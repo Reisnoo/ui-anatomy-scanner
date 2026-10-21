@@ -7,7 +7,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), crypto
 const { execFileSync } = require('child_process');
 const offline = require('./lib/offline');
 const args = process.argv.slice(2), flag = n => { const i = args.indexOf(n); return i < 0 ? null : (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true); };
-const EVAL = flag('--eval'), LIVE = flag('--live'), ONLY = flag('--only') && String(flag('--only')).split(',');
+const EXPLAIN = flag('--explain'), SET = flag('--set'), EVAL = flag('--eval'), LIVE = flag('--live'), ONLY = flag('--only') && String(flag('--only')).split(',');
 const OUT = path.resolve(flag('--out') || path.join(__dirname, 'results'));
 const TOOL_DIR = path.resolve(__dirname, '..'), CORPUS = path.join(__dirname, '.corpus');
 function loadPW() { for (const m of [process.env.PLAYWRIGHT_MODULE, 'playwright', 'playwright-core'].filter(Boolean)) { try { return require(m); } catch (e) {} } throw new Error('playwright が見つかりません（npm i playwright、または PLAYWRIGHT_MODULE を指定）'); }
@@ -46,7 +46,7 @@ function score(axeViol, axeIncomplete, axePass, toolRects, scope = () => true) {
   const fpAll = tool.filter(r => !hasClose(r.rect || r, axeViol));
   const fpConfirmed = fpAll.filter(r => hasClose(r.rect || r, axePass)), fpUnverified = fpAll.filter(r => !hasClose(r.rect || r, axePass));
   return { axeViolations: gt.length, toolDetections: tool.length, tp: tp.length, fn: fn.length, fpConfirmed: fpConfirmed.length, fpUnverified: fpUnverified.length,
-    fnExamples: fn.slice(0, 4).map(n => n.html), fpExamples: fpConfirmed.slice(0, 4).map(r => ({ rect: r.rect || r, label: r.label || '' })), fpUnverifiedExamples: fpUnverified.slice(0, 3).map(r => ({ rect: r.rect || r, label: r.label || '' })) };
+    fnExamples: fn.slice(0, 4).map(n => n.html), fnRects: fn.slice(0, 12).map(n => n.rect), fpExamples: fpConfirmed.slice(0, 4).map(r => ({ rect: r.rect || r, label: r.label || '' })), fpUnverifiedExamples: fpUnverified.slice(0, 3).map(r => ({ rect: r.rect || r, label: r.label || '' })) };
 }
 
 async function main() {
@@ -59,6 +59,7 @@ async function main() {
     if (!pages.length) throw new Error('検証用ページがありません。先に node fetch_corpus.js を実行してください');
   }
   if (ONLY) pages = pages.filter(p => ONLY.includes(p.id));
+  if (SET && SET !== true) pages = pages.filter(p => (p.set || '') === SET);
   const { s: server, port } = await serve(), origin = `http://127.0.0.1:${port}`;
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -71,6 +72,7 @@ async function main() {
     try { await live.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { await live.waitForTimeout(1500); }
     await live.waitForTimeout(600);
     const html = '<!DOCTYPE html>\n' + await live.evaluate(() => document.documentElement.outerHTML), baseHref = live.url();
+    const liveH = await live.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
     const audit = await live.evaluate(() => {   // ニールセンの一部の指摘は、ツールと別の実装で事実確認する
       const q = sel => [...document.querySelectorAll(sel)];
       const navLike = q('nav,[role=navigation],ul[class*="nav"],ul[class*="sidebar"],ul[class*="menu"]').filter(n => n.querySelectorAll('a').length >= 3 && !n.closest('footer'));
@@ -113,11 +115,20 @@ async function main() {
         [...nodesOf(axe, 'passes', ['button-name', 'input-button-name']), ...nodesOf(axe, 'passes', ['link-name']).filter(n => hasClose(n.rect, D.allButtons))], D.iconNoLabel),
       targetSize: score(nodesOf(axe, 'violations', ['target-size']), nodesOf(axe, 'incomplete', ['target-size']), nodesOf(axe, 'passes', ['target-size']), D.targetSmall, n => ['BUTTON', 'INPUT', 'SELECT'].includes(n.tag) || n.role === 'button')
     };
+    if (EXPLAIN && checks.contrast.fnRects.length) {
+      console.log('--explain', p.id, JSON.stringify(await toolPage.evaluate(rs => rs.map(r => {
+        const els = [...D.doc.body.querySelectorAll('*')].filter(e => { const b = D.rect(e); return Math.abs(b.x - r.x) <= 6 && Math.abs(b.y - r.y) <= 6 && Math.abs(b.w - r.w) <= 8 && Math.abs(b.h - r.h) <= 8; });
+        const el = els[els.length - 1]; if (!el) return { miss: true, r };
+        const s = D.cs(el), bg = D.effBg(el), c = parseColor(s.color); let op = 1; for (let n = el; n; n = n.parentElement) op *= parseFloat(D.cs(n).opacity);
+        const st = D.doc.elementsFromPoint(r.x + r.w / 2, r.y + r.h / 2), i = st.indexOf(el);
+        return { tag: el.tagName, cls: String(el.className || '').slice(0, 36), vis: D.isVis(el), direct: [...el.childNodes].some(t => t.nodeType === 3 && t.textContent.trim()), disabledAttr: el.matches(':disabled'), color: s.color, bgNull: bg === null, ratio: bg && c ? +contrast(over(c, bg), bg).toFixed(2) : null, fs: s.fontSize, opacity: +op.toFixed(2), inStack: i, below: st.slice(i + 1, i + 4).map(b => b.tagName + '.' + String(b.className || '').slice(0, 20) + (b.contains(el) ? '(anc)' : '')) };
+      }), checks.contrast.fnRects)));
+    }
     const info = { axeContrastIncomplete: nodesOf(axe, 'incomplete', ['color-contrast']).length, axeLinkNameViolations: nodesOf(axe, 'violations', ['link-name']).filter(n => !hasClose(n.rect, D.allButtons)).length,
       axeLabelViolations: nodesOf(axe, 'violations', ['label', 'select-name']).length, toolPlaceholderOnly: D.placeholderOnly.length,
       toolPlaceholderOnlyAxePass: D.placeholderOnly.filter(r => hasClose(r.rect, nodesOf(axe, 'passes', ['label', 'select-name']))).length };
     const { debug, ...toolOut } = tool;
-    results.push({ id: p.id, label: p.label, kind: p.kind, audit, url: p.url || `${p.repo}/${p.path}`, sha256: crypto.createHash('sha256').update(html).digest('hex').slice(0, 16), checks, info, tool: toolOut });
+    results.push({ id: p.id, label: p.label, kind: p.kind, set: p.set || (LIVE ? 'live' : ''), audit, liveH, url: p.url || `${p.repo}/${p.path}`, sha256: crypto.createHash('sha256').update(html).digest('hex').slice(0, 16), checks, info, tool: toolOut });
     console.log(`${p.id.padEnd(16)} comps=${tool.comps} issues=${tool.issues.length} contrast tp/fp/fn=${checks.contrast.tp}/${checks.contrast.fpConfirmed + checks.contrast.fpUnverified}/${checks.contrast.fn}  btn recall=${tool.buttons.tp}/${tool.buttons.oracle}`);
   }
   await browser.close(); server.close();

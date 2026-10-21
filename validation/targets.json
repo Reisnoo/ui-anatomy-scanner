@@ -64,6 +64,34 @@
     "stylish-portfolio": {
       "url": "https://github.com/StartBootstrap/startbootstrap-stylish-portfolio",
       "commit": "a658eb7130db599f69572384ef2dd6221757f028"
+    },
+    "AdminLTE": {
+      "url": "https://github.com/ColorlibHQ/AdminLTE",
+      "commit": "bd4d9c72931f1dd28601b6bfb387554a381ad540"
+    },
+    "heroic-features": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-heroic-features",
+      "commit": "a9b7e388ba59526bf569839269e899e5c28c0bda"
+    },
+    "business-frontpage": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-business-frontpage",
+      "commit": "b330ff68d31fca0950dcce5687796d71432fbd5f"
+    },
+    "coming-soon": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-coming-soon",
+      "commit": "5c428101c48f34b85bf45e4faf26476b2f43215d"
+    },
+    "new-age": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-new-age",
+      "commit": "5f619773a873e44545b9e1e049d6565d3a9e81d7"
+    },
+    "simple-sidebar": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-simple-sidebar",
+      "commit": "72f0de1eda0350496100c8a077795fe93752d419"
+    },
+    "scrolling-nav": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-scrolling-nav",
+      "commit": "45ee8f6a5503ec6d4b41ec86cf5be2c930b606df"
     }
   },
   "pages": [
@@ -184,7 +212,7 @@
       "label": "陽性対照（自作の違反例）",
       "kind": "対照",
       "local": "fixtures/positive-control.html",
-      "set": "dev"
+      "set": "control"
     },
     {
       "id": "mb-pricing",
@@ -313,6 +341,118 @@
       "repo": "stylish-portfolio",
       "path": "dist/index.html",
       "set": "holdout"
+    },
+    {
+      "id": "al-dash",
+      "label": "AdminLTE ダッシュボード",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-login",
+      "label": "AdminLTE ログイン",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/examples/login.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-register",
+      "label": "AdminLTE 新規登録",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/examples/register.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-form",
+      "label": "AdminLTE 入力フォーム",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/forms/general.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-table",
+      "label": "AdminLTE データテーブル",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/tables/data.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-projects",
+      "label": "AdminLTE プロジェクト一覧",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/examples/projects.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-invoice",
+      "label": "AdminLTE 請求書",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/examples/invoice.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "al-mailbox",
+      "label": "AdminLTE メールボックス",
+      "kind": "業務システム",
+      "repo": "AdminLTE",
+      "path": "pages/mailbox/mailbox.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "heroic",
+      "label": "ヒーロー型トップ",
+      "kind": "ランディング",
+      "repo": "heroic-features",
+      "path": "dist/index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "biz-front",
+      "label": "企業トップ",
+      "kind": "ランディング",
+      "repo": "business-frontpage",
+      "path": "dist/index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "coming",
+      "label": "公開準備ページ",
+      "kind": "ランディング",
+      "repo": "coming-soon",
+      "path": "dist/index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "new-age",
+      "label": "アプリ紹介",
+      "kind": "ランディング",
+      "repo": "new-age",
+      "path": "dist/index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "sidebar",
+      "label": "サイドバー付きレイアウト",
+      "kind": "業務システム",
+      "repo": "simple-sidebar",
+      "path": "dist/index.html",
+      "set": "holdout2"
+    },
+    {
+      "id": "scrolling",
+      "label": "スクロールナビ",
+      "kind": "ランディング",
+      "repo": "scrolling-nav",
+      "path": "dist/index.html",
+      "set": "holdout2"
     }
   ]
 }
