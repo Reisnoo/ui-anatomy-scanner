@@ -112,7 +112,7 @@ UI Anatomy Scanner の自動判定が、実在するページでどのくらい�
 ## 再現手順
 
 ```bash
-cd anatomy-scanner/validation
+cd validation
 npm install                  # axe-core と playwright
 npx playwright install chromium
 node fetch_corpus.js         # 実在テンプレートをコミット固定で取得（.corpus/、Gitには含めない）
