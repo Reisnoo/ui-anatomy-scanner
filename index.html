@@ -535,7 +535,7 @@ const S = {
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
   base:null, cmp:{split:50, show:true}, src:null, wipe:null, wipeKey:null,
-  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, multi:null, multiLens:false,
+  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false}, multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
 };
@@ -1003,7 +1003,7 @@ function buildIssues(){
     if(!direct) return;
     const s=cs(el), fs=parseFloat(s.fontSize);
     if(fs<12) small.push(el);
-    if(el.matches(':disabled')) return;
+    if(el.closest(':disabled,[aria-disabled="true"]')) return;   // 無効なコントロール（disabled な select の option なども含む）はWCAGの対象外
     const bg=effBg(el); const c=parseColor(s.color); if(!bg||!c) return;
     let op=1; for(let n=el; n && n.nodeType===1; n=n.parentElement) op*=parseFloat(cs(n).opacity);
     let fgc=over(c,bg), bgc=bg;
@@ -1709,8 +1709,8 @@ const HMETRICS = [
   {k:'banners', label:'ファーストビューのバナー', fmt:v=>String(v), better:'lower'},
   {k:'lens', label:'読みにくい文字（重大＋注意）', fmt:v=>String(v), better:'lower'},
   {k:'tap', label:'押しにくい操作領域(<44px)', fmt:v=>String(v), better:'lower'},
-  {k:'cta', label:'主要CTAへの到達率', fmt:v=>Math.round(v*100)+'%', better:'higher'},
-  {k:'ctaMs', label:'主要CTAまでの時間', fmt:v=>v.toFixed(1)+'s', better:'lower'},
+  {k:'cta', label:'主要CTAへの到達率', fmt:v=>Math.round(v*100)+'%', dfmt:d=>(d>0?'+':'')+Math.round(d*100)+'pt', better:'higher'},
+  {k:'ctaMs', label:'主要CTAまでの時間', fmt:v=>v.toFixed(1)+'s', dfmt:d=>(d>0?'+':'')+d.toFixed(1)+'s', better:'lower'},
 ];
 function sparkSVG(vals, labels, fmt){
   const W=260, H=124, pl=18, pr=18, pt=24, pb=26, nums=vals.filter(v=>v!==null);
@@ -1758,6 +1758,11 @@ function panelCompare(){
   const seg=`<div class="seg2" role="tablist" aria-label="比較の種類"><button role="tab" aria-selected="${S.cTab==='pair'}" data-ctab="pair">2画面（Before/After）</button><button role="tab" aria-selected="${S.cTab==='history'}" data-ctab="history">履歴（3画面以上）</button></div>`;
   return `<div class="sec">${seg}</div>` + (S.cTab==='history' ? panelHistory() : panelCmp());
 }
+function chartsHTML(M, labels){ return `<div class="charts">${HMETRICS.map(mt=>{ const vals=M.map(m=>m[mt.k]===undefined?null:m[mt.k]); const nn=vals.filter(v=>v!==null);
+    let cap='—'; if(nn.length>=2){ const a=nn[0], z=nn[nn.length-1], dv=z-a, good=dv===0?'':((mt.better==='lower')===(dv<0)?'good':'bad'); cap=`${mt.fmt(a)} → ${mt.fmt(z)} <span class="${good}">${dv===0?'±0':(mt.dfmt?mt.dfmt(dv):((dv>0?'+':'')+(Math.abs(dv)<10?Math.round(dv*10)/10:Math.round(dv))))}</span>`; }
+    return `<div class="chart"><h4>${mt.label}</h4>${sparkSVG(vals,labels,mt.fmt)}<div class="cap">${cap}</div></div>`; }).join('')}</div>`; }
+function heatHTML(M, labels){ return `<div style="overflow-x:auto"><table class="mx"><tr><th>原則</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${NIELSEN.map((n,ri)=>`<tr><td>${n.id} ${n.ja}</td>${M.map((m,ci)=>{ const v=m.scores[ri], d=ci?v-M[ci-1].scores[ri]:0; return `<td class="cell" style="background:rgba(37,99,235,${(clamp((v-50)/50,0,1)*.5).toFixed(2)})">${v}${d?`<small class="${d>0?'up':'dn'}">${d>0?'+':''}${d}</small>`:''}</td>`; }).join('')}</tr>`).join('')}<tr><td><b>平均</b></td>${M.map(m=>`<td class="cell"><b>${m.avg.toFixed(0)}</b></td>`).join('')}</tr></table></div>`; }
+function timelineHTML(tl, labels){ return tl.length?`<div style="overflow-x:auto"><table class="mx"><tr><th>指摘</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${tl.slice(0,18).map(e=>`<tr><td title="${esc(e.title)}">[${e.h==='SUP'?'補助':e.h}] ${esc(e.title.length>22?e.title.slice(0,21)+'…':e.title)}${e.regress?'<span class="gap-badge">再発</span>':''}</td>${e.sev.map(v=>`<td>${v?`<span class="sev s${v}">${v}</span>`:'<span style="color:var(--muted)">—</span>'}</td>`).join('')}</tr>`).join('')}</table></div>`:'<p class="hint">どのバージョンにも有効な指摘がありません。</p>'; }
 function panelHistory(){
   const V=S.versions;
   let h=pendingShareHTML()+`<div class="sec row"><button class="btn" id="hAdd">${ico('bookmark')}現在の画面を履歴に追加</button><button class="btn ghost" id="hDemo">デモを開く</button>${V.length?'<button class="btn ghost" id="hClear">履歴を空にする</button>':''}</div>`;
@@ -1769,12 +1774,10 @@ function panelHistory(){
   if(rows.length<2) return h+'<p class="hint">推移を表示するには、2件以上（履歴＋現在の画面でも可）が必要です。</p>'+histIO();
   const M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), labels=rows.map(r=>shortLabel(r.label));
   const tl=issueTimelineOf(rows);
-  h+=`<div class="sec"><h3>推移</h3><div class="charts">${HMETRICS.map(mt=>{ const vals=M.map(m=>m[mt.k]===undefined?null:m[mt.k]); const nn=vals.filter(v=>v!==null);
-    let cap='—'; if(nn.length>=2){ const a=nn[0], z=nn[nn.length-1], dv=z-a, good=dv===0?'':((mt.better==='lower')===(dv<0)?'good':'bad'); cap=`${mt.fmt(a)} → ${mt.fmt(z)} <span class="${good}">${dv===0?'±0':(dv>0?'+':'')+(Math.abs(dv)<10?Math.round(dv*10)/10:Math.round(dv))}</span>`; }
-    return `<div class="chart"><h4>${mt.label}</h4>${sparkSVG(vals,labels,mt.fmt)}<div class="cap">${cap}</div></div>`; }).join('')}</div>
+  h+=`<div class="sec"><h3>推移</h3>${chartsHTML(M,labels)}
     <p class="hint">仮想視線（CTA）とAge Lensの値は、③④で選んでいる設定（ペルソナ・タスク・レンズ）で全バージョンを同じ条件にそろえて計算しています。</p></div>`;
-  h+=`<div class="sec"><h3>10原則スコアの変化</h3><div style="overflow-x:auto"><table class="mx"><tr><th>原則</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${NIELSEN.map((n,ri)=>`<tr><td>${n.id} ${n.ja}</td>${M.map((m,ci)=>{ const v=m.scores[ri], d=ci?v-M[ci-1].scores[ri]:0; return `<td class="cell" style="background:rgba(37,99,235,${(clamp((v-50)/50,0,1)*.5).toFixed(2)})">${v}${d?`<small class="${d>0?'up':'dn'}">${d>0?'+':''}${d}</small>`:''}</td>`; }).join('')}</tr>`).join('')}<tr><td><b>平均</b></td>${M.map(m=>`<td class="cell"><b>${m.avg.toFixed(0)}</b></td>`).join('')}</tr></table></div><p class="hint">濃いほど良いスコア。小さな数字は直前のバージョンとの差です。</p></div>`;
-  h+=`<div class="sec"><h3>指摘の出入り</h3>${tl.length?`<div style="overflow-x:auto"><table class="mx"><tr><th>指摘</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${tl.slice(0,18).map(e=>`<tr><td title="${esc(e.title)}">[${e.h==='SUP'?'補助':e.h}] ${esc(e.title.length>22?e.title.slice(0,21)+'…':e.title)}${e.regress?'<span class="gap-badge">再発</span>':''}</td>${e.sev.map(v=>`<td>${v?`<span class="sev s${v}">${v}</span>`:'<span style="color:var(--muted)">—</span>'}</td>`).join('')}</tr>`).join('')}</table></div>`:'<p class="hint">どのバージョンにも有効な指摘がありません。</p>'}<p class="hint">数字は重大度、「—」はその時点で指摘なし。件数などの数字を除いたタイトルで同じ指摘とみなします。</p></div>`;
+  h+=`<div class="sec"><h3>10原則スコアの変化</h3>${heatHTML(M,labels)}<p class="hint">濃いほど良いスコア。小さな数字は直前のバージョンとの差です。</p></div>`;
+  h+=`<div class="sec"><h3>指摘の出入り</h3>${timelineHTML(tl,labels)}<p class="hint">数字は重大度、「—」はその時点で指摘なし。件数などの数字を除いたタイトルで同じ指摘とみなします。</p></div>`;
   const ins=histInsights(rows,M,tl);
   h+=`<div class="sec"><h3>自動で出る所見</h3><div class="note"><ul>${ins.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div>
     <div class="row"><button class="btn" id="hCopy">${ico('copy')}履歴レポートをコピー(Markdown)</button></div>
@@ -1911,7 +1914,81 @@ function histIO(){
     <div class="row" style="margin-top:8px"><label style="font-size:12px;color:var(--muted)">読み込み方<select id="hMode" aria-label="読み込み方" style="margin-left:6px"><option value="append" ${io.mode==='append'?'selected':''}>いまの履歴の後ろに追加</option><option value="replace" ${io.mode==='replace'?'selected':''}>いまの履歴を置き換える</option></select></label></div>
     <div class="row" style="margin-top:12px"><button class="btn ghost" id="hLink" ${S.versions.length?'':'disabled'}>共有リンクをコピー</button><span class="hint" id="hLinkInfo" style="margin:0"></span></div>
     <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">JSONを貼り付けて読み込む</summary><textarea id="hPaste" placeholder="書き出したJSONを貼り付け" aria-label="履歴のJSON" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button class="mini" id="hPasteGo">貼り付けた内容を読み込む</button></div></details>
-    <p class="hint">共有は、JSONファイルを渡すか、共有リンクを送る方法です。リンクはURLの「#」以降にデータを入れるため、サイトのサーバーには送信されませんが、データが多いとチャットやメールで途中で切れます。その場合はファイルを使ってください。読み込んだデータは、形式と値を検証してから取り込みます。</p></div>`;
+    <p class="hint" id="hShareHint">共有は、JSONファイルを渡すか、共有リンクを送る方法です。リンクはURLの「#」以降にデータを入れるため、サイトのサーバーには送信されませんが、データが多いとチャットやメールで途中で切れます。その場合はファイルを使ってください。読み込んだデータは、形式と値を検証してから取り込みます。</p></div>${reportUI()}`;
+}
+
+/* ============================================================
+   提出用レポート（単体HTML）
+   履歴のグラフ・表・所見を、外部ファイルなしの1つのHTMLにまとめる。印刷（A4）にも対応
+   ============================================================ */
+function loadRep(){ try{ const d=JSON.parse(localStorage.getItem('uas-report')||'null'); if(d) Object.assign(S.rep,{title:tx(d.title,60)||S.rep.title, author:tx(d.author,40), purpose:tx(d.purpose,400), note:tx(d.note,600), thumbs:!!d.thumbs}); }catch(e){} }
+function saveRep(){ try{ localStorage.setItem('uas-report',JSON.stringify(S.rep)); }catch(e){} }
+const VALIDATION_SUMMARY = '2026年10月21日時点。実在のオープンソーステンプレート45ページ（MIT）で、アクセシビリティ検査エンジン axe-core 4.14 と照合した。ツールの修正が一段落した後に初めて走らせた未見14ページでは、コントラスト不足の検出は再現率96%（143/149）・適合率100%（axeが合格とした誤検出は0件。ただし、両者とも確定できない検出が39件ある）、アイコンのみのボタンの名前の検出は再現率91%（51/56）だった。見逃しの主な原因は、JavaScriptで描かれる領域（チャートなど）のレイアウトの差である。最初の測定（修正前）では、同種のページでコントラストの再現率が48%にとどまり、修正の過程と数値は検証の記録に残している。ニールセン10原則に基づく指摘は外部ツールに正解がなく、人手の採点シートで評価する設計で、採点は未実施である。';
+const HMAP = [['H1','状態の視認性','ステップ・ナビの現在地の有無と、強調の視覚差'],['H2','実世界との一致','曖昧なリンク文言、英語混在、同じ概念の呼び方の揺れ'],['H3','主導権と自由','モーダルの閉じる手段、自動再生、カルーセルの停止、長いフォームの戻る導線'],['H4','一貫性と標準','ボタンの見た目の種類数、角丸、フォント数、見出しサイズ'],['H5','エラー予防','破壊的操作と主要操作の近接、入力欄のtype'],['H6','記憶より認識','名前のないアイコンボタン、プレースホルダのみの入力欄'],['H7','柔軟性と効率性','検索の有無、autocomplete'],['H8','最小限のデザイン','ファーストビューのバナー数・主要ボタンの競合・操作要素の数'],['H9','エラーの認識・回復','エラー表示領域の有無'],['H10','ヘルプとドキュメント','見えているヘルプ・問い合わせ導線の有無'],['補助','アクセシビリティ（WCAG）','コントラスト比、小さな文字、操作領域の大きさ、画像の代替テキスト']];
+const REP_CSS = `:root{--text:#0F172A;--muted:#64748B;--border:#E2E8F0;--surface:#fff;--bg:#F8FAFC;--primary:#2563EB;--primary-strong:#1D4ED8;--primary-light:#EFF6FF;--ok:#15803D;--ok-bg:#DCFCE7;--sev1:#A16207;--sev2:#C2410C;--sev3:#DC2626;--sev4:#7E22CE;--sev1-bg:#FEF9C3;--sev2-bg:#FFEDD5;--sev3-bg:#FEE2E2;--sev4-bg:#F3E8FF}
+*{box-sizing:border-box}html{-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;background:#fff;color:var(--text);font:15px/1.8 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:48px 32px 64px}
+header.cover{padding:24px 0 28px;border-bottom:1px solid var(--border);margin-bottom:8px}
+h1{font-size:28px;line-height:1.4;margin:0 0 10px;font-weight:600}.meta{color:var(--muted);font-size:13px}.badge{display:inline-block;margin-top:12px;font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:1px 10px}
+h2{font-size:18px;font-weight:600;margin:44px 0 14px}h3{font-size:14px;font-weight:600;margin:20px 0 8px}
+p{margin:0 0 12px}.lead{color:var(--muted)}ul{margin:0;padding-left:20px}li{margin-bottom:4px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.tile{border:1px solid var(--border);border-radius:10px;padding:14px 16px}.tile b{display:block;font-size:22px;font-weight:600;line-height:1.3}.tile span{font-size:12px;color:var(--muted)}
+.note{border:1px solid var(--border);border-radius:10px;padding:14px 18px;background:var(--bg);font-size:13px;color:#475569}.note ul{margin-top:4px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}.chart{border:1px solid var(--border);border-radius:10px;padding:12px 14px}.chart h4{margin:0 0 4px;font-size:12px;font-weight:600;color:var(--muted)}.chart svg{width:100%;height:auto;display:block}.cap{font-size:12px;color:var(--muted);margin-top:4px}.cap .good{color:var(--ok);font-weight:600}.cap .bad{color:var(--sev3);font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--muted);font-weight:600}.mx td,.mx th{text-align:center}.mx td:first-child,.mx th:first-child{text-align:left}.mx td.cell{font-weight:600;border-left:2px solid #fff}.mx small{display:block;font-size:11px;font-weight:400;color:var(--muted);line-height:1.2}.mx small.up{color:var(--ok)}.mx small.dn{color:var(--sev3)}
+.sev{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:6px}.sev.s1{background:var(--sev1-bg);color:var(--sev1)}.sev.s2{background:var(--sev2-bg);color:var(--sev2)}.sev.s3{background:var(--sev3-bg);color:var(--sev3)}.sev.s4{background:var(--sev4-bg);color:var(--sev4)}.gap-badge{font-size:12px;font-weight:600;color:var(--sev2);border:1px solid var(--sev2);border-radius:6px;padding:0 5px;margin-left:6px}.hint{font-size:12px;color:var(--muted)}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,280px);gap:14px}figure{margin:0}.frame{width:280px;height:175px;overflow:hidden;border:1px solid var(--border);border-radius:6px;position:relative;background:#fff}.frame iframe{width:1280px;height:800px;border:0;transform-origin:0 0;transform:scale(.21875);pointer-events:none}figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.user{white-space:pre-wrap}footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+@media(max-width:700px){.tiles{grid-template-columns:1fr 1fr}.charts{grid-template-columns:1fr}main{padding:24px 16px}}
+@page{size:A4;margin:16mm}@media print{main{max-width:none;padding:0}h2{break-after:avoid}.chart,.tile,.note,figure,tr{break-inside:avoid}section{break-inside:auto}}`;
+function buildReportHTML(){
+  const rows=histRows(); if(rows.length<2) return null;
+  const rp=S.rep, M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), labels=rows.map(r=>shortLabel(r.label)), tl=issueTimelineOf(rows), ins=histInsights(rows,M,tl);
+  const g=S.gaze, P=PERSONAS[g.persona], lensOn=S.lens.on, LP=lensOn?S.lens:LENS_PRESETS.senior65;
+  const lensName=lensOn ? ((S.lens.preset&&LENS_PRESETS[S.lens.preset])?LENS_PRESETS[S.lens.preset].name:'カスタム') : '65歳前後（既定）';
+  const A=M[0], Z=M[M.length-1], d=new Date(), dateStr=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+  const delta=(a,b,k)=>{ if(a===null||b===null||a===undefined||b===undefined) return ''; const dv=b-a; if(dv===0) return '±0'; const mt=HMETRICS.find(m=>m.k===k); return mt&&mt.dfmt ? mt.dfmt(dv) : (dv>0?'+':'')+(Math.abs(dv)<10?Math.round(dv*10)/10:Math.round(dv)); };
+  const tile=(label,k,fmt)=>{ const a=A[k], z=Z[k]; if(a===null||a===undefined||z===null||z===undefined) return ''; return `<div class="tile"><b>${fmt(a)} → ${fmt(z)}</b><span>${label}（${delta(a,z,k)}）</span></div>`; };
+  const thumbs = rp.thumbs ? rows.filter(r=>!r.cur && r.snap.raw) : [];
+  let h=`<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(rp.title||'UI改善の履歴レポート')}</title><style>${REP_CSS}</style></head><body><main>
+<header class="cover"><h1>${esc(rp.title||'UI改善の履歴レポート')}</h1><div class="meta">${rp.author?esc(rp.author)+'　／　':''}${dateStr}　／　対象：${esc(rows.map(r=>r.label).join(' → '))}</div><div class="badge">ルールベースの分析と仮想の視線を含みます（実ユーザーテストの結果ではありません）</div></header>
+<section><h2>1. 要約</h2><div class="tiles">${tile('10原則の平均スコア','avg',v=>v.toFixed(0))}${tile('有効な指摘の件数','issues',v=>String(v))}${tile('ボタンの見た目の種類','btnStyle',v=>String(v))}${tile('主要CTAへの到達率（仮想）','cta',v=>Math.round(v*100)+'%')}</div>
+<h3>自動で出た所見</h3><div class="note"><ul>${ins.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></section>`;
+  if(rp.purpose||rp.note) h+=`<section><h2>2. 目的と設計の判断</h2>${rp.purpose?`<h3>目的・課題設定</h3><p class="user">${esc(rp.purpose)}</p>`:''}${rp.note?`<h3>設計判断・補足</h3><p class="user">${esc(rp.note)}</p>`:''}</section>`;
+  h+=`<section><h2>${rp.purpose||rp.note?'3':'2'}. 分析した画面</h2><table><tr><th>#</th><th>バージョン</th><th>対象</th><th>保存時刻</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.label)}</td><td>${esc(r.snap.name)}</td><td>${r.cur?'（解析時点の画面）':esc(r.snap.savedAt||'')}</td></tr>`).join('')}</table>`;
+  if(thumbs.length) h+=`<h3>画面のスナップショット</h3><div class="thumbs">${thumbs.map(r=>`<figure><div class="frame"><iframe sandbox="" tabindex="-1" title="${esc(r.label)}" srcdoc="${esc(prepareHTML(r.snap.raw, r.snap.baseHref))}"></iframe></div><figcaption>${esc(r.label)}</figcaption></figure>`).join('')}</div><p class="hint">サムネイルは、スクリプトを実行しない状態で表示しています。外部の画像・CSSは、開く環境で読み込めない場合があります。</p>`;
+  h+=`</section>`;
+  const n0=rp.purpose||rp.note?4:3;
+  h+=`<section><h2>${n0}. 指標の推移</h2>${chartsHTML(M,labels)}<p class="hint">各点の上の数値がその時点の値です。仮想視線とAge Lensの値は、全バージョンを同じ条件（下記）で計算しています。</p></section>
+<section><h2>${n0+1}. 10原則スコアの変化</h2>${heatHTML(M,labels)}<p class="hint">濃いほど良いスコア（100が満点）。小さな数字は直前のバージョンとの差です。</p></section>
+<section><h2>${n0+2}. 指摘の出入り</h2>${timelineHTML(tl,labels)}<p class="hint">数字は重大度（1〜4）、「—」はその時点で指摘なし。「再発」は、いったん解消した後に再び出た指摘です。件数などの数字を除いたタイトルで同じ指摘とみなしています。</p></section>
+<section><h2>${n0+3}. 分析の条件</h2><table><tr><th>項目</th><th>内容</th></tr>
+<tr><td>仮想視線のペルソナ／タスク</td><td>${esc(P.name)}／${esc(TASKS[g.task])}（${g.range==='fold'?'ファーストビュー':'ページ全体'}、30試行・乱数シード固定）</td></tr>
+<tr><td>Age Lens（読みにくさの判定）</td><td>${esc(lensName)}：ぼやけ ${(+LP.blur).toFixed(1)}px／コントラスト感度 ${Math.round(LP.contrast*100)}%／黄変 ${Math.round(LP.yellow*100)}%／視野狭窄 ${Math.round(LP.tunnel*100)}%／色覚 ${esc(CVD_JA[LP.cvd])}</td></tr>
+<tr><td>表示条件</td><td>幅1280px・高さ800px（ファーストビュー）</td></tr><tr><td>作成</td><td>UI Anatomy Scanner（プロトタイプ）、${dateStr}</td></tr></table></section>
+<section><h2>${n0+4}. 方法と限界</h2><div class="note"><ul>
+<li>指摘は、画面のHTMLとCSSから機械的に判定した<b>ルールベースの推定</b>です。実ユーザーテストの代わりにはなりません。</li>
+<li>視線は<b>実測ではなく仮想</b>です。要素の目立ち・タスクとの関連・位置の傾向と、ペルソナごとの仮定から確率的に生成しています。</li>
+<li>スクリプトは実行しないため、JavaScriptで描かれる部分（チャートなど）は、実際の画面と違う場合があります。</li>
+<li>ニールセンの10原則のうち、機械的に判定できる項目だけを自動で指摘しています。判断が必要な項目は、人の確認が必要です。</li>
+<li>推移の変化は指標上の変化であり、ユーザーにとって実際に良くなったかは、ユーザーテストで確認する必要があります。</li></ul></div></section>
+<section><h2>${n0+5}. このツールの検証状況</h2><p>${esc(VALIDATION_SUMMARY)}</p></section>
+<section><h2>付録　自動判定の対応表</h2><table><tr><th>原則</th><th>名称</th><th>自動で見ているもの</th></tr>${HMAP.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table></section>
+<footer>このレポートは UI Anatomy Scanner（プロトタイプ）で作成した単体のHTMLです。印刷（A4）にも対応しています。</footer></main></body></html>`;
+  return h;
+}
+function reportUI(){
+  const rp=S.rep, ready=histRows().length>=2;
+  return `<div class="sec"><h3>提出用レポート（単体HTML）</h3>
+    <p class="hint" style="margin-top:0">履歴のグラフ・ヒートマップ・指摘の出入り・所見・分析条件・限界を、外部ファイルなしの1つのHTMLにまとめます。ポートフォリオの補足資料として添付できます。</p>
+    <div class="form-grid"><label class="full">タイトル<input type="text" id="rTitle" maxlength="60" value="${esc(rp.title)}"></label>
+    <label class="full">作成者（任意）<input type="text" id="rAuthor" maxlength="40" value="${esc(rp.author)}"></label>
+    <label class="full">目的・課題設定（任意・400字まで）<textarea id="rPurpose" maxlength="400" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：問い合わせフォームの入力負荷を下げるため、…">${esc(rp.purpose)}</textarea></label>
+    <label class="full">設計判断・補足（任意・600字まで）<textarea id="rNote" maxlength="600" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：ボタンを3種類に絞った理由、…">${esc(rp.note)}</textarea></label></div>
+    <div style="margin-top:8px"><label class="toggle"><input type="checkbox" id="rThumbs" ${rp.thumbs?'checked':''}> 各バージョンの画面のスナップショットを載せる</label></div>
+    <p class="hint">載せると、画面のHTMLがレポートに入り、ファイルサイズが大きくなります。解析した画面の中身も、レポートを渡した相手に伝わります。</p>
+    <div class="row" style="margin-top:12px"><button class="btn" id="rExport" ${ready?'':'disabled'}>レポートをHTMLで書き出す</button><button class="btn ghost" id="rPreview" ${ready?'':'disabled'}>プレビューを開く</button></div>
+    ${ready?'':'<p class="hint">履歴（または履歴＋現在の画面）が2件以上あると書き出せます。</p>'}</div>`;
 }
 
 /* ============================================================
@@ -2132,6 +2209,10 @@ document.addEventListener('click', e=>{
   if(t.id==='hAdd'||t.id==='saveHist'){ addVersion(); return; }
   if(t.id==='hDemo'){ histDemo(); return; }
   if(t.id==='hClear'){ if(confirm('履歴をすべて削除します。よろしいですか？')){ S.versions=[]; S.histSel=null; S.histCache.clear(); saveHistory(); renderPanel(); renderOverlay(); } return; }
+  if(t.id==='rExport'||t.id==='rPreview'){ const html=buildReportHTML(); if(!html){ toast('履歴が2件以上必要です'); return; }
+    const url=URL.createObjectURL(new Blob([html],{type:'text/html'})), a=document.createElement('a'); a.href=url;
+    if(t.id==='rExport'){ a.download='ui-history-report-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.html'; a.click(); toast(`レポートを書き出しました（約${Math.round(html.length/1024)}KB）`); } else { a.target='_blank'; a.rel='noopener'; a.click(); }
+    setTimeout(()=>URL.revokeObjectURL(url),60000); return; }
   if(t.id==='hExport'){ const txt=JSON.stringify(buildHistPayload(),null,1), a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'})); a.download='ui-anatomy-history-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast(`${S.versions.length}件を書き出しました`); return; }
   if(t.id==='hImportBtn'){ const f=$('#hFile'); if(f) f.click(); return; }
   if(t.id==='hPasteGo'){ importText(($('#hPaste')||{value:''}).value, S.io.mode); return; }
@@ -2201,6 +2282,7 @@ document.addEventListener('change', e=>{
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='hFile'){ const f=t.files&&t.files[0]; t.value=''; if(!f) return; if(f.size>MAX_IMPORT_BYTES){ toast('ファイルが大きすぎます（8MBまで）'); return; } const r=new FileReader(); r.onload=()=>importText(String(r.result), S.io.mode); r.onerror=()=>toast('ファイルを読み込めませんでした'); r.readAsText(f); }
+  else if(t.id==='rThumbs'){ S.rep.thumbs=t.checked; saveRep(); }
   else if(t.id==='hRaw'){ S.io.raw=t.checked; renderPanel(); }
   else if(t.id==='hPers'){ S.io.pers=t.checked; renderPanel(); }
   else if(t.id==='hMode'){ S.io.mode=t.value; }
@@ -2225,6 +2307,7 @@ document.addEventListener('input', e=>{
   const lt=e.target;
   if(lt.dataset && (lt.dataset.pf||lt.dataset.pl)){ const d=ensureDraft(), k=lt.dataset.pf||lt.dataset.pl; if(lt.dataset.pf) d[k]=+lt.value; else d.lens[k]=+lt.value; const v=$('#pv_'+k); if(v) v.textContent=PFMAP[k](+lt.value); return; }
   if(lt.dataset && lt.dataset.vlabel){ const v=S.versions.find(x=>x.id===lt.dataset.vlabel); if(v){ v.label=lt.value.slice(0,12)||'無題'; clearTimeout(S._hl); S._hl=setTimeout(saveHistory,400); } return; }
+  if(lt.id==='rTitle'||lt.id==='rAuthor'||lt.id==='rPurpose'||lt.id==='rNote'){ const k={rTitle:'title',rAuthor:'author',rPurpose:'purpose',rNote:'note'}[lt.id]; S.rep[k]=lt.value; clearTimeout(S._rt); S._rt=setTimeout(saveRep,400); return; }
   if(lt.id==='pName'){ ensureDraft().name=lt.value; return; }
   if(lt.id==='pDesc'){ ensureDraft().descText=lt.value; return; }
   if(lt.dataset && lt.dataset.cmp==='split'){ S.cmp.split=+lt.value; const v=$('#cv_split'); if(v) v.textContent=lt.value+'%'; renderOverlay(); return; }
@@ -2255,7 +2338,7 @@ function toggleTheme(){ const d=document.documentElement; const next=d.dataset.t
 (function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').innerHTML=ico(t==='dark'?'sun':'moon',18); })();
 
 /* 起動 */
-initPersonas(); initHistory();
+initPersonas(); initHistory(); loadRep();
 renderSrc();
 renderPanel();
 (function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name).then(checkShareHash); })();

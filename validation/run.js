@@ -45,7 +45,9 @@ function score(axeViol, axeIncomplete, axePass, toolRects, scope = () => true) {
   const tp = gt.filter(n => hasClose(n.rect, tool)), fn = gt.filter(n => !hasClose(n.rect, tool));
   const fpAll = tool.filter(r => !hasClose(r.rect || r, axeViol));
   const fpConfirmed = fpAll.filter(r => hasClose(r.rect || r, axePass)), fpUnverified = fpAll.filter(r => !hasClose(r.rect || r, axePass));
-  return { axeViolations: gt.length, toolDetections: tool.length, tp: tp.length, fn: fn.length, fpConfirmed: fpConfirmed.length, fpUnverified: fpUnverified.length,
+  const fpIncomplete = fpUnverified.filter(r => hasClose(r.rect || r, axeIncomplete));      // axeも「要確認」とした（両者とも確定できない）
+  const fpNone = fpUnverified.filter(r => !hasClose(r.rect || r, axeIncomplete));          // axeがまったく評価しなかった
+  return { axeViolations: gt.length, toolDetections: tool.length, tp: tp.length, fn: fn.length, fpConfirmed: fpConfirmed.length, fpUnverified: fpUnverified.length, fpIncomplete: fpIncomplete.length, fpNone: fpNone.length, fpNoneExamples: fpNone.slice(0, 6).map(r => ({ rect: r.rect || r, label: r.label || '' })),
     fnExamples: fn.slice(0, 4).map(n => n.html), fnRects: fn.slice(0, 12).map(n => n.rect), fpExamples: fpConfirmed.slice(0, 4).map(r => ({ rect: r.rect || r, label: r.label || '' })), fpUnverifiedExamples: fpUnverified.slice(0, 3).map(r => ({ rect: r.rect || r, label: r.label || '' })) };
 }
 

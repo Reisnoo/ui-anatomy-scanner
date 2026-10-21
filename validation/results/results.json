@@ -1,16 +1,18 @@
 {
  "meta": {
-  "date": "2026-10-21T02:35:04.896Z",
+  "date": "2026-10-21T02:52:27.423Z",
   "axeCore": "4.14.0",
   "playwright": "1.56.1",
-  "toolCommit": "b2421a846025f667b48799a84db50e7d466dfc93",
+  "toolCommit": "64847c46f0c463e1d31c517106bd11f54c02ff75",
   "mode": "corpus (offline stubs)",
   "stubs": {
-   "npm": 42,
-   "css": 54,
-   "js": 24,
-   "images": 22,
-   "blockedHosts": []
+   "npm": 151,
+   "css": 135,
+   "js": 87,
+   "images": 47,
+   "blockedHosts": [
+    "maps.google.com"
+   ]
   },
   "corpus": {
    "shop-homepage": "fb3a490",
@@ -20,7 +22,22 @@
    "agency": "b2d5d5c",
    "freelancer": "5bc65b4",
    "clean-blog": "1ebc4f8",
-   "business-casual": "b6f9289"
+   "business-casual": "b6f9289",
+   "modern-business": "7d29710",
+   "sb-admin": "adde34b",
+   "creative": "b1762d8",
+   "grayscale": "d974402",
+   "resume": "c6fbe5e",
+   "one-page-wonder": "4a2712c",
+   "small-business": "9c5ef57",
+   "stylish-portfolio": "a658eb7",
+   "AdminLTE": "bd4d9c7",
+   "heroic-features": "a9b7e38",
+   "business-frontpage": "b330ff6",
+   "coming-soon": "5c42810",
+   "new-age": "5f61977",
+   "simple-sidebar": "72f0de1",
+   "scrolling-nav": "45ee8f6"
   }
  },
  "results": [
@@ -28,6 +45,7 @@
    "id": "shop-home",
    "label": "ECストア トップ",
    "kind": "EC",
+   "set": "dev",
    "audit": {
     "navCandidates": 3,
     "navActive": true,
@@ -35,6 +53,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1405,
    "url": "shop-homepage/dist/index.html",
    "sha256": "ca174c480414ceca",
    "checks": {
@@ -45,7 +64,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -56,7 +79,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -67,7 +94,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -78,7 +109,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -102,7 +137,7 @@
      "footer": 1
     },
     "pageH": 1405,
-    "ms": 141,
+    "ms": 167,
     "issues": [
      {
       "h": "H10",
@@ -187,6 +222,7 @@
    "id": "shop-item",
    "label": "ECストア 商品詳細",
    "kind": "EC",
+   "set": "dev",
    "audit": {
     "navCandidates": 3,
     "navActive": true,
@@ -194,6 +230,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1549,
    "url": "shop-item/dist/index.html",
    "sha256": "9a24b1c3c34bd2ce",
    "checks": {
@@ -204,7 +241,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -215,7 +256,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -226,7 +271,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -237,7 +286,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -262,7 +315,7 @@
      "footer": 1
     },
     "pageH": 1549,
-    "ms": 120,
+    "ms": 135,
     "issues": [
      {
       "h": "H10",
@@ -332,6 +385,7 @@
    "id": "bc-products",
    "label": "カフェ 商品一覧",
    "kind": "EC",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -339,6 +393,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 3252,
    "url": "business-casual/dist/products.html",
    "sha256": "963ed2259036a028",
    "checks": {
@@ -349,7 +404,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -360,7 +419,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -371,7 +434,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -382,7 +449,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -403,7 +474,7 @@
      "footer": 1
     },
     "pageH": 3252,
-    "ms": 123,
+    "ms": 187,
     "issues": [
      {
       "h": "H1",
@@ -450,6 +521,7 @@
    "id": "admin-dash",
    "label": "管理画面 ダッシュボード",
    "kind": "業務システム",
+   "set": "dev",
    "audit": {
     "navCandidates": 3,
     "navActive": true,
@@ -457,6 +529,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1665,
    "url": "sb-admin-2/index.html",
    "sha256": "e647ac1f9750f2f7",
    "checks": {
@@ -467,7 +540,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 1,
+     "fpIncomplete": 1,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": [
       {
@@ -488,7 +565,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -499,7 +580,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -510,7 +595,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -534,7 +623,7 @@
      "footer": 1
     },
     "pageH": 1665,
-    "ms": 199,
+    "ms": 248,
     "issues": [
      {
       "h": "H6",
@@ -617,6 +706,7 @@
    "id": "admin-login",
    "label": "管理画面 ログイン",
    "kind": "業務システム",
+   "set": "dev",
    "audit": {
     "navCandidates": 0,
     "navActive": false,
@@ -624,6 +714,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 800,
    "url": "sb-admin-2/login.html",
    "sha256": "b7791040c60317a1",
    "checks": {
@@ -634,7 +725,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -645,7 +740,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -656,7 +755,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -667,7 +770,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -688,7 +795,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 100,
+    "ms": 121,
     "issues": [
      {
       "h": "H6",
@@ -776,6 +883,7 @@
    "id": "admin-register",
    "label": "管理画面 新規登録",
    "kind": "業務システム",
+   "set": "dev",
    "audit": {
     "navCandidates": 0,
     "navActive": false,
@@ -783,6 +891,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 800,
    "url": "sb-admin-2/register.html",
    "sha256": "10509538818870d8",
    "checks": {
@@ -793,7 +902,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -804,7 +917,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -815,7 +932,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -826,7 +947,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -847,7 +972,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 105,
+    "ms": 91,
     "issues": [
      {
       "h": "H6",
@@ -944,6 +1069,7 @@
    "id": "admin-tables",
    "label": "管理画面 テーブル",
    "kind": "業務システム",
+   "set": "dev",
    "audit": {
     "navCandidates": 3,
     "navActive": true,
@@ -951,6 +1077,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1089,
    "url": "sb-admin-2/tables.html",
    "sha256": "2c55af8d44cf84d7",
    "checks": {
@@ -961,7 +1088,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 7,
+     "fpIncomplete": 7,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": [
       {
@@ -1000,7 +1131,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1011,7 +1146,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1022,7 +1161,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -1046,7 +1189,7 @@
      "footer": 1
     },
     "pageH": 1089,
-    "ms": 191,
+    "ms": 194,
     "issues": [
      {
       "h": "H6",
@@ -1152,6 +1295,7 @@
    "id": "admin-buttons",
    "label": "管理画面 ボタン集",
    "kind": "業務システム",
+   "set": "dev",
    "audit": {
     "navCandidates": 3,
     "navActive": true,
@@ -1159,6 +1303,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1111,
    "url": "sb-admin-2/buttons.html",
    "sha256": "1704a19ea4ea4d83",
    "checks": {
@@ -1169,7 +1314,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 1,
+     "fpIncomplete": 1,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": [
       {
@@ -1190,7 +1339,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1201,7 +1354,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1212,7 +1369,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -1235,7 +1396,7 @@
      "footer": 1
     },
     "pageH": 1111,
-    "ms": 190,
+    "ms": 174,
     "issues": [
      {
       "h": "H4",
@@ -1462,6 +1623,7 @@
    "id": "landing",
    "label": "ランディングページ",
    "kind": "ランディング",
+   "set": "dev",
    "audit": {
     "navCandidates": 0,
     "navActive": false,
@@ -1469,6 +1631,7 @@
     "helpMatch": "<a href=\"#!\">Contact</a>",
     "longForms": 0
    },
+   "liveH": 3812,
    "url": "landing-page/dist/index.html",
    "sha256": "2f12af4876e4371d",
    "checks": {
@@ -1479,7 +1642,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1490,7 +1657,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1501,7 +1672,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1512,7 +1687,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -1538,7 +1717,7 @@
      "footer": 1
     },
     "pageH": 3812,
-    "ms": 151,
+    "ms": 168,
     "issues": [
      {
       "h": "H6",
@@ -1616,6 +1795,7 @@
    "id": "agency",
    "label": "代理店サイト",
    "kind": "ランディング",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -1623,17 +1803,22 @@
     "helpMatch": "<a class=\"nav-link\" href=\"#contact\">Contact</a>",
     "longForms": 0
    },
+   "liveH": 6140,
    "url": "agency/dist/index.html",
    "sha256": "b4194a4fb0bb2131",
    "checks": {
     "contrast": {
      "axeViolations": 7,
-     "toolDetections": 9,
+     "toolDetections": 8,
      "tp": 7,
      "fn": 0,
      "fpConfirmed": 0,
-     "fpUnverified": 2,
+     "fpUnverified": 1,
+     "fpIncomplete": 1,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": [
       {
@@ -1642,15 +1827,6 @@
         "y": 4123,
         "w": 156,
         "h": 78
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 528,
-        "y": 5887,
-        "w": 224,
-        "h": 69
        },
        "label": ""
       }
@@ -1663,7 +1839,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1674,7 +1854,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1685,7 +1869,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -1743,12 +1931,12 @@
      {
       "h": "SUP",
       "sev": 3,
-      "title": "文字のコントラスト比が基準未満の箇所が9件",
+      "title": "文字のコントラスト比が基準未満の箇所が8件",
       "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
       "evidence": [
        "“TELL ME MORE” 1.6:1",
        "“Be Part Of Ou…” 1.6:1",
-       "“SEND MESSAGE” 1.6:1",
+       "“Lorem ipsum d…” 4.4:1",
        "背景が重なっていて判定できない文字5件は除外"
       ],
       "fix": "前景・背景の色を調整して基準を満たす。"
@@ -1853,6 +2041,7 @@
    "id": "freelancer",
    "label": "ポートフォリオ",
    "kind": "ランディング",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -1860,6 +2049,7 @@
     "helpMatch": "<a class=\"nav-link py-3 px-0 px-lg-3 rounded\" href=\"#contact\">Contact</a>",
     "longForms": 0
    },
+   "liveH": 3386,
    "url": "freelancer/dist/index.html",
    "sha256": "8eb2187e2c9fd5ca",
    "checks": {
@@ -1870,7 +2060,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1881,7 +2075,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1892,7 +2090,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -1903,7 +2105,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -1929,7 +2135,7 @@
      "footer": 1
     },
     "pageH": 3386,
-    "ms": 182,
+    "ms": 161,
     "issues": [
      {
       "h": "H1",
@@ -1961,9 +2167,9 @@
       "title": "文字のコントラスト比が基準未満の箇所が7件",
       "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
       "evidence": [
+       "“Send” 1.8:1",
        "“Free Download!” 2.3:1",
-       "“START BOOTSTR…” 2.4:1",
-       "“Graphic Artis…” 2.4:1"
+       "“START BOOTSTR…” 2.4:1"
       ],
       "fix": "前景・背景の色を調整して基準を満たす。"
      }
@@ -2027,6 +2233,7 @@
    "id": "blog-home",
    "label": "ブログ トップ",
    "kind": "ブログ",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -2034,6 +2241,7 @@
     "helpMatch": "<a class=\"nav-link px-lg-3 py-3 py-lg-4\" href=\"contact.html\">Contact</a>",
     "longForms": 0
    },
+   "liveH": 1906,
    "url": "clean-blog/dist/index.html",
    "sha256": "5f114104f2369f5e",
    "checks": {
@@ -2044,7 +2252,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2055,7 +2267,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2066,7 +2282,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2077,7 +2297,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -2099,7 +2323,7 @@
      "footer": 1
     },
     "pageH": 1906,
-    "ms": 108,
+    "ms": 99,
     "issues": [
      {
       "h": "H1",
@@ -2155,6 +2379,7 @@
    "id": "blog-contact",
    "label": "ブログ 問い合わせ",
    "kind": "ブログ",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -2162,6 +2387,7 @@
     "helpMatch": "<a class=\"nav-link px-lg-3 py-3 py-lg-4\" href=\"contact.html\">Contact</a>",
     "longForms": 0
    },
+   "liveH": 1455,
    "url": "clean-blog/dist/contact.html",
    "sha256": "fc374319b3d36f42",
    "checks": {
@@ -2172,7 +2398,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2183,7 +2413,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2194,7 +2428,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2205,7 +2443,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -2228,7 +2470,7 @@
      "footer": 1
     },
     "pageH": 1455,
-    "ms": 99,
+    "ms": 91,
     "issues": [
      {
       "h": "H1",
@@ -2252,7 +2494,7 @@
       "title": "文字のコントラスト比が基準未満の箇所が1件",
       "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
       "evidence": [
-       "“SEND” 4.3:1",
+       "“SEND” 2.5:1",
        "背景が重なっていて判定できない文字5件は除外"
       ],
       "fix": "前景・背景の色を調整して基準を満たす。"
@@ -2292,6 +2534,7 @@
    "id": "bc-store",
    "label": "カフェ 店舗情報",
    "kind": "ブログ",
+   "set": "dev",
    "audit": {
     "navCandidates": 2,
     "navActive": false,
@@ -2299,6 +2542,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 2365,
    "url": "business-casual/dist/store.html",
    "sha256": "e1e054908f3d9e44",
    "checks": {
@@ -2309,7 +2553,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2320,7 +2568,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2331,7 +2583,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2342,7 +2598,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -2364,7 +2624,7 @@
      "footer": 1
     },
     "pageH": 2365,
-    "ms": 123,
+    "ms": 99,
     "issues": [
      {
       "h": "H1",
@@ -2422,6 +2682,7 @@
    "id": "control",
    "label": "陽性対照（自作の違反例）",
    "kind": "対照",
+   "set": "control",
    "audit": {
     "navCandidates": 0,
     "navActive": false,
@@ -2429,6 +2690,7 @@
     "helpMatch": "",
     "longForms": 0
    },
+   "liveH": 1194,
    "url": "undefined/undefined",
    "sha256": "cae142a0a11d1024",
    "checks": {
@@ -2439,7 +2701,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2450,7 +2716,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2461,7 +2731,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     },
@@ -2472,7 +2746,11 @@
      "fn": 0,
      "fpConfirmed": 0,
      "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
+     "fnRects": [],
      "fpExamples": [],
      "fpUnverifiedExamples": []
     }
@@ -2493,7 +2771,7 @@
      "heading": 6
     },
     "pageH": 1194,
-    "ms": 80,
+    "ms": 82,
     "issues": [
      {
       "h": "H5",
@@ -2591,6 +2869,6016 @@
      "fpCount": 0
     },
     "kindPairs": []
+   }
+  },
+  {
+   "id": "mb-pricing",
+   "label": "料金ページ",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 966,
+   "url": "modern-business/dist/pricing.html",
+   "sha256": "7a343e3a074e7c15",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 11,
+    "types": {
+     "button": 5,
+     "nav": 1,
+     "card": 3,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 966,
+    "ms": 107,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“With our no h…” 4.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 5,
+     "tool": 5,
+     "tp": 5,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"#!\">Choose plan</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mb-contact",
+   "label": "問い合わせ",
+   "kind": "ブログ",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1276,
+   "url": "modern-business/dist/contact.html",
+   "sha256": "fa3b367566f83957",
+   "checks": {
+    "contrast": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 11,
+    "types": {
+     "button": 3,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1276,
+    "ms": 108,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が2件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Submit” 2.6:1",
+       "“We'd love to …” 4.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-lg disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mb-faq",
+   "label": "FAQ",
+   "kind": "ブログ",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1285,
+   "url": "modern-business/dist/faq.html",
+   "sha256": "bd984f2ef4ef13e6",
+   "checks": {
+    "contrast": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 4,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 19,
+    "types": {
+     "button": 8,
+     "nav": 1,
+     "heading": 9,
+     "footer": 1
+    },
+    "pageH": 1285,
+    "ms": 108,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が2件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“support@domai…” 4.3:1",
+       "“Contact us at…” 4.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 8,
+     "tool": 8,
+     "tp": 8,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  },
+  {
+   "id": "mb-portfolio",
+   "label": "制作実績一覧",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1596,
+   "url": "modern-business/dist/portfolio-overview.html",
+   "sha256": "9d55c4e24b1f8d99",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 15,
+    "types": {
+     "button": 3,
+     "nav": 1,
+     "card": 4,
+     "image": 4,
+     "heading": 2,
+     "footer": 1
+    },
+    "pageH": 1596,
+    "ms": 94,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-lg btn-primary\" href=\"#!\">Contact us</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "mb-blog",
+   "label": "ブログ一覧",
+   "kind": "ブログ",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1918,
+   "url": "modern-business/dist/blog-home.html",
+   "sha256": "47ec4903164f8ec0",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 4,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 16,
+    "types": {
+     "button": 2,
+     "nav": 1,
+     "card": 3,
+     "image": 3,
+     "heading": 6,
+     "footer": 1
+    },
+    "pageH": 1918,
+    "ms": 113,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H2",
+      "sev": 1,
+      "title": "リンク文言が曖昧",
+      "detail": "「こちら」「詳細」など、遷移先が文言だけでは分からないリンクがある。",
+      "evidence": [
+       "“Read more”"
+      ],
+      "fix": "「経費申請の手順を見る」のように、遷移先・目的を文言に含める。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“More news” 4.3:1",
+       "“May 12, 2023” 4.4:1",
+       "“May 5, 2023” 4.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 2,
+     "tool": 2,
+     "tp": 2,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  },
+  {
+   "id": "sba-dash",
+   "label": "管理画面v7 ダッシュボード",
+   "kind": "業務システム",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 7,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 2151,
+   "url": "sb-admin/dist/index.html",
+   "sha256": "7b500594cce631da",
+   "checks": {
+    "contrast": {
+     "axeViolations": 10,
+     "toolDetections": 10,
+     "tp": 7,
+     "fn": 3,
+     "fpConfirmed": 0,
+     "fpUnverified": 3,
+     "fpIncomplete": 0,
+     "fpNone": 3,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 1022,
+        "y": 2062,
+        "w": 93,
+        "h": 17
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1127,
+        "y": 2062,
+        "w": 129,
+        "h": 17
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 249,
+        "y": 2060,
+        "w": 212,
+        "h": 21
+       },
+       "label": ""
+      }
+     ],
+     "fnExamples": [
+      "<div class=\"text-muted\">Copyright © Your Website 2023</div>",
+      "<a href=\"#\">Privacy Policy</a>",
+      "<a href=\"#\">Terms &amp; Conditions</a>"
+     ],
+     "fnRects": [
+      {
+       "x": 249,
+       "y": 2106,
+       "w": 211.796875,
+       "h": 21
+      },
+      {
+       "x": 1022.390625,
+       "y": 2108,
+       "w": 92.65625,
+       "h": 17
+      },
+      {
+       "x": 1126.96875,
+       "y": 2108,
+       "w": 129.03125,
+       "h": 17
+      }
+     ],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1022,
+        "y": 2062,
+        "w": 93,
+        "h": 17
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1127,
+        "y": 2062,
+        "w": 129,
+        "h": 17
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 249,
+        "y": 2060,
+        "w": 212,
+        "h": 21
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 14,
+    "types": {
+     "button": 3,
+     "nav": 3,
+     "form": 1,
+     "search": 1,
+     "card": 4,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 2105,
+    "ms": 148,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン3個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が10件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Warning Card” 1.6:1",
+       "“View Details” 1.7:1",
+       "“CORE” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "操作領域が24px未満の要素が1個",
+      "detail": "WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）",
+      "evidence": [],
+      "fix": "タップ領域は最低24px、可能なら44px以上にする。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "text",
+      "got": "icon",
+      "html": "<button class=\"btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0\" id=\"sidebarToggle\" href=\"#!\"><i class=\"fas fa-bars\"></i></button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sba-tables",
+   "label": "管理画面v7 テーブル",
+   "kind": "業務システム",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 7,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 1992,
+   "url": "sb-admin/dist/tables.html",
+   "sha256": "165d6bef63803ba6",
+   "checks": {
+    "contrast": {
+     "axeViolations": 8,
+     "toolDetections": 8,
+     "tp": 8,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 10,
+    "types": {
+     "button": 3,
+     "nav": 3,
+     "form": 1,
+     "search": 1,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1992,
+    "ms": 120,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン3個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が8件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“CORE” 2.3:1",
+       "“INTERFACE” 2.3:1",
+       "“ADDONS” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "操作領域が24px未満の要素が1個",
+      "detail": "WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）",
+      "evidence": [],
+      "fix": "タップ領域は最低24px、可能なら44px以上にする。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "text",
+      "got": "icon",
+      "html": "<button class=\"btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0\" id=\"sidebarToggle\" href=\"#!\"><i class=\"fas fa-bars\"></i></button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sba-login",
+   "label": "管理画面v7 ログイン",
+   "kind": "業務システム",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "sb-admin/dist/login.html",
+   "sha256": "c39fc4425f360bdf",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 7,
+    "types": {
+     "button": 1,
+     "form": 1,
+     "input": 3,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 800,
+    "ms": 74,
+    "issues": [
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Need an accou…” 4.2:1",
+       "“Privacy Policy” 4.3:1",
+       "“Terms & Condi…” 4.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95,
+     100,
+     88,
+     88
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"index.html\">Login</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sba-register",
+   "label": "管理画面v7 新規登録",
+   "kind": "業務システム",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "sb-admin/dist/register.html",
+   "sha256": "0135ad51cb035066",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 5,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 9,
+    "types": {
+     "button": 1,
+     "form": 1,
+     "input": 5,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 800,
+    "ms": 65,
+    "issues": [
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Have an accou…” 4.2:1",
+       "“Privacy Policy” 4.3:1",
+       "“Terms & Condi…” 4.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95,
+     100,
+     88,
+     88
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-block\" href=\"login.html\">Create Account</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sba-charts",
+   "label": "管理画面v7 チャート",
+   "kind": "業務システム",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 7,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "sb-admin/dist/charts.html",
+   "sha256": "d9cab1770c18bd73",
+   "checks": {
+    "contrast": {
+     "axeViolations": 11,
+     "toolDetections": 11,
+     "tp": 8,
+     "fn": 3,
+     "fpConfirmed": 0,
+     "fpUnverified": 3,
+     "fpIncomplete": 0,
+     "fpNone": 3,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 250,
+        "y": 364,
+        "w": 1005,
+        "h": 38
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 250,
+        "y": 501,
+        "w": 490,
+        "h": 38
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 766,
+        "y": 501,
+        "w": 490,
+        "h": 38
+       },
+       "label": ""
+      }
+     ],
+     "fnExamples": [
+      "<div class=\"card-footer small text-muted\">Updated yesterday at 11:59 PM</div>",
+      "<div class=\"card-footer small text-muted\">Updated yesterday at 11:59 PM</div>",
+      "<div class=\"card-footer small text-muted\">Updated yesterday at 11:59 PM</div>"
+     ],
+     "fnRects": [
+      {
+       "x": 250,
+       "y": 400,
+       "w": 1005,
+       "h": 38
+      },
+      {
+       "x": 250,
+       "y": 593,
+       "w": 489.5,
+       "h": 38
+      },
+      {
+       "x": 765.5,
+       "y": 593,
+       "w": 489.5,
+       "h": 38
+      }
+     ],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 250,
+        "y": 364,
+        "w": 1005,
+        "h": 38
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 250,
+        "y": 501,
+        "w": 490,
+        "h": 38
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 766,
+        "y": 501,
+        "w": 490,
+        "h": 38
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 10,
+    "types": {
+     "button": 3,
+     "nav": 3,
+     "form": 1,
+     "search": 1,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 800,
+    "ms": 91,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン3個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が11件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“CORE” 2.3:1",
+       "“INTERFACE” 2.3:1",
+       "“ADDONS” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "操作領域が24px未満の要素が1個",
+      "detail": "WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）",
+      "evidence": [],
+      "fix": "タップ領域は最低24px、可能なら44px以上にする。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "text",
+      "got": "icon",
+      "html": "<button class=\"btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0\" id=\"sidebarToggle\" href=\"#!\"><i class=\"fas fa-bars\"></i></button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "creative",
+   "label": "クリエイティブ",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#contact\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 3848,
+   "url": "creative/dist/index.html",
+   "sha256": "8de8d5c410a76a03",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 16,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 12,
+     "fpIncomplete": 0,
+     "fpNone": 12,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 176,
+        "y": 1963,
+        "w": 74,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 152,
+        "y": 1983,
+        "w": 122,
+        "h": 29
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 603,
+        "y": 1963,
+        "w": 74,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 579,
+        "y": 1983,
+        "w": 122,
+        "h": 29
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1029,
+        "y": 1963,
+        "w": 74,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1005,
+        "y": 1983,
+        "w": 122,
+        "h": 29
+       },
+       "label": ""
+      }
+     ],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 176,
+        "y": 1963,
+        "w": 74,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 152,
+        "y": 1983,
+        "w": 122,
+        "h": 29
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 603,
+        "y": 1963,
+        "w": 74,
+        "h": 20
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 11,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 38,
+    "types": {
+     "button": 4,
+     "banner": 2,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "card": 10,
+     "image": 6,
+     "heading": 9,
+     "footer": 1
+    },
+    "pageH": 6896,
+    "ms": 197,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が16件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“CATEGORY” 1.0:1",
+       "“Project Name” 1.0:1",
+       "“CATEGORY” 1.0:1",
+       "背景が重なっていて判定できない文字5件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 4,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<button class=\"btn btn-primary btn-xl disabled\" id=\"submitButton\" type=\"submit\">Submit</button>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a class=\"btn btn-light btn-xl\" href=\"#services\">Get Started!</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a class=\"btn btn-light btn-xl\" href=\"https://startbootstrap.com/theme/creative/\">Download Now!</a>",
+       "kind": "secondary"
+      }
+     ],
+     "fpCount": 3
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-xl disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-xl\" href=\"#about\">Find Out More</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-light btn-xl\" href=\"#services\">Get Started!</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-light btn-xl\" href=\"https://startbootstrap.com/theme/creative/\">Download Now!</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "grayscale",
+   "label": "グレースケール",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#signup\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 4045,
+   "url": "grayscale/dist/index.html",
+   "sha256": "7a93fca3372db3ab",
+   "checks": {
+    "contrast": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 11,
+    "axeLinkNameViolations": 3,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 19,
+    "types": {
+     "button": 2,
+     "banner": 2,
+     "nav": 1,
+     "form": 1,
+     "input": 1,
+     "card": 3,
+     "image": 4,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 7290,
+    "ms": 149,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H2の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが20/32pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が5件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“GET STARTED” 2.9:1",
+       "“hello@yourdom…” 2.9:1",
+       "“Grayscale is …” 3.9:1",
+       "背景が重なっていて判定できない文字4件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     88,
+     100,
+     100,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 2,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<button class=\"btn btn-primary disabled\" id=\"submitButton\" type=\"submit\">Notify Me!</button>",
+       "kind": "primary"
+      }
+     ],
+     "fpCount": 1
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary disabled\" id=\"submitButton\" type=\"submit\">Notify Me!</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"#about\">Get Started</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "resume",
+   "label": "レジュメ",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 5210,
+   "url": "resume/dist/index.html",
+   "sha256": "ef2355ff155cd0fc",
+   "checks": {
+    "contrast": {
+     "axeViolations": 12,
+     "toolDetections": 12,
+     "tp": 12,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 4,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 14,
+    "types": {
+     "nav": 1,
+     "image": 1,
+     "heading": 12
+    },
+    "pageH": 12000,
+    "ms": 161,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が12件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“EXPERIENCE” 2.4:1",
+       "“EDUCATION” 2.4:1",
+       "“SKILLS” 2.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  },
+  {
+   "id": "one-page",
+   "label": "ワンページ",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 1,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 2298,
+   "url": "one-page-wonder/dist/index.html",
+   "sha256": "125d79afbe55293f",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 5,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 11,
+    "types": {
+     "button": 1,
+     "nav": 1,
+     "image": 3,
+     "heading": 5,
+     "footer": 1
+    },
+    "pageH": 2298,
+    "ms": 120,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H2の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが64/56pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“LEARN MORE” 4.2:1",
+       "背景が重なっていて判定できない文字2件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-xl rounded-pill mt-5\" href=\"#scroll\">Learn More</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "small-biz",
+   "label": "スモールビジネス",
+   "kind": "EC",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#!\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1024,
+   "url": "small-business/dist/index.html",
+   "sha256": "d0f089392d7872bd",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 14,
+    "types": {
+     "button": 4,
+     "nav": 1,
+     "card": 3,
+     "image": 1,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 1024,
+    "ms": 75,
+    "issues": [],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 4,
+     "tool": 4,
+     "tp": 4,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"#!\">Call to Action!</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#!\">More Info</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#!\">More Info</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#!\">More Info</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "stylish",
+   "label": "スタイリッシュ",
+   "kind": "ランディング",
+   "set": "holdout",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#contact\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 4813,
+   "url": "stylish-portfolio/dist/index.html",
+   "sha256": "c563ef6255dc408b",
+   "checks": {
+    "contrast": {
+     "axeViolations": 7,
+     "toolDetections": 15,
+     "tp": 7,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 8,
+     "fpIncomplete": 8,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 198,
+        "y": 3037,
+        "w": 362,
+        "h": 15
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 198,
+        "y": 3060,
+        "w": 362,
+        "h": 58
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 720,
+        "y": 3037,
+        "w": 362,
+        "h": 15
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 12,
+    "axeLinkNameViolations": 5,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 26,
+    "types": {
+     "button": 5,
+     "banner": 2,
+     "card": 4,
+     "image": 4,
+     "media": 1,
+     "heading": 9,
+     "footer": 1
+    },
+    "pageH": 8826,
+    "ms": 188,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H3の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが28/16pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H2の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが32/48/56pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が15件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“STATIONARY” 1.5:1",
+       "“A yellow penc…” 1.5:1",
+       "“ICE CREAM” 1.5:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     76,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 5,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<a class=\"btn btn-dark btn-xl\" href=\"#services\">What We Offer</a>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a class=\"btn btn-primary btn-xl\" href=\"https://startbootstrap.com/theme/stylish-portfolio/\">Download Now!</a>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a class=\"btn btn-xl btn-light me-4\" href=\"#!\">Click Me!</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a class=\"btn btn-xl btn-dark\" href=\"#!\">Look at Me!</a>",
+       "kind": "primary"
+      }
+     ],
+     "fpCount": 4
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-xl\" href=\"#about\">Find Out More</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-dark btn-xl\" href=\"#services\">What We Offer</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-xl\" href=\"https://startbootstrap.com/theme/stylish-portfolio/\">Download Now!</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-xl btn-light me-4\" href=\"#!\">Click Me!</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-xl btn-dark\" href=\"#!\">Look at Me!</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-dash",
+   "label": "AdminLTE ダッシュボード",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 18,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1617,
+   "url": "AdminLTE/index.html",
+   "sha256": "430c0631802d9251",
+   "checks": {
+    "contrast": {
+     "axeViolations": 24,
+     "toolDetections": 32,
+     "tp": 18,
+     "fn": 6,
+     "fpConfirmed": 0,
+     "fpUnverified": 14,
+     "fpIncomplete": 9,
+     "fpNone": 5,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 250,
+        "y": 1519,
+        "w": 1030,
+        "h": 57
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 266,
+        "y": 1538,
+        "w": 291,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1161,
+        "y": 1536,
+        "w": 103,
+        "h": 24
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 1161,
+        "y": 1538,
+        "w": 60,
+        "h": 20
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 454,
+        "y": 1538,
+        "w": 98,
+        "h": 20
+       },
+       "label": ""
+      }
+     ],
+     "fnExamples": [
+      "<td data-action=\"selectDay\" data-day=\"10/21/2026\" class=\"day active today\">21</td>",
+      "<footer class=\"main-footer\">\n    <strong>Copyright © 2014-2021 <a href=\"https://adminlte.io\">AdminLTE.io</a>.</strong>\n    All rights reserved.\n    <div class=\"",
+      "<strong>Copyright © 2014-2021 <a href=\"https://adminlte.io\">AdminLTE.io</a>.</strong>",
+      "<a href=\"https://adminlte.io\">AdminLTE.io</a>"
+     ],
+     "fnRects": [
+      {
+       "x": 1035.109375,
+       "y": 1434.75,
+       "w": 58.890625,
+       "h": 29.59375
+      },
+      {
+       "x": 250,
+       "y": 1559.53125,
+       "w": 1030,
+       "h": 57
+      },
+      {
+       "x": 266,
+       "y": 1578.53125,
+       "w": 290.9375,
+       "h": 20
+      },
+      {
+       "x": 453.546875,
+       "y": 1578.53125,
+       "w": 98.046875,
+       "h": 20
+      },
+      {
+       "x": 1161.21875,
+       "y": 1576.53125,
+       "w": 102.78125,
+       "h": 24
+      },
+      {
+       "x": 1161.21875,
+       "y": 1578.53125,
+       "w": 60.09375,
+       "h": 20
+      }
+     ],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1035,
+        "y": 1313,
+        "w": 59,
+        "h": 30
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 189,
+        "y": 413,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 667,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 12,
+     "toolDetections": 12,
+     "tp": 7,
+     "fn": 5,
+     "fpConfirmed": 0,
+     "fpUnverified": 5,
+     "fpIncomplete": 0,
+     "fpNone": 5,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 1192,
+        "y": 713,
+        "w": 30,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1227,
+        "y": 713,
+        "w": 28,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1142,
+        "y": 1122,
+        "w": 46,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1192,
+        "y": 1122,
+        "w": 30,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1227,
+        "y": 1122,
+        "w": 28,
+        "h": 31
+       },
+       "label": "<button>"
+      }
+     ],
+     "fnExamples": [
+      "<button type=\"button\" class=\"btn bg-info btn-sm\" data-card-widget=\"collapse\">\n                    <i class=\"fas fa-minus\"></i>\n                  </button>",
+      "<button type=\"button\" class=\"btn bg-info btn-sm\" data-card-widget=\"remove\">\n                    <i class=\"fas fa-times\"></i>\n                  </button>",
+      "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\" data-offset=\"-52\">\n                      <i class=\"fas fa-bars\"></i>",
+      "<button type=\"button\" class=\"btn btn-success btn-sm\" data-card-widget=\"collapse\">\n                    <i class=\"fas fa-minus\"></i>\n                  </button>"
+     ],
+     "fnRects": [
+      {
+       "x": 1192.125,
+       "y": 768.78125,
+       "w": 30.25,
+       "h": 31
+      },
+      {
+       "x": 1226.875,
+       "y": 768.78125,
+       "w": 27.625,
+       "h": 31
+      },
+      {
+       "x": 1141.875,
+       "y": 1243.78125,
+       "w": 45.75,
+       "h": 31
+      },
+      {
+       "x": 1192.125,
+       "y": 1243.78125,
+       "w": 30.25,
+       "h": 31
+      },
+      {
+       "x": 1226.875,
+       "y": 1243.78125,
+       "w": 27.625,
+       "h": 31
+      }
+     ],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1192,
+        "y": 713,
+        "w": 30,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1227,
+        "y": 713,
+        "w": 28,
+        "h": 31
+       },
+       "label": "<button>"
+      },
+      {
+       "rect": {
+        "x": 1142,
+        "y": 1122,
+        "w": 46,
+        "h": 31
+       },
+       "label": "<button>"
+      }
+     ]
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 3,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 3,
+     "fpIncomplete": 0,
+     "fpNone": 3,
+     "fpNoneExamples": [
+      {
+       "rect": {
+        "x": 886,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "20"
+      },
+      {
+       "rect": {
+        "x": 1014,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "50"
+      },
+      {
+       "rect": {
+        "x": 1141,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "30"
+      }
+     ],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 886,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "20"
+      },
+      {
+       "rect": {
+        "x": 1014,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "50"
+      },
+      {
+       "rect": {
+        "x": 1141,
+        "y": 1078,
+        "w": 34,
+        "h": 20
+       },
+       "label": "30"
+      }
+     ]
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 88,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 9,
+    "toolPlaceholderOnly": 1,
+    "toolPlaceholderOnlyAxePass": 1
+   },
+   "tool": {
+    "comps": 48,
+    "types": {
+     "button": 23,
+     "nav": 3,
+     "form": 1,
+     "search": 1,
+     "input": 4,
+     "card": 4,
+     "heading": 11,
+     "footer": 1
+    },
+    "pageH": 1576,
+    "ms": 374,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "ボタンの見た目が4種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#007bff / #ffffff / 0 / 16 / -",
+       "#007bff / #ffffff / 4 / 16 / -",
+       "- / #007bff / 3 / 14 / o",
+       "- / #007bff / 0 / 14 / o"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H3の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが35/18pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン12個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が1個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Type Message ...”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューの操作要素がやや多い（約67個）",
+      "detail": "リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が32件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“4 hours” 2.1:1",
+       "“21” 2.1:1",
+       "“6” 3.0:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "12px未満の小さな文字が8箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "操作領域が24px未満の要素が3個",
+      "detail": "WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）",
+      "evidence": [],
+      "fix": "タップ領域は最低24px、可能なら44px以上にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     76,
+     100,
+     66,
+     100,
+     88,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 17,
+     "tool": 23,
+     "tp": 17,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<a class=\"nav-link active\" href=\"#revenue-chart\" data-toggle=\"tab\">Area</a>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a href=\"#\" class=\"page-link\">«</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" class=\"page-link\">1</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" class=\"page-link\">2</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" class=\"page-link\">3</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" class=\"page-link\">»</a>",
+       "kind": "secondary"
+      }
+     ],
+     "fpCount": 6
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-primary\">Send</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-primary float-right\"><i class=\"fas fa-plus\"></i> Add item</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button type=\"button\" class=\"btn btn-primary btn-sm daterange\" title=\"Date range\"> <i class=\"far fa-calendar-alt\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button type=\"button\" class=\"btn btn-primary btn-sm\" data-card-widget=\"collapse\" title=\"Collapse\"> <i class=\"fas fa-minus\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button type=\"button\" class=\"btn btn-success btn-sm dropdown-toggle\" data-toggle=\"dropdown\" data-offset=\"-52\"> <i class=\"fas fa-bars\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button type=\"button\" class=\"btn btn-success btn-sm\" data-card-widget=\"collapse\"> <i class=\"fas fa-minus\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button type=\"button\" class=\"btn btn-success btn-sm\" data-card-widget=\"remove\"> <i class=\"fas fa-times\"></i> </button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-login",
+   "label": "AdminLTE ログイン",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "AdminLTE/pages/examples/login.html",
+   "sha256": "2fc7636a01c7fb19",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 2,
+    "toolPlaceholderOnlyAxePass": 2
+   },
+   "tool": {
+    "comps": 6,
+    "types": {
+     "button": 3,
+     "form": 1,
+     "input": 2
+    },
+    "pageH": 800,
+    "ms": 165,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が2個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Email”",
+       "“Password”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューに「主要ボタン」が3つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“Sign In”",
+       "“Sign in using Facebook”",
+       "“Sign in using Google+”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Sign In” 4.0:1",
+       "“Sign in using…” 4.0:1",
+       "“I forgot my p…” 4.0:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     88,
+     88,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"submit\" class=\"btn btn-primary btn-block\">Sign In</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-block btn-primary\"> <i class=\"fab fa-facebook mr-2\"></i> Sign in using Facebook </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-block btn-danger\"> <i class=\"fab fa-google-plus mr-2\"></i> Sign in using Google+ </a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-register",
+   "label": "AdminLTE 新規登録",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "AdminLTE/pages/examples/register.html",
+   "sha256": "3c7f85863e4d1149",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 4,
+    "toolPlaceholderOnlyAxePass": 4
+   },
+   "tool": {
+    "comps": 8,
+    "types": {
+     "button": 3,
+     "form": 1,
+     "input": 4
+    },
+    "pageH": 800,
+    "ms": 145,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が4個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Full name”",
+       "“Email”",
+       "“Password”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューに「主要ボタン」が3つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“Register”",
+       "“Sign up using Facebook”",
+       "“Sign up using Google+”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“terms” 4.0:1",
+       "“Register” 4.0:1",
+       "“Sign up using…” 4.0:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     88,
+     88,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"submit\" class=\"btn btn-primary btn-block\">Register</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-block btn-primary\"> <i class=\"fab fa-facebook mr-2\"></i> Sign up using Facebook </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-block btn-danger\"> <i class=\"fab fa-google-plus mr-2\"></i> Sign up using Google+ </a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-form",
+   "label": "AdminLTE 入力フォーム",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 19,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 2
+   },
+   "liveH": 2543,
+   "url": "AdminLTE/pages/forms/general.html",
+   "sha256": "112ddf9e6b45573a",
+   "checks": {
+    "contrast": {
+     "axeViolations": 26,
+     "toolDetections": 28,
+     "tp": 26,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 2,
+     "fpIncomplete": 2,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 189,
+        "y": 284,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 710,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 8,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 25,
+    "toolPlaceholderOnly": 12,
+    "toolPlaceholderOnlyAxePass": 12
+   },
+   "tool": {
+    "comps": 84,
+    "types": {
+     "button": 11,
+     "nav": 3,
+     "form": 4,
+     "search": 1,
+     "input": 55,
+     "heading": 9,
+     "footer": 1
+    },
+    "pageH": 2543,
+    "ms": 323,
+    "issues": [
+     {
+      "h": "H3",
+      "sev": 1,
+      "title": "フォームに「戻る／キャンセル」が見当たらない",
+      "detail": "入力欄17個のフォームに、取り消し・戻る導線の文言が見つからない。",
+      "evidence": [],
+      "fix": "途中離脱・戻る導線を明示する（保存して中断、など）。"
+     },
+     {
+      "h": "H3",
+      "sev": 1,
+      "title": "フォームに「戻る／キャンセル」が見当たらない",
+      "detail": "入力欄21個のフォームに、取り消し・戻る導線の文言が見つからない。",
+      "evidence": [],
+      "fix": "途中離脱・戻る導線を明示する（保存して中断、など）。"
+     },
+     {
+      "h": "H4",
+      "sev": 3,
+      "title": "ボタンの見た目が6種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#007bff / #ffffff / 4 / 16 / -",
+       "#ffc107 / #1f2d3d / 5 / 20 / -",
+       "#dc3545 / #ffffff / 4 / 16 / -",
+       "#17a2b8 / #ffffff / 0 / 14 / -"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン5個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が12個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Username”",
+       "“Email”",
+       "“.form-control-lg”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューの操作要素がやや多い（約58個）",
+      "detail": "リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が28件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“6” 3.0:1",
+       "“2” 3.0:1",
+       "“Input Addon” 3.0:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     90,
+     78,
+     100,
+     66,
+     95,
+     88,
+     64,
+     100
+    ],
+    "buttons": {
+     "oracle": 11,
+     "tool": 11,
+     "tp": 11,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"submit\" class=\"btn btn-primary\">Submit</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\"> Action </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-danger\">Action</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-info btn-flat\">Go!</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"submit\" class=\"btn btn-info\">Sign in</button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-table",
+   "label": "AdminLTE データテーブル",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 18,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1724,
+   "url": "AdminLTE/pages/tables/data.html",
+   "sha256": "eb5434fa3b4e2b60",
+   "checks": {
+    "contrast": {
+     "axeViolations": 12,
+     "toolDetections": 26,
+     "tp": 12,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 14,
+     "fpIncomplete": 14,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 189,
+        "y": 284,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 667,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 977,
+        "y": 803,
+        "w": 33,
+        "h": 38
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 14,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 36,
+    "types": {
+     "button": 27,
+     "nav": 3,
+     "search": 2,
+     "heading": 3,
+     "footer": 1
+    },
+    "pageH": 1724,
+    "ms": 275,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 3,
+      "title": "ボタンの見た目が5種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#6c757d / #ffffff / 4 / 16 / -",
+       "#6c757d / #ffffff / 0 / 16 / -",
+       "- / #6c757d / 4 / 16 / o",
+       "#007bff / #ffffff / 0 / 16 / -"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン5個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューの操作要素がやや多い（約58個）",
+      "detail": "リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が26件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“6” 3.0:1",
+       "“2” 3.0:1",
+       "“Version 3.2.0…” 3.2:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     78,
+     100,
+     88,
+     100,
+     88,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 11,
+     "tool": 27,
+     "tp": 11,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"0\" tabindex=\"0\" class=\"page-link\">Previous</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"1\" tabindex=\"0\" class=\"page-link\">1</a>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"2\" tabindex=\"0\" class=\"page-link\">2</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"3\" tabindex=\"0\" class=\"page-link\">3</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"4\" tabindex=\"0\" class=\"page-link\">4</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"5\" tabindex=\"0\" class=\"page-link\">5</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"6\" tabindex=\"0\" class=\"page-link\">6</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"example2\" data-dt-idx=\"7\" tabindex=\"0\" class=\"page-link\">Next</a>",
+       "kind": "secondary"
+      }
+     ],
+     "fpCount": 16
+    },
+    "kindPairs": [
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-copy buttons-html5\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\"><span>Copy</span></button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-csv buttons-html5\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\"><span>CSV</span></button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-excel buttons-html5\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\"><span>Excel</span></button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-pdf buttons-html5\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\"><span>PDF</span></button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-print\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\"><span>Print</span></button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-secondary buttons-collection dropdown-toggle buttons-colvis\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\" aria-haspopup="
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-projects",
+   "label": "AdminLTE プロジェクト一覧",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 18,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1718,
+   "url": "AdminLTE/pages/examples/projects.html",
+   "sha256": "94357a7e07328dac",
+   "checks": {
+    "contrast": {
+     "axeViolations": 37,
+     "toolDetections": 39,
+     "tp": 37,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 2,
+     "fpIncomplete": 2,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 189,
+        "y": 284,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 537,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 41,
+    "types": {
+     "button": 34,
+     "nav": 3,
+     "search": 1,
+     "heading": 2,
+     "footer": 1
+    },
+    "pageH": 1718,
+    "ms": 268,
+    "issues": [
+     {
+      "h": "H5",
+      "sev": 3,
+      "title": "破壊的な操作が主要操作のすぐ隣にある",
+      "detail": "「削除」「空にする」などと「申請する」「注文へ進む」が16px未満の間隔で並んでおり、誤クリックしやすい。",
+      "evidence": [
+       "“Delete” ／ “View”（0px）",
+       "“Delete” ／ “Edit”（0px）"
+      ],
+      "fix": "破壊的操作は主要操作から離す（余白24px以上・位置を分ける）か、色を弱め、実行前に確認ダイアログを置く。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン5個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H8",
+      "sev": 3,
+      "title": "ファーストビューに「主要ボタン」が21つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“View”",
+       "“Edit”",
+       "“Delete”",
+       "“View”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H8",
+      "sev": 3,
+      "title": "ファーストビューの操作要素が多い（約99個）",
+      "detail": "リンク・ボタン・入力欄が非常に多く、視覚的に煩雑になりやすい。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が39件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“6” 3.0:1",
+       "“2” 3.0:1",
+       "“Edit” 3.0:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     78,
+     88,
+     100,
+     56,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 34,
+     "tool": 34,
+     "tp": 34,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-sm\" href=\"#\"> <i class=\"fas fa-folder\"> </i> View </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-info btn-sm\" href=\"#\"> <i class=\"fas fa-pencil-alt\"> </i> Edit </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-invoice",
+   "label": "AdminLTE 請求書",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 18,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1718,
+   "url": "AdminLTE/pages/examples/invoice.html",
+   "sha256": "e0e60fa8ccc30caf",
+   "checks": {
+    "contrast": {
+     "axeViolations": 12,
+     "toolDetections": 14,
+     "tp": 12,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 2,
+     "fpIncomplete": 2,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 189,
+        "y": 284,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 537,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 14,
+    "types": {
+     "button": 8,
+     "nav": 3,
+     "search": 1,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1718,
+    "ms": 269,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン5個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューの操作要素がやや多い（約50個）",
+      "detail": "リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が14件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“6” 3.0:1",
+       "“2” 3.0:1",
+       "“Submit Payment” 3.1:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     88,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 8,
+     "tool": 8,
+     "tp": 8,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-success float-right\"><i class=\"far fa-credit-card\"></i> Submit Payment </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button type=\"button\" class=\"btn btn-primary float-right\" style=\"margin-right: 5px;\"> <i class=\"fas fa-download\"></i> Generate PDF </button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "al-mailbox",
+   "label": "AdminLTE メールボックス",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 20,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#\" class=\"nav-link\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1429,
+   "url": "AdminLTE/pages/mailbox/mailbox.html",
+   "sha256": "7589cc0381c0999a",
+   "checks": {
+    "contrast": {
+     "axeViolations": 27,
+     "toolDetections": 29,
+     "tp": 27,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 2,
+     "fpIncomplete": 2,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 189,
+        "y": 284,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 209,
+        "y": 537,
+        "w": 17,
+        "h": 18
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 21,
+     "toolDetections": 21,
+     "tp": 21,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 15,
+    "axeLabelViolations": 15,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 34,
+    "types": {
+     "button": 22,
+     "nav": 5,
+     "search": 2,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 1429,
+    "ms": 234,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン21個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H8",
+      "sev": 3,
+      "title": "ファーストビューの操作要素が多い（約84個）",
+      "detail": "リンク・ボタン・入力欄が非常に多く、視覚的に煩雑になりやすい。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が29件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“6” 3.0:1",
+       "“2” 3.0:1",
+       "“Version 3.2.0…” 3.2:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     78,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 22,
+     "tool": 22,
+     "tp": 22,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"compose.html\" class=\"btn btn-primary btn-block mb-3\">Compose</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "heroic",
+   "label": "ヒーロー型トップ",
+   "kind": "ランディング",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#!\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1460,
+   "url": "heroic-features/dist/index.html",
+   "sha256": "a8cca06e6383361e",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 16,
+    "types": {
+     "button": 1,
+     "nav": 1,
+     "card": 6,
+     "heading": 7,
+     "footer": 1
+    },
+    "pageH": 1460,
+    "ms": 106,
+    "issues": [],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-lg\" href=\"#!\">Call to action</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "biz-front",
+   "label": "企業トップ",
+   "kind": "ランディング",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#!\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 3488,
+   "url": "business-frontpage/dist/index.html",
+   "sha256": "59d2bbdb550baa2a",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 23,
+    "types": {
+     "button": 6,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "card": 3,
+     "heading": 7,
+     "footer": 1
+    },
+    "pageH": 3488,
+    "ms": 127,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "ボタンの見た目が4種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#0d6efd / #ffffff / 8 / 20 / -",
+       "- / #f8f9fa / 8 / 20 / o",
+       "- / #0d6efd / 6 / 16 / o",
+       "#0d6efd / #ffffff / 6 / 16 / -"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H2の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが24/32pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Submit” 2.6:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     76,
+     100,
+     100,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 6,
+     "tool": 6,
+     "tp": 6,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-lg disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-lg px-4 me-sm-3\" href=\"#features\">Get Started</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-light btn-lg px-4\" href=\"#!\">Learn More</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"#!\">Choose plan</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "coming",
+   "label": "公開準備ページ",
+   "kind": "ランディング",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "coming-soon/dist/index.html",
+   "sha256": "ac0f46c618cfa413",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 3,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 3,
+     "fpIncomplete": 3,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 128,
+        "y": 232,
+        "w": 464,
+        "h": 112
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 128,
+        "y": 368,
+        "w": 464,
+        "h": 94
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 464,
+        "y": 510,
+        "w": 128,
+        "h": 58
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 8,
+    "types": {
+     "button": 4,
+     "form": 1,
+     "input": 1,
+     "media": 1,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 212,
+    "issues": [
+     {
+      "h": "H3",
+      "sev": 2,
+      "title": "自動再生・自動スクロールがある",
+      "detail": "動画の自動再生やmarqueeは、ユーザーが制御できない動きになる。",
+      "evidence": [],
+      "fix": "自動再生をやめるか、一時停止・停止の手段を提供する。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン3個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が3件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Our Website i…” 1.0:1",
+       "“We're working…” 1.0:1",
+       "“NOTIFY ME!” 3.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     88,
+     100,
+     100,
+     88,
+     95,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 4,
+     "tool": 4,
+     "tp": 4,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary disabled\" id=\"submitButton\" type=\"submit\">Notify Me!</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark m-3\" href=\"#!\"><i class=\"fab fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark m-3\" href=\"#!\"><i class=\"fab fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark m-3\" href=\"#!\"><i class=\"fab fa-instagram\"></i></a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "new-age",
+   "label": "アプリ紹介",
+   "kind": "ランディング",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 1,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#!\">FAQ</a>",
+    "longForms": 0
+   },
+   "liveH": 3393,
+   "url": "new-age/dist/index.html",
+   "sha256": "7c865619b3c53cbc",
+   "checks": {
+    "contrast": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 21,
+    "types": {
+     "button": 2,
+     "banner": 1,
+     "nav": 1,
+     "image": 6,
+     "media": 2,
+     "heading": 8,
+     "footer": 1
+    },
+    "pageH": 3393,
+    "ms": 173,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H3",
+      "sev": 2,
+      "title": "自動再生・自動スクロールがある",
+      "detail": "動画の自動再生やmarqueeは、ユーザーが制御できない動きになる。",
+      "evidence": [],
+      "fix": "自動再生をやめるか、一時停止・停止の手段を提供する。"
+     },
+     {
+      "h": "H4",
+      "sev": 2,
+      "title": "H2の文字サイズが揃っていない",
+      "detail": "同じ階層の見出しで文字サイズが56/80/32pxとばらついている。",
+      "evidence": [],
+      "fix": "見出し階層ごとに文字サイズを固定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が2件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Launch your m…” 4.4:1",
+       "“This section …” 4.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     88,
+     88,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 2,
+     "tool": 2,
+     "tp": 2,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary rounded-pill px-3 mb-2 mb-lg-0\" data-bs-toggle=\"modal\" data-bs-target=\"#feedbackModal\"> <span class=\"d-flex align-items"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-light py-3 px-4 rounded-pill\" href=\"https://startbootstrap.com/theme/new-age\" target=\"_blank\">Download for free</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sidebar",
+   "label": "サイドバー付きレイアウト",
+   "kind": "業務システム",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "simple-sidebar/dist/index.html",
+   "sha256": "41b427160e1d898c",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 4,
+    "types": {
+     "button": 2,
+     "nav": 1,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 70,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 2,
+     "tool": 2,
+     "tp": 2,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary\" id=\"sidebarToggle\">Toggle Menu</button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "scrolling",
+   "label": "スクロールナビ",
+   "kind": "ランディング",
+   "set": "holdout2",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": true,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#contact\">Contact</a>",
+    "longForms": 0
+   },
+   "liveH": 1975,
+   "url": "scrolling-nav/dist/index.html",
+   "sha256": "fe80e2ae9d0942bd",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 7,
+    "types": {
+     "button": 1,
+     "nav": 1,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 1975,
+    "ms": 72,
+    "issues": [],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "secondary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-lg btn-light\" href=\"#about\">Start scrolling!</a>"
+     }
+    ]
    }
   }
  ]
