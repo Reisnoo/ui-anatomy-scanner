@@ -291,6 +291,7 @@ th { color:var(--muted); font-weight:600; }
       <button role="tab" aria-selected="false" data-tab="cmp">⑤ 比較</button>
       <button role="tab" aria-selected="false" data-tab="multi">⑥ ペルソナ</button>
       <button role="tab" aria-selected="false" data-tab="resp">⑦ 画面幅</button>
+      <button role="tab" aria-selected="false" data-tab="kp">⑧ Where・When・Why</button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -700,6 +701,7 @@ const S = {
   versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false}, multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
+  kp:[], kpSel:null, kpSeq:0,
 };
 const frame = $('#frame'), frameLens = $('#frameLens'), frameCmp = $('#frameCmp');
 
@@ -804,6 +806,81 @@ async function analyzeAllScreens(){
   await selectScreen(keep==null?null:keep);
   S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
   toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑤比較→履歴で、画面どうしを比べられます`);
+}
+
+/* ------------------------------------------------------------
+   ⑧ Where・When・Why（キーポイントの記録）
+   docs/keypoint_codebook_v1 の定義に合わせる。
+   Where＝対象のUI要素、When＝画面、Why＝理由（自由記述を先に書き、そのあとコードを割り当てる）。
+   ------------------------------------------------------------ */
+const KP_WHY = [
+  ['R01','位置が画面ごとに変わるため、再探索が生じる'],
+  ['R02','類似した要素が多く、目的の要素を見分けにくい'],
+  ['R03','非機能の要素に注意が分散する'],
+  ['R04','同じ役割の要素の見た目が画面ごとに異なる'],
+  ['R05','現在地の表示が低コントラストで判別しにくい'],
+  ['R99','上記に当てはまらない（自由記述を必ず残す）'],
+];
+const KP_COLS = ['unit_id','condition','technique','screen','where_id','where_html_detail','unit_note','keypoint_id','why_free_text','why_code','indicator_evidence','evidence_status','video_checked','coder_id','status','notes'];
+function kpLoad(){ try{ const a=JSON.parse(localStorage.getItem('uas-keypoints')||'[]'); if(Array.isArray(a)){ S.kp=a.filter(r=>r&&r.id&&r.where).slice(0,500); S.kpSeq=S.kp.reduce((m,r)=>Math.max(m,parseInt(String(r.id).slice(1))||0),0); } }catch(e){} }
+function kpSave(){ try{ localStorage.setItem('uas-keypoints', JSON.stringify(S.kp)); }catch(e){ if(!S._kpWarned){ toast('容量の都合で記録を保存できません（このタブを開いている間は使えます）'); S._kpWarned=true; } } }
+const kpCurWhen = () => (S.src&&S.src.screen) || (S.screens ? '初期表示' : '単一画面');
+const kpRows = () => S.kp.filter(r=>r.source===S.sourceName);
+function kpWhereFromComp(c){ return {type:c.type, label:String(c.label||'').slice(0,40), sel:c.el?selHint(c.el):'', rect:{x:Math.round(c.rect.x),y:Math.round(c.rect.y),w:Math.round(c.rect.w),h:Math.round(c.rect.h)}}; }
+function kpCompAt(r){ let best=null, ba=0; S.comps.forEach(c=>{ const w=Math.min(c.rect.x+c.rect.w,r.x+r.w)-Math.max(c.rect.x,r.x), h=Math.min(c.rect.y+c.rect.h,r.y+r.h)-Math.max(c.rect.y,r.y); if(w>0&&h>0&&w*h>ba){ ba=w*h; best=c; } }); return best; }
+function kpAdd(row){ S.kp.push({id:'k'+(++S.kpSeq), source:S.sourceName, status:'記入済み', whyCode:'', whyText:'', origin:'manual', ...row}); }
+function kpAddFromForm(){
+  const c=S.comps.find(x=>x.id===($('#kpWhere')||{}).value); if(!c){ toast('Where（要素）を選んでください'); return; }
+  const why=(($('#kpWhy')||{}).value||'').trim(); if(!why){ toast('Why（理由）を、先に自由記述で書いてください'); return; }
+  kpAdd({where:kpWhereFromComp(c), when:($('#kpWhen')||{}).value||kpCurWhen(), whyText:why, whyCode:($('#kpCode')||{}).value||''});
+  kpSave(); S.kpSel=S.kp[S.kp.length-1].id; renderPanel(); renderOverlay(); toast('キーポイントを追加しました');
+}
+function kpDraftFromIssues(){
+  const have=new Set(kpRows().filter(r=>r.origin==='issue').map(r=>r.issueKey)), when=kpCurWhen(); let n=0;
+  S.issues.filter(i=>i.auto && isActive(i) && i.rects.length).forEach(is=>{
+    const key=is.h+'|'+is.title+'|'+when; if(have.has(key)) return;
+    const c=kpCompAt(is.rects[0]);
+    kpAdd({where: c?kpWhereFromComp(c):{type:'other',label:'',sel:(is.evidence[0]||''),rect:{x:Math.round(is.rects[0].x),y:Math.round(is.rects[0].y),w:Math.round(is.rects[0].w),h:Math.round(is.rects[0].h)}}, when, whyText:is.title+'（'+is.h+'）', status:'下書き', origin:'issue', issueKey:key, technique:is.h});
+    n++;
+  });
+  kpSave(); S.kpSel=null; renderPanel(); renderOverlay(); toast(n?`指摘から${n}件の下書きを作りました。Whyを確認・修正してください`:'追加できる指摘がありません');
+}
+function kpWhereId(w){ return 'W-'+w.type; }
+function kpCSV(){
+  const q=v=>{ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+  const rows=kpRows().map((r,i)=>({unit_id:'K'+String(i+1).padStart(2,'0'), condition:'', technique:r.technique||'', screen:r.when, where_id:kpWhereId(r.where), where_html_detail:[r.where.sel,r.where.label].filter(Boolean).join(' '), unit_note:'', keypoint_id:'KP'+String(i+1).padStart(2,'0'), why_free_text:r.whyText, why_code:r.whyCode, indicator_evidence:'', evidence_status:'', video_checked:'', coder_id:'', status:r.status, notes:''}));
+  return '﻿'+KP_COLS.join(',')+'\n'+rows.map(r=>KP_COLS.map(c=>q(r[c])).join(',')).join('\n')+'\n';
+}
+function kpMD(){
+  const d=new Date().toISOString().slice(0,10), rs=kpRows();
+  return `# Where・When・Why の記録：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 定義: Where＝対象のUI要素／When＝画面／Why＝理由（自由記述→コード）\n\n| # | Where | When | Why | コード | 状態 |\n|---|---|---|---|---|---|\n`+rs.map((r,i)=>`| ${i+1} | ${GTYPE_JA[r.where.type]||r.where.type}${r.where.label?'「'+r.where.label.replace(/\|/g,'／')+'」':''} | ${r.when} | ${(r.whyText||'').replace(/\|/g,'／').replace(/\n/g,' ')} | ${r.whyCode||'—'} | ${r.status} |`).join('\n')+'\n';
+}
+function panelKp(){
+  const rs=kpRows(), others=S.kp.length-rs.length, cur=kpCurWhen();
+  const whens=[cur, ...(S.screens?S.screens.items.map(s=>s.label):[]), '全画面'].filter((v,i,a)=>a.indexOf(v)===i);
+  const comps=S.comps.slice(0,300);
+  let h=`<div class="sec"><div class="tiles"><div class="tile"><b>Where</b><span>どの要素（対象のUI要素）</span></div><div class="tile"><b>When</b><span>どの画面（画面の単位）</span></div><div class="tile"><b>Why</b><span>なぜ（自由記述→コード）</span></div></div></div>
+    <div class="sec"><h3>キーポイントを追加</h3>
+    <div class="row" style="flex-wrap:wrap;gap:6px"><label style="font-size:12px;flex:1 1 100%">Where（要素）<select id="kpWhere" style="width:100%">${comps.map(c=>`<option value="${c.id}">${esc((TYPES[c.type]||{}).ja||c.type)}「${esc(String(c.label||'').slice(0,28))}」（y=${Math.round(c.rect.y)}）</option>`).join('')}</select></label>
+    <label style="font-size:12px;flex:1 1 100%">When（画面）<select id="kpWhen" style="width:100%">${whens.map(w=>`<option value="${esc(w)}">${esc(w)}</option>`).join('')}</select></label>
+    <label style="font-size:12px;flex:1 1 100%">Why（理由）：<b>先に自由記述で書き、そのあとコードを選びます</b><textarea id="kpWhy" rows="2" style="width:100%" placeholder="例）ボタンの位置が画面ごとに変わり、探し直している"></textarea></label>
+    <label style="font-size:12px;flex:1 1 100%">Whyのコード（コードブック v1 草案）<select id="kpCode" style="width:100%"><option value="">（あとで選ぶ）</option>${KP_WHY.map(([c,t])=>`<option value="${c}">${c}　${esc(t)}</option>`).join('')}</select></label>
+    <button class="btn" id="kpAdd">追加する</button><button class="btn ghost" id="kpDraft" title="いまの画面の、自動で見つかった指摘を、キーポイントの下書きにします">指摘から下書きを作る</button></div></div>`;
+  h+=`<div class="sec"><h3>記録（${rs.length}件）</h3>`;
+  if(!rs.length) h+=`<p class="hint">まだありません。上のフォームで追加するか、「指摘から下書きを作る」を押してください。</p>`;
+  rs.forEach((r,i)=>{ const sel=S.kpSel===r.id?' sel':'';
+    h+=`<div class="issue${sel}" data-kp-row="${r.id}"><div class="ttl"><span class="badge-manual">${i+1}</span><span>${esc((TYPES[r.where.type]||{}).ja||r.where.type)}${r.where.label?'「'+esc(r.where.label)+'」':''}</span><span class="hint" style="margin-left:auto">${esc(r.status)}</span></div>
+      <div class="ev"><b>Where</b>：<code>${esc(kpWhereId(r.where))}</code>${r.where.sel?' <code>'+esc(r.where.sel)+'</code>':''}　<b>When</b>：${esc(r.when)}</div>
+      <label style="font-size:12px;display:block;margin-top:4px">Why（自由記述）<textarea data-kp="${r.id}" data-f="whyText" rows="2" style="width:100%">${esc(r.whyText)}</textarea></label>
+      <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:4px"><label style="font-size:12px">コード <select data-kp="${r.id}" data-f="whyCode"><option value="">（未選択）</option>${KP_WHY.map(([c,t])=>`<option value="${c}" ${r.whyCode===c?'selected':''}>${c}　${esc(t.slice(0,18))}…</option>`).join('')}</select></label>
+      <label style="font-size:12px">状態 <select data-kp="${r.id}" data-f="status">${['下書き','記入済み','確認済み'].map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select></label>
+      <button class="mini" data-kp-show="${r.id}">ステージで見る</button><button class="mini" data-kp-del="${r.id}">削除</button></div></div>`; });
+  h+=`</div>`;
+  if(rs.length) h+=`<div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn" id="kpCsv">CSVを保存</button><button class="btn ghost" id="kpMd">Markdownをコピー</button><button class="btn ghost" id="kpClear">このページの記録を削除</button></div>
+    <p class="hint">CSVの列は、コードブックの記録シート（keypoint_record_sheet_v1.csv）と同じです。条件・根拠指標・映像の確認・コーダーは空欄で、あとから記入します。</p>`;
+  if(others>0) h+=`<p class="hint">ほかのページの記録が${others}件、このブラウザに保存されています。</p>`;
+  h+=`<p class="hint">Whyのコードは、探索UIの実験用に作ったコードブック v1 の草案です。ほかのUIでは、「R99（その他）」と自由記述を使ってください。Whyは、解釈の深い符号のため、複数人で付けて一致度を確認する前提です。</p>`;
+  return h;
 }
 
 async function loadHTML(html, name, baseHref, opt={}){
@@ -916,6 +993,13 @@ function renderOverlay(){
       const r0 = is.rects[0];
       const px = clamp(r0.x+r0.w-10, 12, PAGE_W-34), py = Math.max(12, r0.y+2);
       g.push(`<g class="pin" data-issue="${is.id}"><circle cx="${px}" cy="${py+10}" r="${sel?16:12}" fill="${colHex}" stroke="#fff" stroke-width="2"/><text x="${px}" y="${py+14}" font-size="${sel?11:9}" text-anchor="middle" fill="#fff" font-weight="600">${is.h==='SUP'?'A':is.h}</text></g>`);
+    });
+  }
+  if(S.tab==='kp'){
+    const when=kpCurWhen();
+    kpRows().filter(r=>r.when===when||r.when==='全画面').forEach((r,i)=>{
+      const sel=S.kpSel===r.id, w=r.where.rect, col=sel?'#7E22CE':'#2563EB';
+      g.push(`<rect x="${w.x-3}" y="${w.y-3}" width="${w.w+6}" height="${w.h+6}" fill="${col}" fill-opacity="${sel?.14:.05}" stroke="${col}" stroke-width="${sel?4:2}" stroke-dasharray="8 4" rx="3"/><circle cx="${w.x+10}" cy="${w.y+10}" r="12" fill="${col}" stroke="#fff" stroke-width="2"/><text x="${w.x+10}" y="${w.y+14}" font-size="11" text-anchor="middle" fill="#fff" font-weight="600">${S.kp.filter(k=>k.source===S.sourceName).indexOf(r)+1}</text>`);
     });
   }
   if(S.show.path && S.gaze.fix.length){
@@ -1621,6 +1705,7 @@ const LEAD = {
   cmp:'Beforeに保存した画面と、いまの画面の差を見ます。',
   multi:'ペルソナによって、見え方がどう分かれるかを見ます。',
   resp:'画面幅（スマホ〜大画面）で、指摘と視線がどう変わるかを見ます。',
+  kp:'どの要素（Where）が、どの画面（When）で、なぜ（Why）気になるかを、1件ずつ記録します。',
   multiEdit:'重みと視覚特性を決めて、自分のペルソナを保存します。',
   cmpHist:'バージョンを順に並べて、何がいつ良くなり、どこで後退したかを見ます。',
 };
@@ -1629,7 +1714,7 @@ new MutationObserver(()=>{ $$('#panelBody h3:not([aria-level])').forEach(h=>h.se
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
-  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : panelGaze());
+  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : S.tab==='kp'?panelKp() : panelGaze());
 }
 
 function panelComps(){ return (S.imageMode?panelOcr():'')+panelCompsBase(); }
@@ -3060,6 +3145,13 @@ document.addEventListener('click', e=>{
   const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
   if(t.dataset.scr!==undefined){ selectScreen(t.dataset.scr==='all'?null:+t.dataset.scr); return; }
   if(t.id==='scrAll'){ analyzeAllScreens(); return; }
+  if(t.id==='kpAdd'){ kpAddFromForm(); return; }
+  if(t.id==='kpDraft'){ kpDraftFromIssues(); return; }
+  if(t.id==='kpCsv'){ const blob=new Blob([kpCSV()],{type:'text/csv'}), a2=document.createElement('a'); a2.href=URL.createObjectURL(blob); a2.download='keypoints-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a2.click(); setTimeout(()=>URL.revokeObjectURL(a2.href),30000); toast('CSVを保存しました'); return; }
+  if(t.id==='kpMd'){ navigator.clipboard.writeText(kpMD()).then(()=>toast('Markdownをコピーしました'),()=>toast('コピーに失敗しました')); return; }
+  if(t.id==='kpClear'){ if(confirm('このページの記録をすべて削除します。よろしいですか？')){ S.kp=S.kp.filter(r=>r.source!==S.sourceName); S.kpSel=null; kpSave(); renderPanel(); renderOverlay(); } return; }
+  if(t.dataset.kpDel){ S.kp=S.kp.filter(r=>r.id!==t.dataset.kpDel); if(S.kpSel===t.dataset.kpDel) S.kpSel=null; kpSave(); renderPanel(); renderOverlay(); return; }
+  if(t.dataset.kpShow){ const r=S.kp.find(x=>x.id===t.dataset.kpShow); if(r){ S.kpSel=r.id; scrollToRect(r.where.rect); renderPanel(); renderOverlay(); } return; }
   if(t.matches('.seg button')){ S.srcMode=t.dataset.src; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b===t)); renderSrc(); return; }
   if(t.matches('.tabs button')){
     S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens', multi:S.tab==='multi'});
@@ -3153,6 +3245,7 @@ document.addEventListener('change', e=>{
   else if(t.id==='imgFile'){ const f=t.files&&t.files[0]; t.value=''; loadShotFile(f); }
   else if(t.id==='ocrLang'){ S.ocrOpt.langs=t.value; }
   else if(t.id==='ocrDpr'){ S.ocrOpt.dpr=t.value; }
+  else if(t.dataset.kp){ const r=S.kp.find(x=>x.id===t.dataset.kp); if(r){ r[t.dataset.f]=t.value; if(t.dataset.f==='whyText' && r.status==='下書き' && t.value.trim()) r.status='記入済み'; kpSave(); renderPanel(); } }
   else if(t.id==='scrReveal'){ S.screenReveal=t.checked; if(S.screenIdx!=null) selectScreen(S.screenIdx); }
   else if(t.id==='vpSel'){ if(t.value==='custom'){ S.vp='custom'; renderVpUI(); } else setViewport(t.value); }
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
@@ -3229,7 +3322,7 @@ function toggleTheme(){ const d=document.documentElement; const next=d.dataset.t
 (function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').innerHTML=ico(t==='dark'?'sun':'moon',18); })();
 
 /* 起動 */
-initPersonas(); initHistory(); loadRep();
+initPersonas(); initHistory(); kpLoad(); loadRep();
 renderSrc(); renderVpUI();
 renderPanel();
 (function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name).then(checkShareHash); })();
