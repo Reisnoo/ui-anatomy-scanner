@@ -548,7 +548,7 @@ function setStatus(msg, err=false){ const el=$('#status'); el.textContent=msg; e
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),1800); }
 
 function prepareHTML(html, baseHref){
-  const inject = `<meta charset="utf-8">${baseHref?`<base href="${esc(baseHref)}">`:''}<style>*{animation:none!important;transition:none!important;caret-color:transparent!important}html{overflow:hidden!important}</style>`;
+  const inject = `<meta charset="utf-8">${baseHref?`<base href="${esc(baseHref)}">`:''}<style>*{transition:none!important;caret-color:transparent!important}html{overflow:hidden!important}</style>`;
   if(/<head[^>]*>/i.test(html)) return html.replace(/<head[^>]*>/i, m=>m+inject);
   return inject + html;
 }
@@ -694,6 +694,8 @@ let D = null; // 解析コンテキスト (doc, win, 補助関数)
 
 function runAnalysis(){
   const doc = frame.contentDocument, win = frame.contentWindow;
+  // CSSアニメーションは終了状態まで進めてから解析する（「基本はopacity:0、アニメーションで表示」という作りの要素を、透明のまま固めないため）。繰り返し（infinite）は取り消して基本スタイルに戻す
+  try{ doc.getAnimations().forEach(a=>{ try{ a.finish(); }catch(_){ try{ a.cancel(); }catch(__){} } }); }catch(_){}
   const H = S.anaH || S.frameH;
   const cs = el => win.getComputedStyle(el);
   const cls = el => (el.getAttribute && el.getAttribute('class')) || '';

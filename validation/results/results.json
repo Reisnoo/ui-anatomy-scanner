@@ -1,9 +1,9 @@
 {
  "meta": {
-  "date": "2026-10-21T03:22:48.322Z",
+  "date": "2026-10-21T03:32:09.598Z",
   "axeCore": "4.14.0",
   "playwright": "1.56.1",
-  "toolCommit": "2f1232d0571ecd52f5e85aef3d52a0e43fdb1729",
+  "toolCommit": "83caa7d5ead293a7cb6af1448be7adc82d4e94f0",
   "mode": "corpus (offline stubs)",
   "stubs": {
    "npm": 151,
@@ -137,7 +137,7 @@
      "footer": 1
     },
     "pageH": 1405,
-    "ms": 143,
+    "ms": 154,
     "issues": [
      {
       "h": "H10",
@@ -215,7 +215,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -315,7 +316,7 @@
      "footer": 1
     },
     "pageH": 1549,
-    "ms": 144,
+    "ms": 159,
     "issues": [
      {
       "h": "H10",
@@ -378,7 +379,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -474,7 +476,7 @@
      "footer": 1
     },
     "pageH": 3252,
-    "ms": 152,
+    "ms": 135,
     "issues": [
      {
       "h": "H1",
@@ -514,7 +516,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -623,7 +626,7 @@
      "footer": 1
     },
     "pageH": 1665,
-    "ms": 246,
+    "ms": 248,
     "issues": [
      {
       "h": "H6",
@@ -699,7 +702,8 @@
       "got": "primary",
       "html": "<a href=\"#\" class=\"d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm\"><i class=\"fas fa-download fa-sm text-white-50\"></i> Generate Report</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -795,7 +799,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 120,
+    "ms": 111,
     "issues": [
      {
       "h": "H6",
@@ -876,7 +880,8 @@
       "got": "primary",
       "html": "<a href=\"index.html\" class=\"btn btn-primary btn-user btn-block\"> Login </a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -972,7 +977,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 106,
+    "ms": 92,
     "issues": [
      {
       "h": "H6",
@@ -1062,7 +1067,8 @@
       "got": "primary",
       "html": "<a href=\"login.html\" class=\"btn btn-primary btn-user btn-block\"> Register Account </a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -1189,7 +1195,7 @@
      "footer": 1
     },
     "pageH": 1089,
-    "ms": 196,
+    "ms": 199,
     "issues": [
      {
       "h": "H6",
@@ -1288,7 +1294,8 @@
       "got": "icon",
       "html": "<button class=\"btn btn-primary\" type=\"button\"> <i class=\"fas fa-search fa-sm\"></i> </button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -1396,7 +1403,7 @@
      "footer": 1
     },
     "pageH": 1111,
-    "ms": 216,
+    "ms": 186,
     "issues": [
      {
       "h": "H4",
@@ -1616,7 +1623,8 @@
       "got": "primary",
       "html": "<a href=\"#\" class=\"btn btn-primary btn-icon-split btn-lg\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-flag\"></i> </span> <span class=\"text\">Sp"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -1717,7 +1725,7 @@
      "footer": 1
     },
     "pageH": 3812,
-    "ms": 179,
+    "ms": 178,
     "issues": [
      {
       "h": "H6",
@@ -1788,7 +1796,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary\" href=\"#signup\">Sign Up</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -1898,7 +1907,7 @@
      "footer": 1
     },
     "pageH": 6140,
-    "ms": 223,
+    "ms": 207,
     "issues": [
      {
       "h": "H1",
@@ -2034,7 +2043,8 @@
       "got": "icon",
       "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"LinkedIn\"><i class=\"fab fa-linkedin-in\"></i></a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -2135,7 +2145,7 @@
      "footer": 1
     },
     "pageH": 3386,
-    "ms": 155,
+    "ms": 194,
     "issues": [
      {
       "h": "H1",
@@ -2226,7 +2236,8 @@
       "got": "icon",
       "html": "<a class=\"btn btn-outline-light btn-social mx-1\" href=\"#!\"><i class=\"fab fa-fw fa-dribbble\"></i></a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -2323,7 +2334,7 @@
      "footer": 1
     },
     "pageH": 1906,
-    "ms": 112,
+    "ms": 104,
     "issues": [
      {
       "h": "H1",
@@ -2372,7 +2383,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary text-uppercase\" href=\"#!\">Older Posts →</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -2470,7 +2482,7 @@
      "footer": 1
     },
     "pageH": 1455,
-    "ms": 92,
+    "ms": 128,
     "issues": [
      {
       "h": "H1",
@@ -2527,7 +2539,8 @@
       "got": "primary",
       "html": "<button class=\"btn btn-primary text-uppercase disabled\" id=\"submitButton\" type=\"submit\">Send</button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -2624,7 +2637,7 @@
      "footer": 1
     },
     "pageH": 2365,
-    "ms": 157,
+    "ms": 141,
     "issues": [
      {
       "h": "H1",
@@ -2675,7 +2688,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -2771,7 +2785,7 @@
      "heading": 6
     },
     "pageH": 1194,
-    "ms": 88,
+    "ms": 95,
     "issues": [
      {
       "h": "H5",
@@ -2868,7 +2882,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -2965,7 +2980,7 @@
      "footer": 1
     },
     "pageH": 966,
-    "ms": 101,
+    "ms": 119,
     "issues": [
      {
       "h": "H1",
@@ -3023,7 +3038,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -3121,7 +3137,7 @@
      "footer": 1
     },
     "pageH": 1276,
-    "ms": 100,
+    "ms": 140,
     "issues": [
      {
       "h": "H1",
@@ -3178,7 +3194,8 @@
       "got": "primary",
       "html": "<button class=\"btn btn-primary btn-lg disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -3274,7 +3291,7 @@
      "footer": 1
     },
     "pageH": 1285,
-    "ms": 97,
+    "ms": 125,
     "issues": [
      {
       "h": "H1",
@@ -3317,7 +3334,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -3415,7 +3433,7 @@
      "footer": 1
     },
     "pageH": 1596,
-    "ms": 121,
+    "ms": 97,
     "issues": [
      {
       "h": "H1",
@@ -3453,7 +3471,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-lg btn-primary\" href=\"#!\">Contact us</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -3551,7 +3570,7 @@
      "footer": 1
     },
     "pageH": 1918,
-    "ms": 130,
+    "ms": 151,
     "issues": [
      {
       "h": "H1",
@@ -3605,7 +3624,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -3783,7 +3803,7 @@
      "footer": 1
     },
     "pageH": 2105,
-    "ms": 186,
+    "ms": 189,
     "issues": [
      {
       "h": "H1",
@@ -3862,7 +3882,8 @@
       "got": "icon",
       "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -3960,7 +3981,7 @@
      "footer": 1
     },
     "pageH": 1992,
-    "ms": 123,
+    "ms": 120,
     "issues": [
      {
       "h": "H1",
@@ -4039,7 +4060,8 @@
       "got": "icon",
       "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -4136,7 +4158,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 77,
+    "ms": 74,
     "issues": [
      {
       "h": "H7",
@@ -4202,7 +4224,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary\" href=\"index.html\">Login</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -4299,7 +4322,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 78,
+    "ms": 70,
     "issues": [
      {
       "h": "H7",
@@ -4365,7 +4388,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary btn-block\" href=\"login.html\">Create Account</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -4542,7 +4566,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 90,
+    "ms": 97,
     "issues": [
      {
       "h": "H1",
@@ -4621,7 +4645,8 @@
       "got": "icon",
       "html": "<button class=\"btn btn-primary\" id=\"btnNavbarSearch\" type=\"button\"><i class=\"fas fa-search\"></i></button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -4722,7 +4747,7 @@
      "footer": 1
     },
     "pageH": 6896,
-    "ms": 181,
+    "ms": 163,
     "issues": [
      {
       "h": "H1",
@@ -4809,7 +4834,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-light btn-xl\" href=\"https://startbootstrap.com/theme/creative/\">Download Now!</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -4910,7 +4936,7 @@
      "footer": 1
     },
     "pageH": 7290,
-    "ms": 151,
+    "ms": 153,
     "issues": [
      {
       "h": "H1",
@@ -4987,7 +5013,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary\" href=\"#about\">Get Started</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -5082,7 +5109,7 @@
      "heading": 12
     },
     "pageH": 12000,
-    "ms": 165,
+    "ms": 153,
     "issues": [
      {
       "h": "H10",
@@ -5126,7 +5153,8 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
    }
   },
   {
@@ -5223,7 +5251,7 @@
      "footer": 1
     },
     "pageH": 2298,
-    "ms": 101,
+    "ms": 100,
     "issues": [
      {
       "h": "H1",
@@ -5288,7 +5316,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary btn-xl rounded-pill mt-5\" href=\"#scroll\">Learn More</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -5386,7 +5415,7 @@
      "footer": 1
     },
     "pageH": 1024,
-    "ms": 88,
+    "ms": 101,
     "issues": [],
     "scores": [
      100,
@@ -5430,7 +5459,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary btn-sm\" href=\"#!\">More Info</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -5557,7 +5587,7 @@
      "footer": 1
     },
     "pageH": 8826,
-    "ms": 225,
+    "ms": 238,
     "issues": [
      {
       "h": "H4",
@@ -5660,7 +5690,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-xl btn-dark\" href=\"#!\">Look at Me!</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -6042,7 +6073,7 @@
      "footer": 1
     },
     "pageH": 1576,
-    "ms": 389,
+    "ms": 364,
     "issues": [
      {
       "h": "H4",
@@ -6202,7 +6233,8 @@
       "got": "icon",
       "html": "<button type=\"button\" class=\"btn btn-success btn-sm\" data-card-widget=\"remove\"> <i class=\"fas fa-times\"></i> </button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -6297,7 +6329,7 @@
      "input": 2
     },
     "pageH": 800,
-    "ms": 181,
+    "ms": 146,
     "issues": [
      {
       "h": "H6",
@@ -6396,7 +6428,8 @@
       "got": "primary",
       "html": "<a href=\"#\" class=\"btn btn-block btn-danger\"> <i class=\"fab fa-google-plus mr-2\"></i> Sign in using Google+ </a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -6491,7 +6524,7 @@
      "input": 4
     },
     "pageH": 800,
-    "ms": 148,
+    "ms": 127,
     "issues": [
      {
       "h": "H6",
@@ -6591,7 +6624,8 @@
       "got": "primary",
       "html": "<a href=\"#\" class=\"btn btn-block btn-danger\"> <i class=\"fab fa-google-plus mr-2\"></i> Sign up using Google+ </a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -6709,7 +6743,7 @@
      "footer": 1
     },
     "pageH": 2543,
-    "ms": 299,
+    "ms": 302,
     "issues": [
      {
       "h": "H3",
@@ -6868,7 +6902,8 @@
       "got": "primary",
       "html": "<button type=\"submit\" class=\"btn btn-info\">Sign in</button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -6993,7 +7028,7 @@
      "footer": 1
     },
     "pageH": 1724,
-    "ms": 294,
+    "ms": 282,
     "issues": [
      {
       "h": "H4",
@@ -7130,7 +7165,8 @@
       "got": "secondary",
       "html": "<button class=\"btn btn-secondary buttons-collection dropdown-toggle buttons-colvis\" tabindex=\"0\" aria-controls=\"example1\" type=\"button\" aria-haspopup="
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -7246,7 +7282,7 @@
      "footer": 1
     },
     "pageH": 1718,
-    "ms": 266,
+    "ms": 243,
     "issues": [
      {
       "h": "H5",
@@ -7466,7 +7502,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-danger btn-sm\" href=\"#\"> <i class=\"fas fa-trash\"> </i> Delete </a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -7582,7 +7619,7 @@
      "footer": 1
     },
     "pageH": 1718,
-    "ms": 219,
+    "ms": 224,
     "issues": [
      {
       "h": "H6",
@@ -7653,7 +7690,8 @@
       "got": "primary",
       "html": "<button type=\"button\" class=\"btn btn-primary float-right\" style=\"margin-right: 5px;\"> <i class=\"fas fa-download\"></i> Generate PDF </button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -7769,7 +7807,7 @@
      "footer": 1
     },
     "pageH": 1429,
-    "ms": 246,
+    "ms": 223,
     "issues": [
      {
       "h": "H6",
@@ -7835,7 +7873,8 @@
       "got": "primary",
       "html": "<a href=\"compose.html\" class=\"btn btn-primary btn-block mb-3\">Compose</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -7961,7 +8000,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-primary btn-lg\" href=\"#!\">Call to action</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8060,7 +8100,7 @@
      "footer": 1
     },
     "pageH": 3488,
-    "ms": 118,
+    "ms": 127,
     "issues": [
      {
       "h": "H4",
@@ -8154,7 +8194,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-outline-primary\" href=\"#!\">Choose plan</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8279,7 +8320,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 274,
+    "ms": 208,
     "issues": [
      {
       "h": "H3",
@@ -8368,7 +8409,8 @@
       "got": "icon",
       "html": "<a class=\"btn btn-dark m-3\" href=\"#!\"><i class=\"fab fa-instagram\"></i></a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8467,7 +8509,7 @@
      "footer": 1
     },
     "pageH": 3393,
-    "ms": 161,
+    "ms": 168,
     "issues": [
      {
       "h": "H1",
@@ -8537,7 +8579,8 @@
       "got": "secondary",
       "html": "<a class=\"btn btn-outline-light py-3 px-4 rounded-pill\" href=\"https://startbootstrap.com/theme/new-age\" target=\"_blank\">Download for free</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8632,7 +8675,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 121,
+    "ms": 74,
     "issues": [
      {
       "h": "H10",
@@ -8670,7 +8713,8 @@
       "got": "primary",
       "html": "<button class=\"btn btn-primary\" id=\"sidebarToggle\">Toggle Menu</button>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8766,7 +8810,7 @@
      "footer": 1
     },
     "pageH": 1975,
-    "ms": 86,
+    "ms": 102,
     "issues": [],
     "scores": [
      100,
@@ -8795,7 +8839,8 @@
       "got": "primary",
       "html": "<a class=\"btn btn-lg btn-light\" href=\"#about\">Start scrolling!</a>"
      }
-    ]
+    ],
+    "diag": null
    }
   },
   {
@@ -8888,7 +8933,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 53,
+    "ms": 66,
     "issues": [
      {
       "h": "H10",
@@ -8938,7 +8983,152 @@
      "fp": [],
      "fpCount": 0
     },
-    "kindPairs": []
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "anim-reveal",
+   "label": "対照（アニメーションで現れる要素）",
+   "kind": "対照",
+   "set": "control",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "undefined/undefined",
+   "sha256": "11fdaad25939b0c9",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 1,
+    "types": {
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 39,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Scroll to exp…” 3.9:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が1箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
    }
   }
  ]

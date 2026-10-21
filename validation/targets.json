@@ -460,6 +460,13 @@
       "kind": "対照",
       "local": "fixtures/negative-control-hidden.html",
       "set": "control"
+    },
+    {
+      "id": "anim-reveal",
+      "label": "対照（アニメーションで現れる要素）",
+      "kind": "対照",
+      "local": "fixtures/animated-reveal.html",
+      "set": "control"
     }
   ]
 }
