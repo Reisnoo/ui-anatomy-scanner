@@ -208,6 +208,8 @@ th { color:var(--muted); font-weight:600; }
 .vp-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted); }
 .vp-row select, .vp-row input { font-size:12px; padding:3px 6px; min-height:28px; }
 .vp-row input[type=number] { width:68px; }
+.scr-chips { display:flex; gap:6px; flex-wrap:wrap; }
+.scr-row .mini { max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .code-box { margin:6px 0; border:1px solid var(--border); border-radius:6px; background:var(--bg); }
 .code-box > summary { cursor:pointer; padding:5px 8px; font-size:12px; font-weight:600; list-style:none; }
 .code-box > summary::-webkit-details-marker { display:none; }
@@ -245,6 +247,11 @@ th { color:var(--muted); font-weight:600; }
         <select id="vpSel" aria-label="解析する画面幅"></select>
         <span id="vpCustom" hidden><input type="number" id="vpW" min="320" max="3840" step="1" aria-label="幅(px)" value="1280">×<input type="number" id="vpH" min="480" max="2400" step="1" aria-label="高さ(px)" value="800"><button class="mini" id="vpApply">適用</button></span>
         <span id="vpNote"></span></div>
+      <div class="vp-row scr-row" id="scrRow" hidden><label>解析する画面</label>
+        <span id="scrChips" class="scr-chips" role="group" aria-label="解析する画面"></span>
+        <label class="toggle"><input type="checkbox" id="scrReveal" checked> スクロール連動で隠れた要素（透明）も表示扱い</label>
+        <button class="mini" id="scrAll" title="検出した画面をすべて解析し、履歴に1件ずつ追加します">全画面を一括解析</button>
+        <span id="scrNote" class="hint" style="flex-basis:100%;margin:0"></span></div>
     </div>
 
     <div class="card stage-card">
@@ -682,7 +689,7 @@ const SAMPLES = [
    状態
    ============================================================ */
 const S = {
-  srcMode:'sample', sampleKey:null, sourceName:'', frameH:FOLD_H,
+  srcMode:'sample', sampleKey:null, sourceName:'', frameH:FOLD_H, srcAll:null, screens:null, screenIdx:null, screenReveal:true,
   comps:[], targets:[], issues:[], stats:{}, scale:1,
   shot:null, ocr:null, ocrOpt:{langs:'jpn+eng', dpr:'auto'}, vpBeforeImg:null, vp:'pc', vpCustom:{w:1280,h:800}, resp:null, imageMode:false, respInfo:null, tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
   hiddenTypes:new Set(['link']),
@@ -708,17 +715,120 @@ function prepareHTML(html, baseHref){
   return inject + html;
 }
 
+/* ------------------------------------------------------------
+   複数画面（ページ遷移）の検出
+   1つのHTMLの中に「画面」が複数ある（JSで表示を切り替えるSPA・タブ・ステップ）場合に、
+   画面ごとに解析できるようにする。JSは実行しないので、初期表示で隠れている画面は、
+   強制的に表示して測る。
+   ------------------------------------------------------------ */
+const SCREEN_NAME_RE = /(^|[-_\s])(page|pg|screen|view|route|panel|pane|step|scene|slide|tabpanel|stage|section)s?([-_\s\d]|$)/i;
+const SCREEN_MAX = 12;
+function detectScreens(doc){
+  const win=doc.defaultView, body=doc.body, none={items:[],hid:()=>false};
+  if(!win||!body) return none;
+  const hid=el=>{ if(el.hidden||el.getAttribute('aria-hidden')==='true') return true; const cs=win.getComputedStyle(el); return cs.display==='none'||cs.visibility==='hidden'; };
+  const skipTag=/^(SCRIPT|STYLE|TEMPLATE|LINK|META|NOSCRIPT|SELECT|UL|OL|TABLE|TBODY|THEAD|TR|DL|DATALIST|NAV|HEAD)$/;
+  const parents=[body,...body.querySelectorAll('*')].filter(p=>p.children.length>=2 && p.children.length<=80 && !skipTag.test(p.tagName)).slice(0,1500);
+  let best=null, bestScore=0;
+  for(const p of parents){
+    const groups=new Map();
+    for(const k of p.children){
+      if(skipTag.test(k.tagName)) continue;
+      const named=[...k.classList].find(c=>SCREEN_NAME_RE.test(c));
+      const key=k.tagName+'|'+(named||k.className||'');
+      if(!groups.has(key)) groups.set(key,[]);
+      groups.get(key).push(k);
+    }
+    for(const [key,ms] of groups){
+      if(ms.length<2) continue;
+      const big=ms.filter(m=>m.getElementsByTagName('*').length>=8 || (m.textContent||'').trim().length>=60);
+      if(big.length<2) continue;
+      const nHid=big.filter(hid).length;
+      if(!nHid) continue;
+      const namedN=big.filter(m=>SCREEN_NAME_RE.test((m.id||'')+' '+(m.className&&m.className.baseVal!==undefined?m.className.baseVal:m.className)+' '+(m.getAttribute('role')||'')+' '+(m.dataset.page||m.dataset.screen||m.dataset.view||''))).length;
+      const sameCls=key.split('|')[1]!=='';
+      if(!(namedN>=2 || (sameCls && nHid<big.length))) continue;
+      const score=big.length*1000+Math.min(999,big.reduce((s,m)=>s+m.getElementsByTagName('*').length,0)/10);
+      if(score>bestScore){ bestScore=score; best=big; }
+    }
+  }
+  if(!best) return none;
+  const items=best.slice(0,SCREEN_MAX).map((el,i)=>{
+    const id=(el.id||'').replace(/^(pg|page|screen|view|route|panel|step|scene|slide)[-_]?/i,'');
+    const h=el.querySelector('h1,h2,[role=heading]'), ht=h?(h.innerHTML||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,16):'';
+    const al=(el.getAttribute('aria-label')||el.dataset.title||el.dataset.page||el.dataset.screen||'').trim();
+    const base=id||al||ht||('画面'+(i+1));
+    return {el, id:id||al||'', label:(base+(ht&&ht!==base&&(id||al)?'：'+ht:'')).slice(0,30), n:el.getElementsByTagName('*').length, initiallyHidden:hid(el)};
+  });
+  return {items, hid};
+}
+function applyScreen(doc, found, idx, reveal){
+  const win=doc.defaultView, vis=found.items.find(x=>!x.initiallyHidden);
+  let disp = vis ? win.getComputedStyle(vis.el).display : 'block';
+  if(disp==='none'||disp==='inline'||disp==='contents') disp='block';
+  found.items.forEach((x,i)=>{
+    const el=x.el;
+    if(i===idx){
+      el.hidden=false; el.removeAttribute('aria-hidden'); el.removeAttribute('inert');
+      el.style.setProperty('display',disp,'important'); el.style.setProperty('visibility','visible','important');
+      el.setAttribute('data-uas-screen','1');
+    } else el.style.setProperty('display','none','important');
+  });
+  if(reveal){   // スクロール連動の表示（JSで opacity:0 → 1 にする作り）は、JSを実行しないと隠れたままになる
+    const root=found.items[idx].el;
+    [root,...root.querySelectorAll('*')].forEach(e=>{ if(win.getComputedStyle(e).opacity==='0'){ e.style.setProperty('opacity','1','important'); e.style.setProperty('transform','none','important'); } });
+  }
+}
+const srcLabel = () => S.sourceName + (S.src&&S.src.screen ? '｜'+S.src.screen : '');
+function renderScreens(){
+  const row=$('#scrRow'); if(!row) return;
+  const sc=S.screens, n=sc?sc.items.length:0;
+  row.hidden = n<2;
+  if(n<2) return;
+  const cur=S.screenIdx;
+  $('#scrChips').innerHTML = `<button class="mini" data-scr="all" aria-pressed="${cur==null}" title="初期表示のまま解析">初期表示</button>` +
+    sc.items.map((s,i)=>`<button class="mini" data-scr="${i}" aria-pressed="${cur===i}" title="${esc(s.label)}（${s.initiallyHidden?'初期は非表示':'初期表示'}／${s.n}要素）">${esc(s.label)}</button>`).join('');
+  $('#scrReveal').checked = S.screenReveal;
+  $('#scrNote').textContent = `1つのHTMLに${n}つの画面を検出しました。画面を選ぶと、その画面だけを表示して解析します（JSは実行しません）。`;
+}
+async function selectScreen(i){
+  if(!S.srcAll || !S.screens) return;
+  await loadHTML(S.srcAll.html, S.sourceName, S.srcAll.baseHref, {screen:i});
+}
+async function analyzeAllScreens(){
+  if(!S.srcAll || !S.screens) return;
+  const room=MAX_VERSIONS-S.versions.length, items=S.screens.items;
+  if(room<1){ toast(`履歴は${MAX_VERSIONS}件までです。不要なものを削除してください`); return; }
+  const n=Math.min(room, items.length), keep=S.screenIdx;
+  for(let i=0;i<n;i++){ await selectScreen(i); addVersion((items[i].id||items[i].label), true); }
+  await selectScreen(keep==null?null:keep);
+  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
+  toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑤比較→履歴で、画面どうしを比べられます`);
+}
+
 async function loadHTML(html, name, baseHref, opt={}){
   setStatus('描画中…');
   if(!opt.image && S.imageMode) leaveImageMode();
+  const pick = 'screen' in opt;      // 画面を指定して解析（html は元のページ全体）
+  if(!opt.keep && !pick){ S.srcAll={html, baseHref}; S.screens=null; S.screenIdx=null; }
   S.sourceName = name;
-  S.src = {html, baseHref};
+  S.src = {html, baseHref, screen:(opt.keep&&S.src&&S.src.screen)||''};
   S.multi = null; S.plCache = new Map();
   stopPlay();
   applyViewportSize();
   frame.style.height = FOLD_H+'px';
   await new Promise(res=>{ frame.onload=res; frame.srcdoc=prepareHTML(html, baseHref); });
   const doc = frame.contentDocument;
+  if(!opt.keep && !opt.image){
+    const found = detectScreens(doc);
+    if(!pick) S.screens = found.items.length>=2 ? {items:found.items.map(({label,id,n,initiallyHidden})=>({label,id,n,initiallyHidden}))} : null;
+    S.screenIdx = null;
+    if(pick && opt.screen!=null && S.screens && found.items[opt.screen]){
+      applyScreen(doc, found, opt.screen, S.screenReveal);
+      S.screenIdx = opt.screen;
+      S.src = {html:'<!doctype html>'+doc.documentElement.outerHTML, baseHref, screen:S.screens.items[opt.screen].label};
+    }
+  }
   const imgs = [...doc.images].filter(i=>!i.complete);
   if(imgs.length) await Promise.race([Promise.all(imgs.map(i=>new Promise(r=>{i.onload=i.onerror=r;}))), new Promise(r=>setTimeout(r,2500))]);
   try{ await doc.fonts.ready; }catch(e){}
@@ -735,7 +845,7 @@ async function loadHTML(html, name, baseHref, opt={}){
   frame.style.height = FOLD_H+'px'; S.anaH = nat;
   const probe = [...doc.body.querySelectorAll('*')].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).slice(0,400).map(e=>[e, e.getBoundingClientRect().top]);
   runAnalysis();
-  frameLens.srcdoc = (opt.image && S.shot) ? imageDoc() : frame.srcdoc;
+  frameLens.srcdoc = (opt.image && S.shot) ? imageDoc() : (S.src.screen ? prepareHTML(S.src.html, S.src.baseHref) : frame.srcdoc);
   computeLens(); applyLens();
   frame.style.height = h+'px';
   const moved = probe.filter(([e,y0])=>Math.abs(e.getBoundingClientRect().top-y0)>12).length;
@@ -745,7 +855,8 @@ async function loadHTML(html, name, baseHref, opt={}){
   simulate();
   renderAll();
   const cut = doc.documentElement.scrollHeight > MAX_H;
-  setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${name}）${cut?`。ページが長いため先頭${MAX_H}pxまでを解析`:''}${S.layoutShift?'。画面の高さに依存するレイアウトのため、ステージ上の位置は実際と異なる場合があります（解析は1280×800の表示で実施）':''}`, false);
+  renderScreens();
+  setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${srcLabel()}）${cut?`。ページが長いため先頭${MAX_H}pxまでを解析`:''}${S.layoutShift?'。画面の高さに依存するレイアウトのため、ステージ上の位置は実際と異なる場合があります（解析は1280×800の表示で実施）':''}`, false);
 }
 
 async function loadURL(url, proxy){
@@ -1916,7 +2027,7 @@ function importPersonas(txt){
 function buildMultiReport(){
   const M=ensureMulti(), keys=M.keys, d=new Date().toISOString().slice(0,10);
   const pc=v=>Math.round(v*100)+'%', sec=v=>v===null?'—':(v/1000).toFixed(1)+'s';
-  let m=`# ペルソナ並列比較\n\n- 日付: ${d}\n- 対象: ${S.sourceName}\n- タスク: ${TASKS[S.gaze.task]}／範囲: ${S.gaze.range==='fold'?'ファーストビュー':'ページ全体'}\n- 注意: 仮想シミュレーション（30試行・シード固定）であり、実測ではありません。\n\n## 指標\n\n| 指標 | ${keys.map(k=>PERSONAS[k].name).join(' | ')} |\n|---|${keys.map(()=>'---').join('|')}|\n`;
+  let m=`# ペルソナ並列比較\n\n- 日付: ${d}\n- 対象: ${srcLabel()}\n- タスク: ${TASKS[S.gaze.task]}／範囲: ${S.gaze.range==='fold'?'ファーストビュー':'ページ全体'}\n- 注意: 仮想シミュレーション（30試行・シード固定）であり、実測ではありません。\n\n## 指標\n\n| 指標 | ${keys.map(k=>PERSONAS[k].name).join(' | ')} |\n|---|${keys.map(()=>'---').join('|')}|\n`;
   m+=`| 主要CTAへの到達率 | ${keys.map(k=>pc(M.per[k].ctaRate)).join(' | ')} |\n| 主要CTAまでの時間 | ${keys.map(k=>sec(M.per[k].ctaMs)).join(' | ')} |\n| H1への到達率 | ${keys.map(k=>pc(M.per[k].h1Rate)).join(' | ')} |\n| バナーへの注視の割合 | ${keys.map(k=>pc(M.per[k].bannerShare)).join(' | ')} |\n\n## 要素ごとの到達率\n\n| 要素 | ${keys.map(k=>pshort(k)).join(' | ')} |\n|---|${keys.map(()=>'---').join('|')}|\n`;
   m+=M.rows.slice(0,12).map(r=>`| ${GTYPE_JA[r.t.type]||r.t.type}：${r.t.label} | ${keys.map(k=>pc(r.ps[k])).join(' | ')} |`).join('\n')+'\n';
   if(M.insights.length) m+='\n## 所見\n\n'+M.insights.map(t=>'- '+t).join('\n')+'\n';
@@ -2283,7 +2394,7 @@ function collectTexts(){
 }
 function makeSnap(){
   const types={}, kinds={}; S.comps.forEach(c=>{ types[c.type]=(types[c.type]||0)+1; if(c.type==='button') kinds[c.bi.kind]=(kinds[c.bi.kind]||0)+1; });
-  return { name:S.sourceName, H:S.frameH, vw:PAGE_W, vh:FOLD_H, shot:(S.imageMode&&S.shot&&S.shot.thumb)||'', types, kinds, btnStyleN:(S.btnStyles||[]).length,
+  return { name:srcLabel(), H:S.frameH, vw:PAGE_W, vh:FOLD_H, shot:(S.imageMode&&S.shot&&S.shot.thumb)||'', types, kinds, btnStyleN:(S.btnStyles||[]).length,
     bannersFold:S.comps.filter(c=>c.type==='banner' && c.rect.y<FOLD_H).length, links:S.stats.links,
     issues:JSON.parse(JSON.stringify(S.issues)), targets:S.targets.map(t=>({...t, el:null})),
     texts:collectTexts(), tap:S.lensTap.length };
@@ -2423,7 +2534,7 @@ function buildCmpReport(){
    ============================================================ */
 function buildReport(){
   const d=new Date().toISOString().slice(0,10);
-  let m=`# UI分析レポート：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定であり、実ユーザーテストの代替ではありません。視線は実測ではなく仮想です。\n\n## 構成要素\n\n`;
+  let m=`# UI分析レポート：${srcLabel()}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定であり、実ユーザーテストの代替ではありません。視線は実測ではなく仮想です。\n\n## 構成要素\n\n`;
   const by={}; S.comps.forEach(c=>{ by[c.type]=(by[c.type]||0)+1; });
   m+=Object.keys(TYPES).filter(t=>by[t]).map(t=>`- ${TYPES[t].ja}: ${by[t]}`).join('\n')+'\n\n## ニールセン10原則\n\n| 原則 | スコア |\n|---|---|\n'+NIELSEN.map(h=>`| ${h.id} ${h.ja} | ${hScore(h.id)} |`).join('\n')+'\n';
   [...NIELSEN,SUP].forEach(h=>{ const l=S.issues.filter(i=>i.h===h.id && isActive(i)); if(!l.length) return;
@@ -2458,7 +2569,7 @@ function renderVpUI(){
 async function setViewport(key, opt={}){
   if(key==='custom'){ const c=opt.custom||S.vpCustom; S.vpCustom={w:clamp(Math.round(+c.w||1280),320,3840), h:clamp(Math.round(+c.h||800),480,2400)}; }
   S.vp=key; applyViewportSize(); renderVpUI();
-  if(S.src && S.comps.length && !opt.noReload) await loadHTML(S.src.html, S.sourceName, S.src.baseHref, {image:S.imageMode});
+  if(S.src && S.comps.length && !opt.noReload) await loadHTML(S.src.html, S.sourceName, S.src.baseHref, {image:S.imageMode, keep:true});
 }
 const respSig = () => S.src ? `${S.sourceName}|${(S.src.html||'').length}` : '';
 const normTitle = t => t.replace(/画面幅\d+pxで、/,'').replace(/（\d+px幅）/,'').replace(/^\d+px幅でも、/,'').replace(/\d+(?=個|枚|箇所|件|つ|%)/g,'〇');
@@ -2536,7 +2647,7 @@ input, select, textarea { font-size: 16px; }
 function buildRespReport(){
   const R=S.resp; if(!R) return '';
   const d=new Date().toISOString().slice(0,10);
-  let m=`# 画面幅ごとの比較：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定。視線は実測ではなく仮想（ペルソナ「${R.persona}」・タスク「${R.task}」）\n\n`;
+  let m=`# 画面幅ごとの比較：${srcLabel()}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定。視線は実測ではなく仮想（ペルソナ「${R.persona}」・タスク「${R.task}」）\n\n`;
   m+='| 画面幅 | 要素 | 指摘(重3+/全) | 幅の指摘 | 横はみ出し | 操作領域最小 | 文字最小 | CTA(FV内/全) | CTA到達率 |\n|---|---|---|---|---|---|---|---|---|\n';
   R.rows.forEach(r=>{ m+=`| ${r.name} ${r.w}×${r.h} | ${r.comps} | ${r.sev[3]+r.sev[4]} / ${r.total} | ${r.resp} | ${r.overflow?'あり':'なし'} | ${r.tapMin==null?'—':r.tapMin+'px'} | ${r.fsMin==null?'—':r.fsMin+'px'} | ${r.ctaFold} / ${r.cta} | ${r.ctaReach==null?'—':Math.round(r.ctaReach*100)+'%'} |\n`; });
   R.rows.forEach(r=>{ const l=r.fixes.filter(x=>x.resp); if(!l.length) return;
@@ -2947,6 +3058,8 @@ function renderSrc(){
    ============================================================ */
 document.addEventListener('click', e=>{
   const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
+  if(t.dataset.scr!==undefined){ selectScreen(t.dataset.scr==='all'?null:+t.dataset.scr); return; }
+  if(t.id==='scrAll'){ analyzeAllScreens(); return; }
   if(t.matches('.seg button')){ S.srcMode=t.dataset.src; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b===t)); renderSrc(); return; }
   if(t.matches('.tabs button')){
     S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens', multi:S.tab==='multi'});
@@ -3040,6 +3153,7 @@ document.addEventListener('change', e=>{
   else if(t.id==='imgFile'){ const f=t.files&&t.files[0]; t.value=''; loadShotFile(f); }
   else if(t.id==='ocrLang'){ S.ocrOpt.langs=t.value; }
   else if(t.id==='ocrDpr'){ S.ocrOpt.dpr=t.value; }
+  else if(t.id==='scrReveal'){ S.screenReveal=t.checked; if(S.screenIdx!=null) selectScreen(S.screenIdx); }
   else if(t.id==='vpSel'){ if(t.value==='custom'){ S.vp='custom'; renderVpUI(); } else setViewport(t.value); }
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }

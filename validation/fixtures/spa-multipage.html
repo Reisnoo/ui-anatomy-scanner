@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>Mini Shop（複数画面のSPA）</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font:16px/1.6 sans-serif;color:#222;background:#fff}
+header{display:flex;gap:16px;align-items:center;padding:12px 24px;background:#0f1c2e;color:#fff}
+header a{color:#fff}
+.screen{display:none;padding:32px 24px;max-width:960px;margin:0 auto}
+.screen.active{display:block}
+.reveal{opacity:0;transform:translateY(20px)}
+.btn{display:inline-block;padding:12px 20px;border:0;border-radius:6px;background:#1d4ed8;color:#fff;font-size:16px}
+.card{border:1px solid #ddd;border-radius:8px;padding:16px;margin:12px 0}
+.muted{color:#aaa}            /* 低コントラスト（一覧画面だけにある） */
+.tiny{font-size:9px}          /* 小さな文字（詳細画面だけにある） */
+label{display:block;margin-top:12px}
+input{width:100%;padding:10px;border:1px solid #888;border-radius:4px}
+</style></head>
+<body>
+<header><strong>Mini Shop</strong><a href="#home">ホーム</a><a href="#list">商品一覧</a><a href="#detail">商品詳細</a><a href="#cart">カート</a></header>
+
+<main>
+<section id="screen-home" class="screen active" aria-label="ホーム">
+  <h1>春のセール開催中</h1>
+  <p class="reveal">人気の商品を、最大50%オフでお届けします。</p>
+  <button class="btn">今すぐ見る</button>
+  <div class="card"><h2>おすすめ</h2><p>編集部が選んだ5つのアイテム。</p><button class="btn">詳細</button></div>
+  <div class="card"><h2>新着</h2><p>今週入荷した商品です。</p><button class="btn">詳細</button></div>
+</section>
+
+<section id="screen-list" class="screen" aria-label="商品一覧">
+  <h1>商品一覧</h1>
+  <div class="card"><h2>トートバッグ</h2><p class="muted">軽くて丈夫な定番バッグ。収納力があり通勤にも便利です。</p><button class="btn">カートへ</button></div>
+  <div class="card"><h2>マグカップ</h2><p class="muted">手になじむ形の陶器製。電子レンジ対応。</p><button class="btn">カートへ</button></div>
+  <div class="card"><h2>ノート</h2><p class="muted">書き心地の良い紙を使った、方眼タイプ。</p><button class="btn">カートへ</button></div>
+  <div class="card"><h2>ペン</h2><p class="muted">なめらかなインクの水性ボールペン。</p><button class="btn">カートへ</button></div>
+</section>
+
+<section id="screen-detail" class="screen" aria-label="商品詳細">
+  <h1>トートバッグ</h1>
+  <p class="reveal">価格：3,980円（税込）</p>
+  <p class="tiny">※ 配送には3〜5日かかります。返品は未使用品に限り、到着後7日以内に承ります。</p>
+  <button class="btn">カートに入れる</button>
+  <p>在庫：あり</p>
+</section>
+
+<section id="screen-cart" class="screen" aria-label="カート">
+  <h1>カート</h1>
+  <form><label>お名前<input type="text"></label><label>メールアドレス<input type="email"></label><label>電話番号<input type="tel"></label><label>住所<input type="text"></label>
+  <label>クーポン<input type="text"></label><button class="btn" type="button">注文する</button></form>
+</section>
+</main>
+<script>document.querySelectorAll('header a').forEach(a=>a.onclick=e=>{e.preventDefault();document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active','#'+s.id.replace('screen-','')==a.getAttribute('href')))})</script>
+</body></html>
