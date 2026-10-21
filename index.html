@@ -46,6 +46,21 @@ small { font-size:12px; }
 .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); }
 .input-card { padding:16px 20px; margin-bottom:24px; }
 .seg { display:inline-flex; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:3px; gap:2px; }
+.vrow { display:grid; grid-template-columns:24px 1fr auto; gap:8px 10px; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); }
+.vrow:last-child { border-bottom:0; }
+.vrow .vn { font-size:12px; color:var(--muted); text-align:center; }
+.vrow input[type=text] { min-height:34px; padding:4px 8px; width:100%; }
+.vrow .vsrc { font-size:12px; color:var(--muted); white-space:nowrap; max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+.vrow .acts { grid-column:2/-1; display:flex; gap:6px; flex-wrap:wrap; }
+.charts { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.chart { border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--surface); }
+.chart h4 { margin:0 0 4px; font-size:12px; font-weight:600; color:var(--muted); }
+.chart svg { width:100%; height:auto; display:block; }
+.chart .cap { font-size:12px; color:var(--muted); margin-top:4px; }
+.chart .cap .good { color:var(--ok); font-weight:600; } .chart .cap .bad { color:var(--sev3); font-weight:600; }
+@media (max-width:600px){ .charts { grid-template-columns:1fr; } }
+.mx td small { display:block; font-size:12px; font-weight:400; color:var(--muted); line-height:1.2; }
+.mx td small.up { color:var(--ok); } .mx td small.dn { color:var(--sev3); }
 .seg2 { display:inline-flex; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px; gap:2px; }
 .seg button, .seg2 button { font-size:14px; }
 .seg2 button { border:0; background:transparent; padding:6px 14px; border-radius:6px; font-weight:600; color:var(--muted); min-height:34px; }
@@ -220,7 +235,7 @@ th { color:var(--muted); font-weight:600; }
         <label class="toggle"><input type="checkbox" id="tgPath"> 視線の軌跡</label>
         <label class="toggle"><input type="checkbox" id="tgLens"> 読みにくさマップ</label>
         <label class="toggle"><input type="checkbox" id="tgMulti"> 全ペルソナの軌跡</label>
-        <button class="mini" id="saveBase" disabled title="現在の解析結果をBefore(比較元)として保存">Beforeに保存</button><span class="status" id="baseChip"></span>
+        <button class="mini" id="saveBase" disabled title="現在の解析結果をBefore(比較元)として保存">Beforeに保存</button><button class="mini" id="saveHist" disabled title="現在の解析結果をバージョン履歴に追加">履歴に追加</button><span class="status" id="baseChip"></span>
         <label class="toggle"><input type="checkbox" id="tgHeat"> ヒートマップ</label>
         <span class="status" style="margin-left:auto" id="pageInfo"></span>
       </div>
@@ -448,6 +463,26 @@ footer{background:#0f172a;color:#cbd5e1;padding:28px 56px;display:flex;gap:28px;
 </body></html>`;
 }
 
+function sampleECStep(n){
+  let h=sampleEC();
+  // V2: 告知バーとバナーを整理し、商品ボタンを1種類に
+  h=h.replace(/<div class="ann">[^<]*<\/div>\n?/,'');
+  h=h.replace(/<div class="promos">.*<\/div><\/div>\n?/,'');
+  h=h.replace(/<button style="[^"]*">(カートに入れる|購入する|詳細を見る|かごへ)<\/button>/g,'<button class="uni">カートに入れる</button>');
+  h=h.replace('</style>','.card button.uni{background:#2563eb;color:#fff;border:0;border-radius:6px;padding:8px 16px;font-size:14px}</style>');
+  if(n>=3){
+    // V3: 操作の安全性と読みやすさを改善（ただし告知バーを再び足してしまう）
+    h=h.replace(/<div class="ic">(.*?)<\/div>/,(m,inner)=>{ let i=0; const L=['お気に入り','マイページ','カート']; return '<div class="ic">'+inner.replace(/<button>/g,()=>`<button aria-label="${L[i]}" title="${L[i++]}">`)+'</div>'; });
+    h=h.replace('.rv{font-size:11px;color:#aaa}','.rv{font-size:13px;color:#555}');
+    h=h.replace('footer{background:#222;color:#888;padding:30px 40px;font-size:11px;display:flex;gap:30px}footer a{color:#888}','footer{background:#222;color:#ddd;padding:30px 40px;font-size:13px;display:flex;gap:30px}footer a{color:#ddd}');
+    h=h.replace('<footer><a href="#">会社概要</a>','<footer><a href="#">ヘルプ</a><a href="#">お問い合わせ</a><a href="#">会社概要</a>');
+    h=h.replace('<div class="cartbar"><span>カートに 2 点</span><button class="clear">カートを空にする</button><button class="go">注文へ進む</button></div>','<div class="cartbar" style="justify-content:space-between"><button class="clear" style="background:transparent;color:#555;text-decoration:underline">カートを空にする</button><span>カートに 2 点</span><button class="go">注文へ進む</button></div>');
+    h=h.replace('<nav class="main"><a href="#">ホーム</a>','<nav class="main" aria-label="メイン"><a href="#" aria-current="page">ホーム</a>');
+    h=h.replace('<body>\n','<body>\n<div class="ann">会員限定ポイント企画を実施中です</div>\n');
+  }
+  return h;
+}
+
 function sampleECFixed(){
   const names=['ワイヤレスイヤホン Pro','ワイヤレスイヤホン Pro II','ノイズキャンセリングヘッドホン','スマートウォッチ S3','モバイルバッテリー 10000','USB-C 急速充電器 65W','ポータブルスピーカー','Bluetoothキーボード'];
   const cards=names.map((n,i)=>`<div class="card"><img src="${thumb(['#93c5fd','#fca5a5','#86efac','#fcd34d'][i%4],'#e5e7eb')}" alt="${n}" width="260" height="150"><div class="nm">${n}</div><div class="pr">¥${(3980+i*1200).toLocaleString()}</div><div class="rv">レビュー ${100+i*13}件</div><button>カートに入れる</button></div>`).join('');
@@ -498,7 +533,8 @@ const S = {
   gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, useLens:false, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
-  base:null, cmp:{split:50, show:true}, src:null, multi:null, multiLens:false,
+  base:null, cmp:{split:50, show:true}, src:null, wipe:null, wipeKey:null,
+  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
 };
@@ -636,7 +672,7 @@ function renderOverlay(){
   }
   if(cmpActive()){
     const x=PAGE_W*S.cmp.split/100;
-    g.push(`<line x1="${x}" y1="0" x2="${x}" y2="${Math.max(S.frameH,S.base.H)}" stroke="#2563EB" stroke-width="3"/><rect x="${x-70}" y="8" width="140" height="22" rx="6" fill="#2563EB"/><text x="${x}" y="24" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">Before | After</text>`);
+    g.push(`<line x1="${x}" y1="0" x2="${x}" y2="${Math.max(S.frameH,S.wipe.H)}" stroke="#2563EB" stroke-width="3"/><rect x="${x-70}" y="8" width="140" height="22" rx="6" fill="#2563EB"/><text x="${x}" y="24" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">${esc(S.wipe.label)}</text>`);
   }
   svg.innerHTML = g.join('');
   const hc = $('#heat'); hc.style.display = S.show.heat ? 'block':'none';
@@ -1168,11 +1204,12 @@ const LEAD = {
   cmp:'Beforeに保存した画面と、いまの画面の差を見ます。',
   multi:'ペルソナによって、見え方がどう分かれるかを見ます。',
   multiEdit:'重みと視覚特性を決めて、自分のペルソナを保存します。',
+  cmpHist:'バージョンを順に並べて、何がいつ良くなり、どこで後退したかを見ます。',
 };
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
-  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCmp() : S.tab==='multi'?panelPersonas() : panelGaze());
+  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : panelGaze());
 }
 
 function panelComps(){
@@ -1576,23 +1613,166 @@ function buildMultiReport(){
 }
 
 /* ============================================================
+   バージョン履歴（3画面以上の比較）
+   画面を順に「履歴に追加」しておき、時系列で何が良くなり・何が後退したかを見る
+   ============================================================ */
+const MAX_VERSIONS = 8;
+const shortLabel = l => { const t=String(l).trim().split(/\s+/)[0]||String(l); return t.length>4 ? t.slice(0,4) : t; };
+function saveHistory(){
+  try{ const txt=JSON.stringify(S.versions); if(txt.length>4.2e6) throw new Error('size'); localStorage.setItem('uas-history',txt); }
+  catch(e){ if(!S._histWarned){ toast('容量の都合で履歴を保存できません（このタブを開いている間は使えます）'); S._histWarned=true; } }
+}
+function initHistory(){
+  try{ const raw=localStorage.getItem('uas-history'); if(!raw) return; const a=JSON.parse(raw);
+    if(Array.isArray(a)){ S.versions=a.filter(v=>v && v.issues && v.targets && v.texts && v.raw).slice(0,MAX_VERSIONS); S.vSeq=S.versions.reduce((m,v)=>Math.max(m,parseInt(String(v.id).slice(1))||0),0); } }catch(e){}
+}
+function addVersion(label, silent){
+  if(!S.comps.length || !S.src){ toast('先に画面を解析してください'); return; }
+  if(S.versions.length>=MAX_VERSIONS){ toast(`履歴は${MAX_VERSIONS}件までです。不要なものを削除してください`); return; }
+  const id='v'+(++S.vSeq), n=S.versions.length+1, d=new Date();
+  S.versions.push({...makeSnap(), raw:S.src.html, baseHref:S.src.baseHref, id, label:(label||('V'+n)).slice(0,12), savedAt:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')});
+  saveHistory(); if(!silent){ toast(`「${S.versions[S.versions.length-1].label}」を履歴に追加しました（${S.versions.length}件）`); renderPanel(); }
+}
+function settingsKey(){ const g=S.gaze, w=gazeWeights(), L=S.lens; return [g.persona,g.task,g.range,w.wV,w.wR,w.wP,L.on?[L.blur,L.contrast,L.yellow,L.tunnel,L.cvd,L.cvdS].join(','):'-',customKeys().length].join('|'); }
+function histMetrics(snap, cacheKey){
+  const key=cacheKey?cacheKey+'|'+settingsKey():null;
+  if(key && S.histCache.has(key)) return S.histCache.get(key);
+  const sc=NIELSEN.map(h=>hScore(h.id,snap.issues)), act=snap.issues.filter(isActive), LC=S.lens.on?S.lens:LENS_PRESETS.senior65, L=lensCounts(snap,LC), g=simMetrics(snap.targets);
+  const m={scores:sc, avg:sc.reduce((a,b)=>a+b,0)/sc.length, issues:act.length, btnStyle:snap.btnStyleN, banners:snap.bannersFold, lens:L.n2+L.n1, tap:snap.tap, cta:g.hasCTA?g.ctaRate:null, ctaMs:g.ctaMs===null?null:g.ctaMs/1000};
+  if(key) S.histCache.set(key,m); return m;
+}
+function histRows(){
+  const rows=S.versions.map(v=>({id:v.id,label:v.label,snap:v,cur:false}));
+  if(S.hCur && S.comps.length) rows.push({id:'cur',label:'現在',snap:makeSnap(),cur:true});
+  return rows;
+}
+const HMETRICS = [
+  {k:'avg', label:'10原則の平均スコア', fmt:v=>v.toFixed(0), better:'higher'},
+  {k:'issues', label:'有効な指摘の件数', fmt:v=>String(v), better:'lower'},
+  {k:'btnStyle', label:'ボタンの見た目の種類', fmt:v=>String(v), better:'lower'},
+  {k:'banners', label:'ファーストビューのバナー', fmt:v=>String(v), better:'lower'},
+  {k:'lens', label:'読みにくい文字（重大＋注意）', fmt:v=>String(v), better:'lower'},
+  {k:'tap', label:'押しにくい操作領域(<44px)', fmt:v=>String(v), better:'lower'},
+  {k:'cta', label:'主要CTAへの到達率', fmt:v=>Math.round(v*100)+'%', better:'higher'},
+  {k:'ctaMs', label:'主要CTAまでの時間', fmt:v=>v.toFixed(1)+'s', better:'lower'},
+];
+function sparkSVG(vals, labels, fmt){
+  const W=260, H=124, pl=18, pr=18, pt=24, pb=26, nums=vals.filter(v=>v!==null);
+  if(!nums.length) return '<p class="hint">この指標はデータがありません。</p>';
+  let mn=Math.min(...nums), mx=Math.max(...nums); if(mn===mx){ mn-=1; mx+=1; }
+  const x=i=>pl+(vals.length===1?(W-pl-pr)/2:i*(W-pl-pr)/(vals.length-1)), y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn));
+  let d='', pts='', txt='', lx='';
+  vals.forEach((v,i)=>{
+    lx+=`<text x="${x(i).toFixed(1)}" y="${H-8}" font-size="12" text-anchor="middle" style="fill:var(--muted)">${esc(labels[i])}</text>`;
+    if(v===null){ return; }
+    d+=(d===''||vals[i-1]===null?'M':'L')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' ';
+    const last=i===vals.length-1;
+    pts+=`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${last?4.5:3.5}" style="fill:${last?'var(--primary)':'var(--surface)'};stroke:var(--primary)" stroke-width="2"/>`;
+    txt+=`<text x="${x(i).toFixed(1)}" y="${(y(v)-9).toFixed(1)}" font-size="12" text-anchor="middle" style="fill:var(--text)">${fmt(v)}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="推移のグラフ"><line x1="${pl}" y1="${H-pb+2}" x2="${W-pr}" y2="${H-pb+2}" style="stroke:var(--border)"/><path d="${d}" fill="none" style="stroke:var(--primary)" stroke-width="2" stroke-linejoin="round"/>${pts}${txt}${lx}</svg>`;
+}
+function issueTimelineOf(rows){
+  const map=new Map();
+  rows.forEach((r,i)=>{ r.snap.issues.filter(isActive).forEach(is=>{ const k=issueKey(is); if(!map.has(k)) map.set(k,{h:is.h,title:is.title,sev:rows.map(()=>0),first:i}); const e=map.get(k); e.sev[i]=Math.max(e.sev[i],is.sev); e.title=is.title; }); });
+  const list=[...map.values()].map(e=>{ const present=e.sev.map(v=>v>0); let regress=false; for(let i=2;i<present.length;i++) if(present[i] && !present[i-1] && present.slice(0,i-1).some(Boolean)) regress=true; return {...e,regress}; });
+  return list.sort((a,b)=>a.first-b.first || a.h.localeCompare(b.h));
+}
+function histInsights(rows, M, tl){
+  const n=rows.length, out=[], A=M[0], Z=M[n-1], f=v=>Math.round(v*10)/10;
+  out.push(`${rows[0].label} → ${rows[n-1].label}：10原則の平均 ${A.avg.toFixed(0)} → ${Z.avg.toFixed(0)}（${Z.avg-A.avg>=0?'+':''}${f(Z.avg-A.avg)}）、有効な指摘 ${A.issues} → ${Z.issues}件`);
+  const d=NIELSEN.map((h,i)=>({h,d:Z.scores[i]-A.scores[i]})).sort((a,b)=>b.d-a.d);
+  if(d[0].d>0) out.push(`最も改善した原則：${d[0].h.id} ${d[0].h.ja}（${A.scores[NIELSEN.indexOf(d[0].h)]} → ${Z.scores[NIELSEN.indexOf(d[0].h)]}）`);
+  for(let i=1;i<n;i++){
+    const drops=NIELSEN.map((h,k)=>({h,a:M[i-1].scores[k],b:M[i].scores[k]})).filter(x=>x.b<x.a);
+    const worse=M[i].avg<M[i-1].avg || M[i].issues>M[i-1].issues || drops.length;
+    if(worse){
+      const added=tl.filter(e=>e.sev[i]>0 && !e.sev[i-1]).map(e=>`[${e.h==='SUP'?'補助':e.h}] ${e.title}`).slice(0,2);
+      const parts=[]; if(drops.length) parts.push('後退した原則：'+drops.slice(0,3).map(x=>`${x.h.id}（${x.a} → ${x.b}）`).join('、'));
+      if(M[i].issues>M[i-1].issues) parts.push(`指摘 ${M[i-1].issues} → ${M[i].issues}件`);
+      if(added.length) parts.push('新たに：'+added.join('、'));
+      out.push(`${rows[i].label}で後退あり。${parts.join('／')}`);
+    }
+  }
+  const rec=tl.filter(e=>e.regress); if(rec.length) out.push(`いったん解消した後に再発した指摘：${rec.slice(0,2).map(e=>e.title).join('、')}`);
+  const left=tl.filter(e=>e.sev[n-1]>0).sort((a,b)=>b.sev[n-1]-a.sev[n-1]).slice(0,3); if(left.length) out.push(`${rows[n-1].label}に残る指摘：${left.map(e=>`[${e.h==='SUP'?'補助':e.h}] ${e.title}`).join('、')}`);
+  return out.slice(0,6);
+}
+function panelCompare(){
+  const seg=`<div class="seg2" role="tablist" aria-label="比較の種類"><button role="tab" aria-selected="${S.cTab==='pair'}" data-ctab="pair">2画面（Before/After）</button><button role="tab" aria-selected="${S.cTab==='history'}" data-ctab="history">履歴（3画面以上）</button></div>`;
+  return `<div class="sec">${seg}</div>` + (S.cTab==='history' ? panelHistory() : panelCmp());
+}
+function panelHistory(){
+  const V=S.versions;
+  let h=`<div class="sec row"><button class="btn" id="hAdd">${ico('bookmark')}現在の画面を履歴に追加</button><button class="btn ghost" id="hDemo">デモを開く</button>${V.length?'<button class="btn ghost" id="hClear">履歴を空にする</button>':''}</div>`;
+  if(!V.length) return h+`<div class="note"><b>使い方</b><ul><li>画面を解析して「履歴に追加」を押す（改善の節目ごとに繰り返す。最大${MAX_VERSIONS}件）</li><li>2件以上たまると、指標の推移・10原則の変化・指摘の出入りが表示される</li><li>履歴はこのブラウザに保存される（容量が足りないときはタブを閉じると消える）</li></ul><div style="margin-top:6px">すぐ試すなら「デモを開く」（ECストアの4段階の改善）。</div></div>`;
+  h+=`<div class="sec"><h3>履歴（上から古い順）</h3>${V.map((v,i)=>`<div class="vrow"><span class="vn">${i+1}</span><input type="text" data-vlabel="${v.id}" value="${esc(v.label)}" maxlength="12" aria-label="バージョン名"><span class="vsrc" title="${esc(v.name)}">${esc(v.name)} ・${v.savedAt}</span>
+    <div class="acts"><button class="mini" data-vact="prev" data-v="${v.id}" aria-pressed="${S.histSel===v.id}">ステージに重ねる</button><button class="mini" data-vact="base" data-v="${v.id}">Beforeにする</button><button class="mini" data-vact="up" data-v="${v.id}" ${i===0?'disabled':''}>上へ</button><button class="mini" data-vact="down" data-v="${v.id}" ${i===V.length-1?'disabled':''}>下へ</button><button class="mini" data-vact="del" data-v="${v.id}">削除</button></div></div>`).join('')}
+    <div class="row" style="margin-top:12px"><label class="toggle"><input type="checkbox" id="hCur" ${S.hCur?'checked':''}> 現在の画面を最後に含める</label></div></div>`;
+  const rows=histRows();
+  if(rows.length<2) return h+'<p class="hint">推移を表示するには、2件以上（履歴＋現在の画面でも可）が必要です。</p>';
+  const M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), labels=rows.map(r=>shortLabel(r.label));
+  const tl=issueTimelineOf(rows);
+  h+=`<div class="sec"><h3>推移</h3><div class="charts">${HMETRICS.map(mt=>{ const vals=M.map(m=>m[mt.k]===undefined?null:m[mt.k]); const nn=vals.filter(v=>v!==null);
+    let cap='—'; if(nn.length>=2){ const a=nn[0], z=nn[nn.length-1], dv=z-a, good=dv===0?'':((mt.better==='lower')===(dv<0)?'good':'bad'); cap=`${mt.fmt(a)} → ${mt.fmt(z)} <span class="${good}">${dv===0?'±0':(dv>0?'+':'')+(Math.abs(dv)<10?Math.round(dv*10)/10:Math.round(dv))}</span>`; }
+    return `<div class="chart"><h4>${mt.label}</h4>${sparkSVG(vals,labels,mt.fmt)}<div class="cap">${cap}</div></div>`; }).join('')}</div>
+    <p class="hint">仮想視線（CTA）とAge Lensの値は、③④で選んでいる設定（ペルソナ・タスク・レンズ）で全バージョンを同じ条件にそろえて計算しています。</p></div>`;
+  h+=`<div class="sec"><h3>10原則スコアの変化</h3><div style="overflow-x:auto"><table class="mx"><tr><th>原則</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${NIELSEN.map((n,ri)=>`<tr><td>${n.id} ${n.ja}</td>${M.map((m,ci)=>{ const v=m.scores[ri], d=ci?v-M[ci-1].scores[ri]:0; return `<td class="cell" style="background:rgba(37,99,235,${(clamp((v-50)/50,0,1)*.5).toFixed(2)})">${v}${d?`<small class="${d>0?'up':'dn'}">${d>0?'+':''}${d}</small>`:''}</td>`; }).join('')}</tr>`).join('')}<tr><td><b>平均</b></td>${M.map(m=>`<td class="cell"><b>${m.avg.toFixed(0)}</b></td>`).join('')}</tr></table></div><p class="hint">濃いほど良いスコア。小さな数字は直前のバージョンとの差です。</p></div>`;
+  h+=`<div class="sec"><h3>指摘の出入り</h3>${tl.length?`<div style="overflow-x:auto"><table class="mx"><tr><th>指摘</th>${labels.map(l=>`<th>${esc(l)}</th>`).join('')}</tr>${tl.slice(0,18).map(e=>`<tr><td title="${esc(e.title)}">[${e.h==='SUP'?'補助':e.h}] ${esc(e.title.length>22?e.title.slice(0,21)+'…':e.title)}${e.regress?'<span class="gap-badge">再発</span>':''}</td>${e.sev.map(v=>`<td>${v?`<span class="sev s${v}">${v}</span>`:'<span style="color:var(--muted)">—</span>'}</td>`).join('')}</tr>`).join('')}</table></div>`:'<p class="hint">どのバージョンにも有効な指摘がありません。</p>'}<p class="hint">数字は重大度、「—」はその時点で指摘なし。件数などの数字を除いたタイトルで同じ指摘とみなします。</p></div>`;
+  const ins=histInsights(rows,M,tl);
+  h+=`<div class="sec"><h3>自動で出る所見</h3><div class="note"><ul>${ins.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div>
+    <div class="row"><button class="btn" id="hCopy">${ico('copy')}履歴レポートをコピー(Markdown)</button></div>
+    <p class="hint">推移はルールベースの指標の変化です。ユーザーにとって実際に良くなったかは、ユーザーテストで確認が必要です。</p>`;
+  return h;
+}
+function buildHistReport(){
+  const rows=histRows(); if(rows.length<2) return '# 履歴レポート\n\n2件以上の履歴が必要です。\n';
+  const M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), tl=issueTimelineOf(rows), d=new Date().toISOString().slice(0,10);
+  let m=`# バージョン履歴レポート\n\n- 日付: ${d}\n- 対象: ${rows.map(r=>r.label).join(' → ')}\n- 注意: ルールベースの推定による比較であり、実ユーザーテストの代替ではありません。視線は仮想です。\n\n## 指標の推移\n\n| 指標 | ${rows.map(r=>r.label).join(' | ')} |\n|---|${rows.map(()=>'---').join('|')}|\n`;
+  m+=HMETRICS.map(mt=>`| ${mt.label} | ${M.map(x=>x[mt.k]===null||x[mt.k]===undefined?'—':mt.fmt(x[mt.k])).join(' | ')} |`).join('\n')+'\n\n## 10原則スコア\n\n| 原則 | '+rows.map(r=>r.label).join(' | ')+' |\n|---|'+rows.map(()=>'---').join('|')+'|\n';
+  m+=NIELSEN.map((n,i)=>`| ${n.id} ${n.ja} | ${M.map(x=>x.scores[i]).join(' | ')} |`).join('\n')+'\n\n## 指摘の出入り（数字は重大度）\n\n| 指摘 | '+rows.map(r=>r.label).join(' | ')+' |\n|---|'+rows.map(()=>'---').join('|')+'|\n';
+  m+=tl.map(e=>`| [${e.h}] ${e.title}${e.regress?'（再発）':''} | ${e.sev.map(v=>v||'—').join(' | ')} |`).join('\n')+'\n\n## 所見\n\n'+histInsights(rows,M,tl).map(t=>'- '+t).join('\n')+'\n';
+  return m;
+}
+async function histDemo(){
+  S.versions=[]; S.vSeq=0; S.histSel=null; S.histCache.clear(); S.hCur=false;
+  const steps=[['V1 現状',sampleEC,'ECストア（現状）'],['V2 広告を整理',()=>sampleECStep(2),'EC（V2）'],['V3 操作と可読性',()=>sampleECStep(3),'EC（V3）'],['V4 仕上げ',sampleECFixed,'ECストア（改善版）']];
+  for(const [label,fn,name] of steps){ await loadHTML(fn(), name); addVersion(label,true); }
+  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,lensMap:false,multi:false}); S.cmp.show=true;
+  syncToggles(); applyLens(); renderSrc(); renderAll(); toast('4つのバージョンを履歴に追加しました');
+}
+function moveVersion(id,dir){ const i=S.versions.findIndex(v=>v.id===id), j=i+dir; if(i<0||j<0||j>=S.versions.length) return; [S.versions[i],S.versions[j]]=[S.versions[j],S.versions[i]]; saveHistory(); renderPanel(); }
+
+/* ============================================================
    Before / After 比較
    「Beforeに保存」で解析結果を複製し、現在の画面(After)と同じ基準で比べる
    ============================================================ */
-const cmpActive = () => !!(S.base && S.tab==='cmp' && S.cmp.show);
+const cmpActive = () => !!(S.wipe && S.tab==='cmp' && S.cmp.show);
+function syncWipe(){
+  let w=null;
+  if(S.tab==='cmp'){
+    if(S.cTab==='pair' && S.base) w={H:S.base.H, raw:S.base.raw, baseHref:S.base.baseHref, key:'b'+S.base.uid, label:'Before | After'};
+    else if(S.cTab==='history' && S.histSel){ const v=S.versions.find(x=>x.id===S.histSel); if(v) w={H:v.H, raw:v.raw, baseHref:v.baseHref, key:'v'+v.id, label:shortLabel(v.label)+' | 現在'}; }
+  }
+  S.wipe=w;
+  if(w && S.wipeKey!==w.key){ frameCmp.srcdoc=prepareHTML(w.raw,w.baseHref); S.wipeKey=w.key; }
+}
 function applyCmp(){
+  syncWipe();
   const on=cmpActive();
   frameCmp.style.display = on ? 'block' : 'none';
-  if(S.base){ frameCmp.style.height = S.base.H+'px'; frameCmp.style.clipPath = `inset(0 ${100-S.cmp.split}% 0 0)`; }
+  if(S.wipe){ frameCmp.style.height = S.wipe.H+'px'; frameCmp.style.clipPath = `inset(0 ${100-S.cmp.split}% 0 0)`; }
 }
 function collectTexts(){
-  const {cs,effBg,isVis,labelOf,doc,rect} = D, out=[];
+  const {cs,effBg,isVis,doc} = D, agg=new Map();
   doc.body.querySelectorAll('*').forEach(el=>{
-    if(out.length>=1500 || ![...el.childNodes].some(n=>n.nodeType===3 && n.textContent.trim()) || !isVis(el) || el.matches(':disabled')) return;
+    if(![...el.childNodes].some(n=>n.nodeType===3 && n.textContent.trim()) || !isVis(el) || el.matches(':disabled')) return;
     const s=cs(el), bg=effBg(el), col=parseColor(s.color); if(!bg||!col) return;
-    out.push({fs:parseFloat(s.fontSize)||14, bold:parseInt(s.fontWeight)>=700, fg:over(col,bg), bg, label:labelOf(el,20)});
+    const fs=parseFloat(s.fontSize)||14, bold=parseInt(s.fontWeight)>=700, fg=over(col,bg);
+    const R=v=>Math.round(v), key=[fs,bold,R(fg.r),R(fg.g),R(fg.b),R(bg.r),R(bg.g),R(bg.b)].join('|');
+    const e=agg.get(key); if(e) e.n++; else agg.set(key,{fs,bold,fg:{r:R(fg.r),g:R(fg.g),b:R(fg.b),a:1},bg:{r:R(bg.r),g:R(bg.g),b:R(bg.b),a:1},n:1});
   });
-  return out;
+  return [...agg.values()];
 }
 function makeSnap(){
   const types={}, kinds={}; S.comps.forEach(c=>{ types[c.type]=(types[c.type]||0)+1; if(c.type==='button') kinds[c.bi.kind]=(kinds[c.bi.kind]||0)+1; });
@@ -1602,27 +1782,26 @@ function makeSnap(){
     texts:collectTexts(), tap:S.lensTap.length };
 }
 function updateBaseChip(){
-  $('#saveBase').disabled = !S.comps.length; $('#saveBase').innerHTML = ico('bookmark',14)+'Beforeに保存';
+  $('#saveHist').disabled = !S.comps.length; $('#saveHist').innerHTML = ico('bookmark',14)+'履歴に追加'; $('#saveBase').disabled = !S.comps.length; $('#saveBase').innerHTML = ico('bookmark',14)+'Beforeに保存';
   $('#baseChip').innerHTML = S.base ? `Before：${esc(S.base.name)} <button class="mini" id="clearBase" aria-label="Beforeを解除">${ico('x',12)}</button>` : '';
 }
 function saveBase(){
   if(!S.comps.length || !S.src){ toast('先に画面を解析してください'); return; }
-  S.base = {...makeSnap(), raw:S.src.html, baseHref:S.src.baseHref};
-  frameCmp.srcdoc = prepareHTML(S.base.raw, S.base.baseHref);
+  S.base = {...makeSnap(), raw:S.src.html, baseHref:S.src.baseHref, uid:Date.now()};
   updateBaseChip(); toast('「'+S.base.name+'」をBeforeに保存しました'); renderPanel(); renderOverlay();
 }
 async function cmpDemo(){
   const a=SAMPLES.find(x=>x.key==='ec'), b=SAMPLES.find(x=>x.key==='ecfix');
   S.sampleKey='ec'; await loadHTML(a.build(), a.name); saveBase();
   S.sampleKey='ecfix'; await loadHTML(b.build(), b.name);
-  S.tab='cmp'; Object.assign(S.show,{comps:false,pins:false,path:false,lensMap:false}); S.cmp.show=true;
+  S.tab='cmp'; S.cTab='pair'; Object.assign(S.show,{comps:false,pins:false,path:false,lensMap:false}); S.cmp.show=true;
   syncToggles(); applyLens(); renderSrc(); renderAll();
 }
 async function swapBA(){
   if(!S.base) return;
   const old={...makeSnap(), raw:S.src.html, baseHref:S.src.baseHref}, b=S.base;
   await loadHTML(b.raw, b.name, b.baseHref);
-  S.base=old; frameCmp.srcdoc=prepareHTML(old.raw, old.baseHref); updateBaseChip(); renderAll();
+  S.base=old; S.base.uid=Date.now(); updateBaseChip(); renderAll();
 }
 function simMetrics(targets){
   const g=S.gaze, w=gazeWeights(), foldH=foldOf(), N=30, base=hashStr('cmp|'+g.persona+'|'+g.task);
@@ -1642,7 +1821,7 @@ function simMetrics(targets){
 }
 function lensCounts(snap, L){
   let n2=0, n1=0, worse=0;
-  snap.texts.forEach(t=>{ const e=evalPure(t,L); if(e.level===2) n2++; else if(e.level===1) n1++; if(e.level>e.baseLevel) worse++; });
+  snap.texts.forEach(t=>{ const w=t.n||1, e=evalPure(t,L); if(e.level===2) n2+=w; else if(e.level===1) n1+=w; if(e.level>e.baseLevel) worse+=w; });
   return {n2,n1,worse,tap:snap.tap};
 }
 const issueKey = i => i.h+'|'+i.title.replace(/\d+/g,'N');
@@ -1680,7 +1859,7 @@ function dRow(label,a,b,o={}){
 }
 function panelCmp(){
   let h=`<div class="sec row"><button class="btn" id="saveBase2">${ico('bookmark')}現在の画面をBeforeに保存</button>${S.base?`<button class="btn ghost" id="swapBA">${ico('swap')}入れ替え</button>`:''}<button class="btn ghost" id="cmpDemo2">デモを開く</button></div>`;
-  if(!S.base) return h+`<div class="note"><b>使い方</b><ul><li>比較したい画面（Before）を解析し、「Beforeに保存」を押す</li><li>別の画面（After）を解析する（サンプル・URL・HTML貼り付け）</li><li>このタブに、構成・10原則スコア・指摘・Age Lens・仮想視線の差分が表示される</li></ul><div style="margin-top:6px">すぐ試すなら「▶ デモ」（ECストア → 改善版）。</div></div>`;
+  if(!S.base) return h+`<div class="note"><b>使い方</b><ul><li>比較したい画面（Before）を解析し、「Beforeに保存」を押す</li><li>別の画面（After）を解析する（サンプル・URL・HTML貼り付け）</li><li>このタブに、構成・10原則スコア・指摘・Age Lens・仮想視線の差分が表示される</li></ul><div style="margin-top:6px">すぐ試すなら「デモを開く」（ECストア → 改善版）。</div></div>`;
   const c=computeCmp(), {A,B}=c;
   h+=`<div class="cmp-head"><div><span class="sev s3">Before</span> ${esc(B.name)}</div><div><span class="sev s0">After</span> ${esc(A.name)}</div></div>
   <div class="row" style="margin-bottom:6px"><label class="toggle"><input type="checkbox" id="cmpShow" ${S.cmp.show?'checked':''}> ステージにBeforeを重ねる</label></div>
@@ -1778,6 +1957,19 @@ document.addEventListener('click', e=>{
     if(S.tab==='lens' && !S.lens.on && !S.lens.preset){ setLensPreset('senior65'); renderTabs(); return; }
     applyLens(); syncToggles(); renderTabs(); renderPanel(); renderOverlay(); return;
   }
+  if(t.dataset.ctab){ S.cTab=t.dataset.ctab; renderPanel(); renderOverlay(); return; }
+  if(t.id==='hAdd'||t.id==='saveHist'){ addVersion(); return; }
+  if(t.id==='hDemo'){ histDemo(); return; }
+  if(t.id==='hClear'){ if(confirm('履歴をすべて削除します。よろしいですか？')){ S.versions=[]; S.histSel=null; S.histCache.clear(); saveHistory(); renderPanel(); renderOverlay(); } return; }
+  if(t.id==='hCopy'){ navigator.clipboard.writeText(buildHistReport()).then(()=>toast('履歴レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
+  if(t.dataset.vact){
+    const id=t.dataset.v, a=t.dataset.vact;
+    if(a==='del'){ S.versions=S.versions.filter(v=>v.id!==id); if(S.histSel===id) S.histSel=null; saveHistory(); renderPanel(); renderOverlay(); }
+    else if(a==='up') moveVersion(id,-1); else if(a==='down') moveVersion(id,1);
+    else if(a==='prev'){ S.histSel=(S.histSel===id)?null:id; S.cmp.show=true; renderPanel(); renderOverlay(); }
+    else if(a==='base'){ const v=S.versions.find(x=>x.id===id); if(v){ S.base={...v, uid:Date.now()}; S.cTab='pair'; updateBaseChip(); toast(`「${v.label}」をBeforeにしました。現在の画面と比較します`); renderPanel(); renderOverlay(); } }
+    return;
+  }
   if(t.dataset.ptab){ S.pTab=t.dataset.ptab; renderPanel(); return; }
   if(t.dataset.pactive){ const k=t.dataset.pactive; if(S.pActive.has(k)){ if(S.pActive.size>1) S.pActive.delete(k); else toast('1つ以上選んでください'); } else S.pActive.add(k); savePersonas(); S.multi=null; renderPanel(); renderOverlay(); return; }
   if(t.dataset.pload){ const P=PERSONAS[t.dataset.pload]; S.pEdit=draftFrom(P, !!P.custom); renderPanel(); return; }
@@ -1791,7 +1983,7 @@ document.addEventListener('click', e=>{
   if(t.id==='pImport'){ importPersonas(($('#pJson')||{value:''}).value); return; }
   if(t.id==='multiCopy'){ navigator.clipboard.writeText(buildMultiReport()).then(()=>toast('ペルソナ比較をコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='saveBase'||t.id==='saveBase2'){ saveBase(); return; }
-  if(t.id==='clearBase'){ S.base=null; frameCmp.srcdoc=''; updateBaseChip(); renderPanel(); renderOverlay(); return; }
+  if(t.id==='clearBase'){ S.base=null; S.wipeKey=null; updateBaseChip(); renderPanel(); renderOverlay(); return; }
   if(t.id==='swapBA'){ swapBA(); return; }
   if(t.id==='cmpDemo'||t.id==='cmpDemo2'){ cmpDemo(); return; }
   if(t.id==='cmpCopy'){ navigator.clipboard.writeText(buildCmpReport()).then(()=>toast('比較レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
@@ -1827,6 +2019,7 @@ document.addEventListener('change', e=>{
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
+  else if(t.id==='hCur'){ S.hCur=t.checked; renderPanel(); }
   else if(t.id==='cmpShow'){ S.cmp.show=t.checked; renderOverlay(); }
   else if(t.dataset.lens){ computeLens(); renderPanel(); }
   else if(t.id==='lOn'){ S.lens.on=t.checked; if(t.checked && !S.lens.preset) S.lens.preset='custom'; applyLens(); renderOverlay(); renderPanel(); }
@@ -1846,6 +2039,7 @@ document.addEventListener('change', e=>{
 document.addEventListener('input', e=>{
   const lt=e.target;
   if(lt.dataset && (lt.dataset.pf||lt.dataset.pl)){ const d=ensureDraft(), k=lt.dataset.pf||lt.dataset.pl; if(lt.dataset.pf) d[k]=+lt.value; else d.lens[k]=+lt.value; const v=$('#pv_'+k); if(v) v.textContent=PFMAP[k](+lt.value); return; }
+  if(lt.dataset && lt.dataset.vlabel){ const v=S.versions.find(x=>x.id===lt.dataset.vlabel); if(v){ v.label=lt.value.slice(0,12)||'無題'; clearTimeout(S._hl); S._hl=setTimeout(saveHistory,400); } return; }
   if(lt.id==='pName'){ ensureDraft().name=lt.value; return; }
   if(lt.id==='pDesc'){ ensureDraft().descText=lt.value; return; }
   if(lt.dataset && lt.dataset.cmp==='split'){ S.cmp.split=+lt.value; const v=$('#cv_split'); if(v) v.textContent=lt.value+'%'; renderOverlay(); return; }
@@ -1876,7 +2070,7 @@ function toggleTheme(){ const d=document.documentElement; const next=d.dataset.t
 (function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').innerHTML=ico(t==='dark'?'sun':'moon',18); })();
 
 /* 起動 */
-initPersonas();
+initPersonas(); initHistory();
 renderSrc();
 renderPanel();
 (function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); })();
