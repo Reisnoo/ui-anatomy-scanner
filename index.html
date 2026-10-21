@@ -15,7 +15,7 @@
 :root {
   --primary:#3B82F6; --primary-strong:#2563EB; --primary-light:#EFF6FF; --bg:#F8FAFC; --surface:#FFFFFF;
   --border:#E2E8F0; --text:#0F172A; --muted:#64748B; --navy:#0F172A; --canvas:#E9EEF5;
-  --sev1:#A16207; --sev2:#C2410C; --sev3:#DC2626; --sev4:#7E22CE;
+  --sev1:#A16207; --sev2:#C2410C; --sev3:#B91C1C; --sev4:#7E22CE;
   --sev1-bg:#FEF9C3; --sev2-bg:#FFEDD5; --sev3-bg:#FEE2E2; --sev4-bg:#F3E8FF;
   --ok:#15803D; --ok-bg:#DCFCE7; --shadow:0 1px 2px rgba(15,23,42,.04);
 }
@@ -34,7 +34,7 @@ b, strong { font-weight:600; }
 small { font-size:12px; }
 :focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
 .app-bar { display:flex; align-items:center; gap:16px; padding:14px 24px; background:var(--surface); border-bottom:1px solid var(--border); flex-wrap:wrap; }
-.brand { display:flex; align-items:center; gap:10px; font-weight:600; font-size:16px; color:var(--text); }
+.brand { display:flex; align-items:center; gap:10px; font-weight:600; font-size:16px; color:var(--text); margin:0; }
 .brand svg { width:26px; height:26px; }
 .tag { font-size:12px; font-weight:600; padding:1px 8px; border-radius:6px; background:transparent; color:var(--muted); border:1px solid var(--border); }
 .disclaimer { flex:1; min-width:260px; font-size:12px; color:var(--muted); }
@@ -72,6 +72,7 @@ small { font-size:12px; }
 .sample { text-align:left; border:1px solid var(--border); background:var(--bg); border-radius:10px; padding:10px 12px; }
 .sample:hover { border-color:var(--primary); }
 .sample[aria-pressed="true"] { border-color:var(--primary); background:var(--primary-light); }
+.sample[aria-pressed="true"] span { color:var(--text); }
 .sample b { display:block; color:var(--navy); }
 .sample span { font-size:12px; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .sample b { font-size:13px; }
@@ -219,10 +220,10 @@ th { color:var(--muted); font-weight:600; }
   <filter id="fYel" color-interpolation-filters="linearRGB"><feColorMatrix id="mYel" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/></filter>
 </defs></svg>
 <header class="app-bar">
-  <div class="brand">
+  <h1 class="brand">
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="26" height="24" rx="4"/><path d="M8 10h10M8 16h6"/><circle cx="22" cy="20" r="4" style="stroke:var(--primary)"/></svg>
     UI Anatomy Scanner <span class="tag">Prototype</span>
-  </div>
+  </h1>
   <div class="disclaimer">指摘と視線はルールベースの推定です。実ユーザーテストの代替ではなく、視線は実測ではなく仮想です。</div>
   <button class="icon-btn" id="themeBtn" aria-label="ダークモード切替"></button>
 </header>
@@ -1504,6 +1505,8 @@ const LEAD = {
   multiEdit:'重みと視覚特性を決めて、自分のペルソナを保存します。',
   cmpHist:'バージョンを順に並べて、何がいつ良くなり、どこで後退したかを見ます。',
 };
+/* 右パネルの小見出し（h3）は、ページの見出しの階層では h1 の次のレベル（2）として扱う（見出しの飛び越しを避ける） */
+new MutationObserver(()=>{ $$('#panelBody h3:not([aria-level])').forEach(h=>h.setAttribute('aria-level','2')); }).observe($('#panelBody'),{childList:true,subtree:true});
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
@@ -1521,7 +1524,7 @@ function panelCompsBase(){
   h+=`</div>`;
   if(btn.length){
     h+=`<div class="sec"><h3>ボタンの内訳</h3><div class="row" style="gap:6px">${Object.entries(kinds).map(([k,v])=>`<span class="sev s0" style="background:var(--primary-light);color:var(--primary-strong)">${BTN_KIND_JA[k]} ${v}</span>`).join('')}</div>`;
-    if(S.btnStyles.length){ h+=`<h3 style="margin-top:12px">塗り／枠線ボタンの見た目バリエーション（${S.btnStyles.length}種類）</h3><div>`; S.btnStyles.forEach(s=>{ const b=s.bi; h+=`<span class="style-chip" title="${esc(s.sig)}" style="background:${b.filled?hex(b.bg):'transparent'};color:${hex(b.col)};border-color:${b.outlined?hex(b.bcol):'transparent'};border-radius:${b.radius>=20?999:b.radius}px">${esc(s.label)}<small style="opacity:.7;margin-left:6px">×${s.n}</small></span>`; }); h+=`</div>`; }
+    if(S.btnStyles.length){ h+=`<h3 style="margin-top:12px">塗り／枠線ボタンの見た目バリエーション（${S.btnStyles.length}種類）</h3><div>`; S.btnStyles.forEach(s=>{ const b=s.bi; h+=`<span class="style-chip" title="${esc(s.sig)}" style="background:${b.filled?hex(b.bg):'transparent'};color:${hex(b.col)};border-color:${b.outlined?hex(b.bcol):'transparent'};border-radius:${b.radius>=20?999:b.radius}px">${esc(s.label)}<small style="margin-left:6px">×${s.n}</small></span>`; }); h+=`</div>`; }
     h+=`</div>`;
   }
   h+=`<div class="sec"><h3>要素リスト（ホバーでステージ上を強調）</h3>`;
@@ -1556,7 +1559,7 @@ function issueHTML(is){
     return `<div class="issue${sel}${dim}" data-issue="${is.id}"><div class="ttl"><span class="sev s${is.sev}">重大度${is.sev}</span><span>${esc(is.title)}</span></div>
       <div class="ev">${esc(is.detail)}${is.evidence.length?`<br>根拠：${is.evidence.map(e=>`<code>${esc(e)}</code>`).join(' ')}`:''}</div>
       <div class="fix"><b>改善案</b>${esc(is.fix)}</div>
-      ${is.code?`<details class="code-box"><summary>修正の書き方（コード例）</summary><pre><code>${esc(is.code)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" data-act="copycode" data-issue="${is.id}">コードをコピー</button></div></details>`:''}
+      ${is.code?`<details class="code-box"><summary>修正の書き方（コード例）</summary><pre tabindex="0"><code>${esc(is.code)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" data-act="copycode" data-issue="${is.id}">コードをコピー</button></div></details>`:''}
       <div class="row">${is.rects.length?`<button class="mini" data-act="show" data-issue="${is.id}">ステージで見る (${is.rects.length})</button>`:''}<button class="mini" data-act="dismiss" data-issue="${is.id}" aria-pressed="${is.state==='dismissed'}">${is.state==='dismissed'?'却下済み（戻す）':'却下する'}</button></div></div>`;
   }
   return `<div class="issue${sel}" data-issue="${is.id}"><div class="ttl"><span class="badge-manual">要確認</span><span>${esc(is.title)}</span></div>
@@ -2492,7 +2495,7 @@ function panelResp(){
   }
   h+=`<div class="sec"><h3>この画面幅（${v.w}px）の指摘と、直し方</h3>${cur.length?cur.map(issueHTML).join(''):'<p class="hint">この画面幅に特有の指摘は出ていません。</p>'}</div>
     <div class="sec"><h3>画面幅に対応させる書き方（基本形）</h3>
-    <details class="code-box" open><summary>モバイルファーストのCSS（コピーして使えます）</summary><pre><code>${esc(RESP_BASE)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" id="respBaseCopy">コードをコピー</button></div></details>
+    <details class="code-box" open><summary>モバイルファーストのCSS（コピーして使えます）</summary><pre tabindex="0"><code>${esc(RESP_BASE)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" id="respBaseCopy">コードをコピー</button></div></details>
     <p class="hint">境目（ブレークポイント）の目安：〜599px スマホ／600〜1023px タブレット／1024px〜 PC。実際は、内容が崩れる幅で決めるのが基本です。</p></div>`;
   return h;
 }
