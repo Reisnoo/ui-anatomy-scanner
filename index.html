@@ -2015,7 +2015,7 @@ function panelHistory(){
   let h=pendingShareHTML()+`<div class="sec row"><button class="btn" id="hAdd">${ico('bookmark')}現在の画面を履歴に追加</button><button class="btn ghost" id="hDemo">デモを開く</button>${V.length?'<button class="btn ghost" id="hClear">履歴を空にする</button>':''}</div>`;
   if(!V.length) return h+`<div class="note"><b>使い方</b><ul><li>画面を解析して「履歴に追加」を押す（改善の節目ごとに繰り返す。最大${MAX_VERSIONS}件）</li><li>2件以上たまると、指標の推移・10原則の変化・指摘の出入りが表示される</li><li>履歴はこのブラウザに保存される（容量が足りないときはタブを閉じると消える）</li></ul><div style="margin-top:6px">すぐ試すなら「デモを開く」（ECストアの4段階の改善）。</div></div>`+histIO();
   h+=`<div class="sec"><h3>履歴（上から古い順）</h3>${V.map((v,i)=>`<div class="vrow"><span class="vn">${i+1}</span><input type="text" data-vlabel="${v.id}" value="${esc(v.label)}" maxlength="12" aria-label="バージョン名"><span class="vsrc" title="${esc(v.name)}">${esc(v.name)} ・${v.savedAt}</span>
-    <div class="acts"><button class="mini" data-vact="prev" data-v="${v.id}" aria-pressed="${S.histSel===v.id}" ${v.raw?'':'disabled title="HTMLを含めずに書き出された履歴のため、重ね表示はできません"'}>ステージに重ねる</button><button class="mini" data-vact="base" data-v="${v.id}">Beforeにする</button><button class="mini" data-vact="up" data-v="${v.id}" ${i===0?'disabled':''}>上へ</button><button class="mini" data-vact="down" data-v="${v.id}" ${i===V.length-1?'disabled':''}>下へ</button><button class="mini" data-vact="del" data-v="${v.id}">削除</button></div></div>`).join('')}
+    <div class="acts"><button class="mini" data-vact="prev" data-v="${v.id}" aria-pressed="${S.histSel===v.id}" ${hasView(v)?'':'disabled title="HTMLを含めずに書き出された履歴のため、重ね表示はできません"'}>ステージに重ねる</button><button class="mini" data-vact="base" data-v="${v.id}">Beforeにする</button><button class="mini" data-vact="up" data-v="${v.id}" ${i===0?'disabled':''}>上へ</button><button class="mini" data-vact="down" data-v="${v.id}" ${i===V.length-1?'disabled':''}>下へ</button><button class="mini" data-vact="del" data-v="${v.id}">削除</button></div></div>`).join('')}
     <div class="row" style="margin-top:12px"><label class="toggle"><input type="checkbox" id="hCur" ${S.hCur?'checked':''}> 現在の画面を最後に含める</label></div></div>`;
   const rows=histRows();
   if(rows.length<2) return h+'<p class="hint">推移を表示するには、2件以上（履歴＋現在の画面でも可）が必要です。</p>'+histIO();
@@ -2076,11 +2076,11 @@ function sanitizeVersion(v){
   const bh=String(v.baseHref||'');
   return {id:null, label:tx(v.label,12).trim()||'無題', name:tx(v.name,80).trim()||'無題', savedAt:tx(v.savedAt,5), H:Math.round(nm(v.H,800,100,20000)),
     types:sCount(v.types), kinds:sCount(v.kinds), btnStyleN:Math.round(nm(v.btnStyleN,0,0,1000)), bannersFold:Math.round(nm(v.bannersFold,0,0,1000)), links:Math.round(nm(v.links,0,0,1e5)), tap:Math.round(nm(v.tap,0,0,1e5)),
-    issues, targets, texts, raw:typeof v.raw==='string'?v.raw.slice(0,1500000):'', baseHref:/^https?:\/\//.test(bh)?bh.slice(0,500):''};
+    issues, targets, texts, raw:typeof v.raw==='string'?v.raw.slice(0,1500000):'', vw:Math.round(nm(v.vw,1280,200,4000)), vh:Math.round(nm(v.vh,800,200,4000)), shot:(typeof v.shot==='string' && v.shot.length<=1500000 && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(v.shot))?v.shot:'', baseHref:/^https?:\/\//.test(bh)?bh.slice(0,500):''};
 }
 function buildHistPayload(){
   return {...HIST_FORMAT, exportedAt:new Date().toISOString(), includesHtml:!!S.io.raw,
-    versions:S.versions.map(v=>{ const c={...v}; if(!S.io.raw) c.raw=''; return c; }),
+    versions:S.versions.map(v=>{ const c={...v}; if(!S.io.raw){ c.raw=''; c.shot=''; } return c; }),
     ...(S.io.pers && customKeys().length ? {personas:customKeys().map(exportPersona)} : {})};
 }
 function applyImport(payload, mode){
@@ -2196,14 +2196,14 @@ function buildReportHTML(){
   const A=M[0], Z=M[M.length-1], d=new Date(), dateStr=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
   const delta=(a,b,k)=>{ if(a===null||b===null||a===undefined||b===undefined) return ''; const dv=b-a; if(dv===0) return '±0'; const mt=HMETRICS.find(m=>m.k===k); return mt&&mt.dfmt ? mt.dfmt(dv) : (dv>0?'+':'')+(Math.abs(dv)<10?Math.round(dv*10)/10:Math.round(dv)); };
   const tile=(label,k,fmt)=>{ const a=A[k], z=Z[k]; if(a===null||a===undefined||z===null||z===undefined) return ''; return `<div class="tile"><b>${fmt(a)} → ${fmt(z)}</b><span>${label}（${delta(a,z,k)}）</span></div>`; };
-  const thumbs = rp.thumbs ? rows.filter(r=>!r.cur && r.snap.raw) : [];
+  const thumbs = rp.thumbs ? rows.filter(r=>!r.cur && hasView(r.snap)) : [];
   let h=`<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(rp.title||'UI改善の履歴レポート')}</title><style>${REP_CSS}</style></head><body><main>
 <header class="cover"><h1>${esc(rp.title||'UI改善の履歴レポート')}</h1><div class="meta">${rp.author?esc(rp.author)+'　／　':''}${dateStr}　／　対象：${esc(rows.map(r=>r.label).join(' → '))}</div><div class="badge">ルールベースの分析と仮想の視線を含みます（実ユーザーテストの結果ではありません）</div></header>
 <section><h2>1. 要約</h2><div class="tiles">${tile('10原則の平均スコア','avg',v=>v.toFixed(0))}${tile('有効な指摘の件数','issues',v=>String(v))}${tile('ボタンの見た目の種類','btnStyle',v=>String(v))}${tile('主要CTAへの到達率（仮想）','cta',v=>Math.round(v*100)+'%')}</div>
 <h3>自動で出た所見</h3><div class="note"><ul>${ins.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></section>`;
   if(rp.purpose||rp.note) h+=`<section><h2>2. 目的と設計の判断</h2>${rp.purpose?`<h3>目的・課題設定</h3><p class="user">${esc(rp.purpose)}</p>`:''}${rp.note?`<h3>設計判断・補足</h3><p class="user">${esc(rp.note)}</p>`:''}</section>`;
   h+=`<section><h2>${rp.purpose||rp.note?'3':'2'}. 分析した画面</h2><table><tr><th>#</th><th>バージョン</th><th>対象</th><th>保存時刻</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.label)}</td><td>${esc(r.snap.name)}</td><td>${r.cur?'（解析時点の画面）':esc(r.snap.savedAt||'')}</td></tr>`).join('')}</table>`;
-  if(thumbs.length) h+=`<h3>画面のスナップショット</h3><div class="thumbs">${thumbs.map(r=>`<figure><div class="frame"><iframe sandbox="" tabindex="-1" title="${esc(r.label)}" srcdoc="${esc(prepareHTML(r.snap.raw, r.snap.baseHref))}"></iframe></div><figcaption>${esc(r.label)}</figcaption></figure>`).join('')}</div><p class="hint">サムネイルは、スクリプトを実行しない状態で表示しています。外部の画像・CSSは、開く環境で読み込めない場合があります。</p>`;
+  if(thumbs.length) h+=`<h3>画面のスナップショット</h3><div class="thumbs">${thumbs.map(r=>`<figure><div class="frame"><iframe sandbox="" tabindex="-1" title="${esc(r.label)}" srcdoc="${esc(snapDoc(r.snap,1280))}"></iframe></div><figcaption>${esc(r.label)}</figcaption></figure>`).join('')}</div><p class="hint">サムネイルは、スクリプトを実行しない状態で表示しています。外部の画像・CSSは、開く環境で読み込めない場合があります。</p>`;
   h+=`</section>`;
   const n0=rp.purpose||rp.note?4:3;
   h+=`<section><h2>${n0}. 指標の推移</h2>${chartsHTML(M,labels)}<p class="hint">各点の上の数値がその時点の値です。仮想視線とAge Lensの値は、全バージョンを同じ条件（下記）で計算しています。</p></section>
@@ -2242,15 +2242,19 @@ function reportUI(){
    Before / After 比較
    「Beforeに保存」で解析結果を複製し、現在の画面(After)と同じ基準で比べる
    ============================================================ */
+/* 履歴・Before/After・レポートで表示する画面：画像（OCR）の場合は、再構成ではなく元の画像を使う */
+const shotDoc = (url,w) => `<!doctype html><html><body style="margin:0;background:#fff"><img src="${url}" style="display:block;width:${w}px;height:auto" alt=""></body></html>`;
+const hasView = v => !!(v && (v.shot||v.raw));
+const snapDoc = (v,forceW) => v.shot ? shotDoc(v.shot, forceW||v.vw||PAGE_W) : prepareHTML(v.raw, v.baseHref);
 const cmpActive = () => !!(S.wipe && S.tab==='cmp' && S.cmp.show);
 function syncWipe(){
   let w=null;
   if(S.tab==='cmp'){
-    if(S.cTab==='pair' && S.base && S.base.raw) w={H:S.base.H, raw:S.base.raw, baseHref:S.base.baseHref, key:'b'+S.base.uid, label:'Before | After'};
-    else if(S.cTab==='history' && S.histSel){ const v=S.versions.find(x=>x.id===S.histSel); if(v && v.raw) w={H:v.H, raw:v.raw, baseHref:v.baseHref, key:'v'+v.id, label:shortLabel(v.label)+' | 現在'}; }
+    if(S.cTab==='pair' && S.base && hasView(S.base)) w={H:S.base.H, doc:snapDoc(S.base), key:'b'+S.base.uid, label:'Before | After'};
+    else if(S.cTab==='history' && S.histSel){ const v=S.versions.find(x=>x.id===S.histSel); if(v && hasView(v)) w={H:v.H, doc:snapDoc(v), key:'v'+v.id, label:shortLabel(v.label)+' | 現在'}; }
   }
   S.wipe=w;
-  if(w && S.wipeKey!==w.key){ frameCmp.srcdoc=prepareHTML(w.raw,w.baseHref); S.wipeKey=w.key; }
+  if(w && S.wipeKey!==w.key){ frameCmp.srcdoc=w.doc; S.wipeKey=w.key; }
 }
 function applyCmp(){
   syncWipe();
@@ -2271,7 +2275,7 @@ function collectTexts(){
 }
 function makeSnap(){
   const types={}, kinds={}; S.comps.forEach(c=>{ types[c.type]=(types[c.type]||0)+1; if(c.type==='button') kinds[c.bi.kind]=(kinds[c.bi.kind]||0)+1; });
-  return { name:S.sourceName, H:S.frameH, vw:PAGE_W, vh:FOLD_H, types, kinds, btnStyleN:(S.btnStyles||[]).length,
+  return { name:S.sourceName, H:S.frameH, vw:PAGE_W, vh:FOLD_H, shot:(S.imageMode&&S.shot&&S.shot.thumb)||'', types, kinds, btnStyleN:(S.btnStyles||[]).length,
     bannersFold:S.comps.filter(c=>c.type==='banner' && c.rect.y<FOLD_H).length, links:S.stats.links,
     issues:JSON.parse(JSON.stringify(S.issues)), targets:S.targets.map(t=>({...t, el:null})),
     texts:collectTexts(), tap:S.lensTap.length };
@@ -2294,6 +2298,7 @@ async function cmpDemo(){
 }
 async function swapBA(){
   if(!S.base) return;
+  if(S.base.shot || S.imageMode){ toast('画像（OCR）の画面は、BeforeとAfterの入れ替えができません'); return; }
   const old={...makeSnap(), raw:S.src.html, baseHref:S.src.baseHref}, b=S.base;
   await loadHTML(b.raw, b.name, b.baseHref);
   S.base=old; S.base.uid=Date.now(); updateBaseChip(); renderAll();
@@ -2856,6 +2861,8 @@ async function loadShotFile(file){
     S.shot={canvas:c, name:(file.name||'スクリーンショット').replace(/\.[a-z0-9]+$/i,''), w:c.width, h:c.height, dataURL:null};
     const t=document.createElement('canvas'), k=Math.min(1,2400/c.width); t.width=Math.round(c.width*k); t.height=Math.round(c.height*k); t.getContext('2d').drawImage(c,0,0,t.width,t.height);
     S.shot.dataURL=t.toDataURL('image/jpeg',.9);
+    const k2=Math.min(1,960/c.width), t2=document.createElement('canvas'); t2.width=Math.round(c.width*k2); t2.height=Math.round(c.height*k2); t2.getContext('2d').drawImage(c,0,0,t2.width,t2.height);
+    S.shot.thumb=t2.toDataURL('image/jpeg',.72);   // 履歴・Before/After・レポート用の小さい画像
   }catch(e){ setStatus('この画像を読み込めませんでした', true); return; }
   renderSrc(); await analyzeShot();
 }
@@ -2913,7 +2920,8 @@ function renderSrc(){
       ${sh?'<button class="mini" id="ocrRerun">この設定で読み直す</button>':''}</div>
     <p class="hint">画像はこのブラウザの中だけで処理され、外部には送信されません。OCRエンジンと言語データ（約5MB）は、初回だけ CDN（jsDelivr）から取得してブラウザに保存します。画像の中の文字・大きさ・色・ボタンの位置を推定し、DOMが取れない画面（デザイン案・他社サイト・アプリ）で使えます。読み取りと推定には誤りが含まれます（精度は README を参照）。</p>`;
   } else {
-    b.innerHTML=`<textarea id="htmlIn" placeholder="<!doctype html> … ページのHTMLを貼り付け（ブラウザの「ページのソースを表示」からコピー）" aria-label="HTML"></textarea><div class="row" style="margin-top:8px"><button class="btn" id="htmlGo">解析する</button><span class="hint" style="margin:0">外部CSSは絶対URLなら読み込まれます</span></div>`;
+    b.innerHTML=`<textarea id="htmlIn" placeholder="<!doctype html> … ページのHTMLを貼り付け（ブラウザの「ページのソースを表示」からコピー）" aria-label="HTML"></textarea><div class="row" style="margin-top:8px"><input type="url" id="baseIn" placeholder="元のページのURL（任意）https://example.com/page" aria-label="元のページのURL（任意）" value="${esc(S.htmlBase||'')}"><button class="btn" id="htmlGo">解析する</button></div>
+    <p class="hint">貼ったHTMLが、外部のCSS・画像を相対パスで読んでいる場合は、「元のページのURL」を入れると、そこを基準に読み込みます（入れないと、見た目が崩れ、色や大きさの判定がずれます）。JavaScriptで描かれるサイトは、ブラウザの開発者ツールで、描画後の &lt;html&gt; を右クリック → Copy → Copy outerHTML でコピーして貼ると、中身が取れます。スクリプトは実行しません。</p>`;
   }
 }
 
@@ -2977,7 +2985,11 @@ document.addEventListener('click', e=>{
   if(t.dataset.lrect){ const l=S.lensList[+t.dataset.lrect]; if(l) scrollToRect(l.rect); return; }
   if(t.dataset.sample){ const s=SAMPLES.find(x=>x.key===t.dataset.sample); S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); return; }
   if(t.id==='urlGo'){ loadURL($('#urlIn').value.trim(), $('#proxyIn')?.value.trim()); return; }
-  if(t.id==='htmlGo'){ const v=$('#htmlIn').value; if(v.trim().length<20){ setStatus('HTMLを貼り付けてください', true); return; } loadHTML(v, '貼り付けたHTML'); return; }
+  if(t.id==='htmlGo'){
+    const v=$('#htmlIn').value; if(v.trim().length<20){ setStatus('HTMLを貼り付けてください', true); return; }
+    const raw=($('#baseIn')&&$('#baseIn').value||'').trim(); let base='', name='貼り付けたHTML';
+    if(raw){ try{ const u=new URL(raw); if(!/^https?:$/.test(u.protocol)) throw 0; base=u.href; name=u.host; S.htmlBase=raw; }catch(e){ setStatus('元のページのURLの形式が正しくありません（https://… で入力）', true); return; } }
+    loadHTML(v, name, base); return; }
   if(t.id==='themeBtn'){ toggleTheme(); return; }
   if(t.id==='copyReport'){ navigator.clipboard.writeText(buildReport()).then(()=>toast('レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='dlReport'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildReport()],{type:'text/markdown'})); a.download='ui-analysis-report.md'; a.click(); return; }
