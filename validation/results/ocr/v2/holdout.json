@@ -1,0 +1,500 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "holdout",
+  "summary": {
+   "buttons": "再現 20/25 (80.0%)／検出した枠 31 のうちDOMのボタンと一致 20 (64.5%)",
+   "pages": 16,
+   "lines": 1132,
+   "lineRecall": 0.9363957597173145,
+   "CER": 0.029645431808150654,
+   "extraRate": 0.007874595231086252,
+   "fsN": 1060,
+   "fsMedRatio": 1.0045276988636365,
+   "fsMedAbsErr": 0.010949337121212155,
+   "fsWithin15": 0.9811320754716981,
+   "fsWithin25": 0.9858490566037735,
+   "byKind": {
+    "cap20+": {
+     "n": 70,
+     "med": 0.951,
+     "w15": 1
+    },
+    "cap14-19": {
+     "n": 967,
+     "med": 1.007,
+     "w15": 0.98
+    },
+    "xh14-19": {
+     "n": 6,
+     "med": 1.138,
+     "w15": 1
+    },
+    "cap<14": {
+     "n": 15,
+     "med": 0.996,
+     "w15": 0.87
+    },
+    "line14-19": {
+     "n": 2,
+     "med": 0.145,
+     "w15": 0
+    }
+   },
+   "conN": 997,
+   "conMedRelErr": 0.0032342470533183515,
+   "conWithin20": 0.9909729187562688,
+   "small": "P 0.0% R — (tp0/fp2/fn0)",
+   "low": "P 100.0% R 90.6% (tp29/fp0/fn3) ／基準ぎりぎり(±4%)で除外 38件",
+   "msPerPage": 3849.7187499998836
+  },
+  "pages": [
+   {
+    "id": "mb-pricing",
+    "lines": 53,
+    "recall": 0.92,
+    "CER": 0.015,
+    "ms": 3540,
+    "bad": [
+     {
+      "text": "$0",
+      "sim": 0.67,
+      "hyp": "$0."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "mb-contact",
+    "lines": 35,
+    "recall": 0.94,
+    "CER": 0.005,
+    "ms": 1878,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "mb-faq",
+    "lines": 44,
+    "recall": 0.95,
+    "CER": 0.002,
+    "ms": 3966,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "mb-portfolio",
+    "lines": 22,
+    "recall": 0.91,
+    "CER": 0.03,
+    "ms": 1013,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "mb-blog",
+    "lines": 63,
+    "recall": 0.84,
+    "CER": 0.109,
+    "ms": 3760,
+    "bad": [
+     {
+      "text": "News",
+      "sim": 0,
+      "hyp": "ad"
+     },
+     {
+      "text": "News",
+      "sim": 0,
+      "hyp": "ad"
+     },
+     {
+      "text": "Kelly Rowan",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "March 12, 2023 · 6 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Josiah Barclay",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "March 23, 2023 · 4 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Evelyn Martinez",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "April 2, 2023 · 10 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "sba-dash",
+    "lines": 382,
+    "recall": 0.95,
+    "CER": 0.023,
+    "ms": 13221,
+    "bad": [
+     {
+      "text": "66",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "59",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "39",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "36",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0.5,
+      "hyp": "a1"
+     },
+     {
+      "text": "2009/06/25",
+      "sim": 0.56,
+      "hyp": "2009/06/25$675,000"
+     },
+     {
+      "text": "$675,000",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "2011/12/12",
+      "sim": 0.7,
+      "hyp": "2011212"
+     },
+     {
+      "text": "28",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "48",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "22",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "47",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "sba-tables",
+    "lines": 377,
+    "recall": 0.95,
+    "CER": 0.024,
+    "ms": 13851,
+    "bad": [
+     {
+      "text": "66",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "59",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "39",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "36",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0.5,
+      "hyp": "a1"
+     },
+     {
+      "text": "2009/06/25",
+      "sim": 0.56,
+      "hyp": "2009/06/25$675,000"
+     },
+     {
+      "text": "$675,000",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "2011/12/12",
+      "sim": 0.7,
+      "hyp": "2011212"
+     },
+     {
+      "text": "28",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "48",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "22",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "47",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "sba-login",
+    "lines": 11,
+    "recall": 0.91,
+    "CER": 0.007,
+    "ms": 825,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "sba-register",
+    "lines": 12,
+    "recall": 0.92,
+    "CER": 0.006,
+    "ms": 801,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "sba-charts",
+    "lines": 28,
+    "recall": 0.96,
+    "CER": 0.002,
+    "ms": 2147,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "creative",
+    "lines": 11,
+    "recall": 0.91,
+    "CER": 0.027,
+    "ms": 2011,
+    "bad": [
+     {
+      "text": "Your Favorite Place for",
+      "sim": 0.75,
+      "hyp": "Yi0urFaVifo)ritePlacefor"
+     }
+    ]
+   },
+   {
+    "id": "grayscale",
+    "lines": 8,
+    "recall": 0.88,
+    "CER": 0.017,
+    "ms": 1314,
+    "bad": [
+     {
+      "text": "GRAYSCALE",
+      "sim": 0.78,
+      "hyp": "GRAYSCA"
+     }
+    ]
+   },
+   {
+    "id": "resume",
+    "lines": 13,
+    "recall": 1,
+    "CER": 0.016,
+    "ms": 2191,
+    "bad": []
+   },
+   {
+    "id": "one-page",
+    "lines": 27,
+    "recall": 0.85,
+    "CER": 0.052,
+    "ms": 6354,
+    "bad": [
+     {
+      "text": "One Page Wonder",
+      "sim": 0.15,
+      "hyp": "[JasiaFyr"
+     },
+     {
+      "text": "Will Rock Your Socks Off",
+      "sim": 0.05,
+      "hyp": "NLJS"
+     },
+     {
+      "text": "For those",
+      "sim": 0.5,
+      "hyp": "F0)rth©)Se"
+     },
+     {
+      "text": "about to rock...",
+      "sim": 0.71,
+      "hyp": "abouttrockeo0"
+     }
+    ]
+   },
+   {
+    "id": "small-biz",
+    "lines": 37,
+    "recall": 0.97,
+    "CER": 0.002,
+    "ms": 3997,
+    "bad": [
+     {
+      "text": "Tagline",
+      "sim": 0.78,
+      "hyp": "Ti‘agline"
+     }
+    ]
+   },
+   {
+    "id": "stylish",
+    "lines": 9,
+    "recall": 0.33,
+    "CER": 0.459,
+    "ms": 728,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "About",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Services",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Portfolio",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   }
+  ]
+ }
+]

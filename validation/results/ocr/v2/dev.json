@@ -1,0 +1,383 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "dev",
+  "summary": {
+   "buttons": "再現 36/50 (72.0%)／検出した枠 41 のうちDOMのボタンと一致 36 (87.8%)",
+   "pages": 14,
+   "lines": 553,
+   "lineRecall": 0.9258589511754068,
+   "CER": 0.023466117216117216,
+   "extraRate": 0.04768644529123571,
+   "fsN": 512,
+   "fsMedRatio": 0.9821329099821747,
+   "fsMedAbsErr": 0.023792613636363757,
+   "fsWithin15": 0.998046875,
+   "fsWithin25": 0.998046875,
+   "byKind": {
+    "cap20+": {
+     "n": 136,
+     "med": 0.969,
+     "w15": 1
+    },
+    "cap14-19": {
+     "n": 290,
+     "med": 0.991,
+     "w15": 1
+    },
+    "cap<14": {
+     "n": 80,
+     "med": 0.988,
+     "w15": 0.99
+    },
+    "xh14-19": {
+     "n": 2,
+     "med": 1.147,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 4,
+     "med": 1.091,
+     "w15": 1
+    }
+   },
+   "conN": 421,
+   "conMedRelErr": 0.0027854011053674976,
+   "conWithin20": 0.9857482185273159,
+   "small": "P 100.0% R 100.0% (tp11/fp0/fn0)",
+   "low": "P 100.0% R 97.2% (tp174/fp0/fn5) ／基準ぎりぎり(±4%)で除外 18件",
+   "msPerPage": 4465.264285714432
+  },
+  "pages": [
+   {
+    "id": "shop-home",
+    "lines": 41,
+    "recall": 0.78,
+    "CER": 0.078,
+    "ms": 2757,
+    "bad": [
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "©"
+     },
+     {
+      "text": "Shop in style",
+      "sim": 0.55,
+      "hyp": "nstyle"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$26:66"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "Sole"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.43,
+      "hyp": "$56-608"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": "€Dd"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$26:66"
+     }
+    ]
+   },
+   {
+    "id": "shop-item",
+    "lines": 34,
+    "recall": 0.82,
+    "CER": 0.034,
+    "ms": 2013,
+    "bad": [
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "©"
+     },
+     {
+      "text": "$45.00",
+      "sim": 0.5,
+      "hyp": "$4566"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.5,
+      "hyp": "sate"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.5,
+      "hyp": "$2660"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.5,
+      "hyp": "sate"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     }
+    ]
+   },
+   {
+    "id": "bc-products",
+    "lines": 26,
+    "recall": 1,
+    "CER": 0.001,
+    "ms": 11656,
+    "bad": []
+   },
+   {
+    "id": "admin-dash",
+    "lines": 77,
+    "recall": 0.94,
+    "CER": 0.038,
+    "ms": 4842,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#f8f9fc",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Illustrations",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-login",
+    "lines": 7,
+    "recall": 1,
+    "CER": 0,
+    "ms": 782,
+    "bad": []
+   },
+   {
+    "id": "admin-register",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 912,
+    "bad": []
+   },
+   {
+    "id": "admin-tables",
+    "lines": 104,
+    "recall": 0.89,
+    "CER": 0.038,
+    "ms": 5808,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0.5,
+      "hyp": "a1"
+     },
+     {
+      "text": "Previous",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "5",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Next",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-buttons",
+    "lines": 57,
+    "recall": 0.96,
+    "CER": 0.006,
+    "ms": 4274,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": "2"
+     }
+    ]
+   },
+   {
+    "id": "landing",
+    "lines": 35,
+    "recall": 1,
+    "CER": 0,
+    "ms": 5579,
+    "bad": []
+   },
+   {
+    "id": "agency",
+    "lines": 50,
+    "recall": 0.96,
+    "CER": 0.021,
+    "ms": 5548,
+    "bad": [
+     {
+      "text": "Welcome To Our Studio!",
+      "sim": 0.58,
+      "hyp": "TcOurStudio!"
+     },
+     {
+      "text": "March 2011",
+      "sim": 0,
+      "hyp": "mna"
+     }
+    ]
+   },
+   {
+    "id": "freelancer",
+    "lines": 27,
+    "recall": 1,
+    "CER": 0,
+    "ms": 2948,
+    "bad": []
+   },
+   {
+    "id": "blog-home",
+    "lines": 37,
+    "recall": 0.97,
+    "CER": 0.016,
+    "ms": 3949,
+    "bad": [
+     {
+      "text": "CONTACT",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-contact",
+    "lines": 15,
+    "recall": 0.73,
+    "CER": 0.197,
+    "ms": 2346,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "SAMPLE POST",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact Me",
+      "sim": 0.44,
+      "hyp": "onMe"
+     },
+     {
+      "text": "Have questions? I have a",
+      "sim": 0.44,
+      "hyp": "haveanswers."
+     }
+    ]
+   },
+   {
+    "id": "bc-store",
+    "lines": 37,
+    "recall": 0.97,
+    "CER": 0.007,
+    "ms": 9100,
+    "bad": [
+     {
+      "text": "lust",
+      "sim": 0.75,
+      "hyp": "Just"
+     }
+    ]
+   }
+  ]
+ }
+]
