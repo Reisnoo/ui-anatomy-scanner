@@ -698,7 +698,7 @@ const S = {
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
   base:null, cmp:{split:50, show:true}, src:null, wipe:null, wipeKey:null,
-  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false}, multi:null, multiLens:false,
+  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false, kp:true, kpDraft:false}, multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
   kp:[], kpSel:null, kpSeq:0,
@@ -854,6 +854,24 @@ function kpCSV(){
 function kpMD(){
   const d=new Date().toISOString().slice(0,10), rs=kpRows();
   return `# Where・When・Why の記録：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 定義: Where＝対象のUI要素／When＝画面／Why＝理由（自由記述→コード）\n\n| # | Where | When | Why | コード | 状態 |\n|---|---|---|---|---|---|\n`+rs.map((r,i)=>`| ${i+1} | ${GTYPE_JA[r.where.type]||r.where.type}${r.where.label?'「'+r.where.label.replace(/\|/g,'／')+'」':''} | ${r.when} | ${(r.whyText||'').replace(/\|/g,'／').replace(/\n/g,' ')} | ${r.whyCode||'—'} | ${r.status} |`).join('\n')+'\n';
+}
+/* 提出用レポートに載せる記録：レポートに含まれるバージョンの対象ページの記録。「下書き」は、既定では載せない */
+function kpReportRows(rows){
+  const rp=S.rep; if(!rp.kp) return [];
+  const names=new Set((rows||[]).map(r=>String(r.snap&&r.snap.name||'').split('｜')[0]).filter(Boolean));
+  if(S.sourceName) names.add(S.sourceName);
+  return S.kp.filter(r=>names.has(r.source) && (rp.kpDraft || r.status!=='下書き'));
+}
+const kpWhyShort = c => { const x=KP_WHY.find(w=>w[0]===c); return x?`${x[0]} ${x[1]}`:'—'; };
+function kpSectionHTML(rs, num){
+  const whens=[...new Set(rs.map(r=>r.when))], coded=rs.filter(r=>r.whyCode).length, drafts=rs.filter(r=>r.status==='下書き').length;
+  const used=[...new Set(rs.map(r=>r.whyCode).filter(Boolean))];
+  return `<section><h2>${num}. Where・When・Why の記録</h2>
+<p class="hint" style="margin-top:0">気になった点を、<b>Where（どの要素）・When（どの画面）・Why（なぜ）</b>の3つで記録したものです。Whyは、先に自由記述で書き、そのあとコードを割り当てています。</p>
+<div class="tiles"><div class="tile"><b>${rs.length}件</b><span>記録した点</span></div><div class="tile"><b>${whens.length}画面</b><span>${esc(whens.slice(0,3).join('・'))}${whens.length>3?'ほか':''}</span></div><div class="tile"><b>${coded}/${rs.length}</b><span>Whyにコードを付けた件数</span></div></div>
+<table><tr><th>#</th><th>Where（要素）</th><th>When（画面）</th><th>Why（理由）</th><th>コード</th><th>状態</th></tr>${rs.map((r,i)=>`<tr><td>${i+1}</td><td>${esc((TYPES[r.where.type]||{}).ja||r.where.type)}${r.where.label?'「'+esc(r.where.label)+'」':''}${r.where.sel?'<br><code>'+esc(r.where.sel)+'</code>':''}</td><td>${esc(r.when)}</td><td>${esc(r.whyText)}</td><td>${esc(r.whyCode||'—')}</td><td>${esc(r.status)}</td></tr>`).join('')}</table>
+${used.length?`<p class="hint">使ったコード：${used.map(c=>esc(kpWhyShort(c))).join('／')}（コードブック v1 草案）</p>`:''}
+<p class="hint">Whyは解釈的な記録で、複数人で付けて一致度を確認する前提の項目です。この記録は、一致度の確認前のものです。${drafts?`「下書き」${drafts}件は、自動の指摘から作った案で、人の確認前です。`:''}</p></section>`;
 }
 function panelKp(){
   const rs=kpRows(), others=S.kp.length-rs.length, cur=kpCurWhen();
@@ -2372,7 +2390,7 @@ function histIO(){
    提出用レポート（単体HTML）
    履歴のグラフ・表・所見を、外部ファイルなしの1つのHTMLにまとめる。印刷（A4）にも対応
    ============================================================ */
-function loadRep(){ try{ const d=JSON.parse(localStorage.getItem('uas-report')||'null'); if(d) Object.assign(S.rep,{title:tx(d.title,60)||S.rep.title, author:tx(d.author,40), purpose:tx(d.purpose,400), note:tx(d.note,600), thumbs:!!d.thumbs}); }catch(e){} }
+function loadRep(){ try{ const d=JSON.parse(localStorage.getItem('uas-report')||'null'); if(d) Object.assign(S.rep,{title:tx(d.title,60)||S.rep.title, author:tx(d.author,40), purpose:tx(d.purpose,400), note:tx(d.note,600), thumbs:!!d.thumbs, kp:d.kp!==false, kpDraft:!!d.kpDraft}); }catch(e){} }
 function saveRep(){ try{ localStorage.setItem('uas-report',JSON.stringify(S.rep)); }catch(e){} }
 const VALIDATION_SUMMARY = '2026年10月21日時点。実在のオープンソーステンプレート45ページ（MIT）で、アクセシビリティ検査エンジン axe-core 4.14 と照合した。ツールの修正が一段落した後に初めて走らせた未見14ページでは、コントラスト不足の検出は再現率96%（143/149）・適合率100%（axeが合格とした誤検出は0件。ただし、両者とも確定できない検出が39件ある）、アイコンのみのボタンの名前の検出は再現率91%（51/56）だった。見逃しの主な原因は、JavaScriptで描かれる領域（チャートなど）のレイアウトの差である。最初の測定（修正前）では、同種のページでコントラストの再現率が48%にとどまり、修正の過程と数値は検証の記録に残している。ニールセン10原則に基づく指摘は外部ツールに正解がなく、人手の採点シートで評価する設計で、採点は未実施である。';
 const HMAP = [['H1','状態の視認性','ステップ・ナビの現在地の有無と、強調の視覚差'],['H2','実世界との一致','曖昧なリンク文言、英語混在、同じ概念の呼び方の揺れ'],['H3','主導権と自由','モーダルの閉じる手段、自動再生、カルーセルの停止、長いフォームの戻る導線'],['H4','一貫性と標準','ボタンの見た目の種類数、角丸、フォント数、見出しサイズ'],['H5','エラー予防','破壊的操作と主要操作の近接、入力欄のtype'],['H6','記憶より認識','名前のないアイコンボタン、プレースホルダのみの入力欄'],['H7','柔軟性と効率性','検索の有無、autocomplete'],['H8','最小限のデザイン','ファーストビューのバナー数・主要ボタンの競合・操作要素の数'],['H9','エラーの認識・回復','エラー表示領域の有無'],['H10','ヘルプとドキュメント','見えているヘルプ・問い合わせ導線の有無'],['補助','アクセシビリティ（WCAG）','コントラスト比、小さな文字、操作領域の大きさ、画像の代替テキスト']];
@@ -2409,21 +2427,22 @@ function buildReportHTML(){
   h+=`<section><h2>${rp.purpose||rp.note?'3':'2'}. 分析した画面</h2><table><tr><th>#</th><th>バージョン</th><th>対象</th><th>保存時刻</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.label)}</td><td>${esc(r.snap.name)}</td><td>${r.cur?'（解析時点の画面）':esc(r.snap.savedAt||'')}</td></tr>`).join('')}</table>`;
   if(thumbs.length) h+=`<h3>画面のスナップショット</h3><div class="thumbs">${thumbs.map(r=>`<figure><div class="frame"><iframe sandbox="" tabindex="-1" title="${esc(r.label)}" srcdoc="${esc(snapDoc(r.snap,1280))}"></iframe></div><figcaption>${esc(r.label)}</figcaption></figure>`).join('')}</div><p class="hint">サムネイルは、スクリプトを実行しない状態で表示しています。外部の画像・CSSは、開く環境で読み込めない場合があります。</p>`;
   h+=`</section>`;
-  const n0=rp.purpose||rp.note?4:3;
+  const n0=rp.purpose||rp.note?4:3, kpr=kpReportRows(rows), kn=kpr.length?1:0;
   h+=`<section><h2>${n0}. 指標の推移</h2>${chartsHTML(M,labels)}<p class="hint">各点の上の数値がその時点の値です。仮想視線とAge Lensの値は、全バージョンを同じ条件（下記）で計算しています。</p></section>
 <section><h2>${n0+1}. 10原則スコアの変化</h2>${heatHTML(M,labels)}<p class="hint">濃いほど良いスコア（100が満点）。小さな数字は直前のバージョンとの差です。</p></section>
 <section><h2>${n0+2}. 指摘の出入り</h2>${timelineHTML(tl,labels)}<p class="hint">数字は重大度（1〜4）、「—」はその時点で指摘なし。「再発」は、いったん解消した後に再び出た指摘です。件数などの数字を除いたタイトルで同じ指摘とみなしています。</p></section>
-<section><h2>${n0+3}. 分析の条件</h2><table><tr><th>項目</th><th>内容</th></tr>
+${kn?kpSectionHTML(kpr,n0+3):''}
+<section><h2>${n0+3+kn}. 分析の条件</h2><table><tr><th>項目</th><th>内容</th></tr>
 <tr><td>仮想視線のペルソナ／タスク</td><td>${esc(P.name)}／${esc(TASKS[g.task])}（${g.range==='fold'?'ファーストビュー':'ページ全体'}、30試行・乱数シード固定）</td></tr>
 <tr><td>Age Lens（読みにくさの判定）</td><td>${esc(lensName)}：ぼやけ ${(+LP.blur).toFixed(1)}px／コントラスト感度 ${Math.round(LP.contrast*100)}%／黄変 ${Math.round(LP.yellow*100)}%／視野狭窄 ${Math.round(LP.tunnel*100)}%／色覚 ${esc(CVD_JA[LP.cvd])}</td></tr>
 <tr><td>表示条件</td><td>幅${PAGE_W}px・高さ${FOLD_H}px（ファーストビュー）</td></tr><tr><td>作成</td><td>UI Anatomy Scanner（プロトタイプ）、${dateStr}</td></tr></table></section>
-<section><h2>${n0+4}. 方法と限界</h2><div class="note"><ul>
+<section><h2>${n0+4+kn}. 方法と限界</h2><div class="note"><ul>
 <li>指摘は、画面のHTMLとCSSから機械的に判定した<b>ルールベースの推定</b>です。実ユーザーテストの代わりにはなりません。</li>
 <li>視線は<b>実測ではなく仮想</b>です。要素の目立ち・タスクとの関連・位置の傾向と、ペルソナごとの仮定から確率的に生成しています。</li>
 <li>スクリプトは実行しないため、JavaScriptで描かれる部分（チャートなど）は、実際の画面と違う場合があります。</li>
 <li>ニールセンの10原則のうち、機械的に判定できる項目だけを自動で指摘しています。判断が必要な項目は、人の確認が必要です。</li>
-<li>推移の変化は指標上の変化であり、ユーザーにとって実際に良くなったかは、ユーザーテストで確認する必要があります。</li></ul></div></section>
-<section><h2>${n0+5}. このツールの検証状況</h2><p>${esc(VALIDATION_SUMMARY)}</p></section>
+<li>推移の変化は指標上の変化であり、ユーザーにとって実際に良くなったかは、ユーザーテストで確認する必要があります。</li>${kn?'<li>Where・When・Whyの記録は、人が書いたもの（または、自動の指摘から作った案を人が確認したもの）です。Whyは解釈的な符号で、複数人での一致度は、まだ確認していません。</li>':''}</ul></div></section>
+<section><h2>${n0+5+kn}. このツールの検証状況</h2><p>${esc(VALIDATION_SUMMARY)}</p></section>
 <section><h2>付録　自動判定の対応表</h2><table><tr><th>原則</th><th>名称</th><th>自動で見ているもの</th></tr>${HMAP.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table></section>
 <footer>このレポートは UI Anatomy Scanner（プロトタイプ）で作成した単体のHTMLです。印刷（A4）にも対応しています。</footer></main></body></html>`;
   return h;
@@ -2437,6 +2456,9 @@ function reportUI(){
     <label class="full">目的・課題設定（任意・400字まで）<textarea id="rPurpose" maxlength="400" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：問い合わせフォームの入力負荷を下げるため、…">${esc(rp.purpose)}</textarea></label>
     <label class="full">設計判断・補足（任意・600字まで）<textarea id="rNote" maxlength="600" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：ボタンを3種類に絞った理由、…">${esc(rp.note)}</textarea></label></div>
     <div style="margin-top:8px"><label class="toggle"><input type="checkbox" id="rThumbs" ${rp.thumbs?'checked':''}> 各バージョンの画面のスナップショットを載せる</label></div>
+    <div style="margin-top:6px"><label class="toggle"><input type="checkbox" id="rKp" ${rp.kp?'checked':''}> ⑧ Where・When・Why の記録を載せる（${kpRows().filter(r=>r.status!=='下書き').length}件）</label>
+    <label class="toggle" style="margin-left:10px"><input type="checkbox" id="rKpDraft" ${rp.kpDraft?'checked':''}> 「下書き」も載せる（${kpRows().filter(r=>r.status==='下書き').length}件）</label></div>
+    <p class="hint">記録は、⑧タブで追加します。「下書き」は、自動の指摘から作った案で、人の確認前のため、既定では載せません。</p>
     <p class="hint">載せると、画面のHTMLがレポートに入り、ファイルサイズが大きくなります。解析した画面の中身も、レポートを渡した相手に伝わります。</p>
     <div class="row" style="margin-top:12px"><button class="btn" id="rExport" ${ready?'':'disabled'}>レポートをHTMLで書き出す</button><button class="btn ghost" id="rPreview" ${ready?'':'disabled'}>プレビューを開く</button></div>
     ${ready?'':'<p class="hint">履歴（または履歴＋現在の画面）が2件以上あると書き出せます。</p>'}</div>`;
@@ -2626,6 +2648,7 @@ function buildReport(){
     m+=`\n### ${h.id==='SUP'?'補助':h.id} ${h.ja}\n\n`;
     l.forEach(i=>{ m+=`- **[重大度${i.sev}] ${i.title}**${i.auto?'':'（手動判定）'}\n`; if(i.detail) m+=`  - 内容: ${i.detail}\n`; if(i.evidence.length) m+=`  - 根拠: ${i.evidence.join(' / ')}\n`; if(i.fix) m+=`  - 改善案: ${i.fix}\n`; if(i.code) m+='  - 修正例:\n\n'+i.code.split('\n').map(l=>'        '+l).join('\n')+'\n\n'; });
   });
+  { const kr=kpReportRows([]); if(kr.length){ m+=`\n## Where・When・Why の記録\n\n| # | Where | When | Why | コード | 状態 |\n|---|---|---|---|---|---|\n`+kr.map((r,i)=>`| ${i+1} | ${(TYPES[r.where.type]||{}).ja||r.where.type}${r.where.label?'「'+r.where.label.replace(/\|/g,'／')+'」':''} | ${r.when} | ${(r.whyText||'').replace(/\|/g,'／').replace(/\n/g,' ')} | ${r.whyCode||'—'} | ${r.status} |`).join('\n')+'\n'; } }
   const g=S.gaze; if(g.fix.length){ m+=`\n## 仮想視線（${PERSONAS[g.persona].name} / ${TASKS[g.task]}）\n\n- 総注視時間: ${(g.fix.reduce((a,b)=>a+b.dur,0)/1000).toFixed(1)}s、注視${g.fix.length}回\n- 注視順: ${g.fix.map((x,i)=>`${i+1}.${x.target.label}`).join(' → ')}\n`; }
   if(S.lens.on){ const L=S.lens, n2=S.lensList.filter(l=>l.level===2).length, n1=S.lensList.filter(l=>l.level===1).length;
     m+=`\n## Age Lens（${L.preset&&LENS_PRESETS[L.preset]?LENS_PRESETS[L.preset].name:'カスタム'}）\n\n- ぼやけ ${L.blur}px／コントラスト ${Math.round(L.contrast*100)}%／黄変 ${Math.round(L.yellow*100)}%／視野狭窄 ${Math.round(L.tunnel*100)}%／色覚 ${CVD_JA[L.cvd]}\n- 読みにくい文字: 重大 ${n2}件、注意 ${n1}件。押しにくい操作領域(<44px): ${S.lensTap.length}件\n- 簡易シミュレーションであり、医学的な再現ではありません。\n`;
@@ -3253,6 +3276,7 @@ document.addEventListener('change', e=>{
   else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='hFile'){ const f=t.files&&t.files[0]; t.value=''; if(!f) return; if(f.size>MAX_IMPORT_BYTES){ toast('ファイルが大きすぎます（8MBまで）'); return; } const r=new FileReader(); r.onload=()=>importText(String(r.result), S.io.mode); r.onerror=()=>toast('ファイルを読み込めませんでした'); r.readAsText(f); }
   else if(t.id==='rThumbs'){ S.rep.thumbs=t.checked; saveRep(); }
+  else if(t.id==='rKp'||t.id==='rKpDraft'){ S.rep[t.id==='rKp'?'kp':'kpDraft']=t.checked; saveRep(); }
   else if(t.id==='hRaw'){ S.io.raw=t.checked; renderPanel(); }
   else if(t.id==='hPers'){ S.io.pers=t.checked; renderPanel(); }
   else if(t.id==='hMode'){ S.io.mode=t.value; }
