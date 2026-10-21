@@ -1,9 +1,9 @@
 {
  "meta": {
-  "date": "2026-10-21T02:59:42.004Z",
+  "date": "2026-10-21T03:22:48.322Z",
   "axeCore": "4.14.0",
   "playwright": "1.56.1",
-  "toolCommit": "8060f2445ce2711439006f4a4ef5cda570ec6769",
+  "toolCommit": "2f1232d0571ecd52f5e85aef3d52a0e43fdb1729",
   "mode": "corpus (offline stubs)",
   "stubs": {
    "npm": 151,
@@ -137,7 +137,7 @@
      "footer": 1
     },
     "pageH": 1405,
-    "ms": 180,
+    "ms": 143,
     "issues": [
      {
       "h": "H10",
@@ -315,7 +315,7 @@
      "footer": 1
     },
     "pageH": 1549,
-    "ms": 134,
+    "ms": 144,
     "issues": [
      {
       "h": "H10",
@@ -474,7 +474,7 @@
      "footer": 1
     },
     "pageH": 3252,
-    "ms": 148,
+    "ms": 152,
     "issues": [
      {
       "h": "H1",
@@ -623,7 +623,7 @@
      "footer": 1
     },
     "pageH": 1665,
-    "ms": 210,
+    "ms": 246,
     "issues": [
      {
       "h": "H6",
@@ -795,7 +795,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 104,
+    "ms": 120,
     "issues": [
      {
       "h": "H6",
@@ -972,7 +972,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 95,
+    "ms": 106,
     "issues": [
      {
       "h": "H6",
@@ -1189,7 +1189,7 @@
      "footer": 1
     },
     "pageH": 1089,
-    "ms": 191,
+    "ms": 196,
     "issues": [
      {
       "h": "H6",
@@ -1396,7 +1396,7 @@
      "footer": 1
     },
     "pageH": 1111,
-    "ms": 192,
+    "ms": 216,
     "issues": [
      {
       "h": "H4",
@@ -1717,7 +1717,7 @@
      "footer": 1
     },
     "pageH": 3812,
-    "ms": 150,
+    "ms": 179,
     "issues": [
      {
       "h": "H6",
@@ -1898,7 +1898,7 @@
      "footer": 1
     },
     "pageH": 6140,
-    "ms": 212,
+    "ms": 223,
     "issues": [
      {
       "h": "H1",
@@ -2135,7 +2135,7 @@
      "footer": 1
     },
     "pageH": 3386,
-    "ms": 172,
+    "ms": 155,
     "issues": [
      {
       "h": "H1",
@@ -2323,7 +2323,7 @@
      "footer": 1
     },
     "pageH": 1906,
-    "ms": 132,
+    "ms": 112,
     "issues": [
      {
       "h": "H1",
@@ -2470,7 +2470,7 @@
      "footer": 1
     },
     "pageH": 1455,
-    "ms": 128,
+    "ms": 92,
     "issues": [
      {
       "h": "H1",
@@ -2624,7 +2624,7 @@
      "footer": 1
     },
     "pageH": 2365,
-    "ms": 162,
+    "ms": 157,
     "issues": [
      {
       "h": "H1",
@@ -2771,7 +2771,7 @@
      "heading": 6
     },
     "pageH": 1194,
-    "ms": 105,
+    "ms": 88,
     "issues": [
      {
       "h": "H5",
@@ -2965,7 +2965,7 @@
      "footer": 1
     },
     "pageH": 966,
-    "ms": 110,
+    "ms": 101,
     "issues": [
      {
       "h": "H1",
@@ -3121,7 +3121,7 @@
      "footer": 1
     },
     "pageH": 1276,
-    "ms": 122,
+    "ms": 100,
     "issues": [
      {
       "h": "H1",
@@ -3274,7 +3274,7 @@
      "footer": 1
     },
     "pageH": 1285,
-    "ms": 114,
+    "ms": 97,
     "issues": [
      {
       "h": "H1",
@@ -3415,7 +3415,7 @@
      "footer": 1
     },
     "pageH": 1596,
-    "ms": 92,
+    "ms": 121,
     "issues": [
      {
       "h": "H1",
@@ -3551,7 +3551,7 @@
      "footer": 1
     },
     "pageH": 1918,
-    "ms": 137,
+    "ms": 130,
     "issues": [
      {
       "h": "H1",
@@ -3783,7 +3783,7 @@
      "footer": 1
     },
     "pageH": 2105,
-    "ms": 175,
+    "ms": 186,
     "issues": [
      {
       "h": "H1",
@@ -3960,7 +3960,7 @@
      "footer": 1
     },
     "pageH": 1992,
-    "ms": 127,
+    "ms": 123,
     "issues": [
      {
       "h": "H1",
@@ -4136,7 +4136,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 83,
+    "ms": 77,
     "issues": [
      {
       "h": "H7",
@@ -4299,7 +4299,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 70,
+    "ms": 78,
     "issues": [
      {
       "h": "H7",
@@ -4542,7 +4542,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 89,
+    "ms": 90,
     "issues": [
      {
       "h": "H1",
@@ -4642,101 +4642,18 @@
    "checks": {
     "contrast": {
      "axeViolations": 4,
-     "toolDetections": 16,
+     "toolDetections": 4,
      "tp": 4,
      "fn": 0,
      "fpConfirmed": 0,
-     "fpUnverified": 12,
+     "fpUnverified": 0,
      "fpIncomplete": 0,
-     "fpNone": 12,
-     "fpNoneExamples": [
-      {
-       "rect": {
-        "x": 176,
-        "y": 1963,
-        "w": 74,
-        "h": 20
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 152,
-        "y": 1983,
-        "w": 122,
-        "h": 29
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 603,
-        "y": 1963,
-        "w": 74,
-        "h": 20
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 579,
-        "y": 1983,
-        "w": 122,
-        "h": 29
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 1029,
-        "y": 1963,
-        "w": 74,
-        "h": 20
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 1005,
-        "y": 1983,
-        "w": 122,
-        "h": 29
-       },
-       "label": ""
-      }
-     ],
+     "fpNone": 0,
+     "fpNoneExamples": [],
      "fnExamples": [],
      "fnRects": [],
      "fpExamples": [],
-     "fpUnverifiedExamples": [
-      {
-       "rect": {
-        "x": 176,
-        "y": 1963,
-        "w": 74,
-        "h": 20
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 152,
-        "y": 1983,
-        "w": 122,
-        "h": 29
-       },
-       "label": ""
-      },
-      {
-       "rect": {
-        "x": 603,
-        "y": 1963,
-        "w": 74,
-        "h": 20
-       },
-       "label": ""
-      }
-     ]
+     "fpUnverifiedExamples": []
     },
     "imageAlt": {
      "axeViolations": 0,
@@ -4805,7 +4722,7 @@
      "footer": 1
     },
     "pageH": 6896,
-    "ms": 197,
+    "ms": 181,
     "issues": [
      {
       "h": "H1",
@@ -4825,13 +4742,13 @@
      },
      {
       "h": "SUP",
-      "sev": 3,
-      "title": "文字のコントラスト比が基準未満の箇所が16件",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
       "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
       "evidence": [
-       "“CATEGORY” 1.0:1",
-       "“Project Name” 1.0:1",
-       "“CATEGORY” 1.0:1",
+       "“SUBMIT” 2.1:1",
+       "“Start Bootstr…” 2.4:1",
+       "“FIND OUT MORE” 3.2:1",
        "背景が重なっていて判定できない文字5件は除外"
       ],
       "fix": "前景・背景の色を調整して基準を満たす。"
@@ -4993,7 +4910,7 @@
      "footer": 1
     },
     "pageH": 7290,
-    "ms": 174,
+    "ms": 151,
     "issues": [
      {
       "h": "H1",
@@ -5165,7 +5082,7 @@
      "heading": 12
     },
     "pageH": 12000,
-    "ms": 174,
+    "ms": 165,
     "issues": [
      {
       "h": "H10",
@@ -5306,7 +5223,7 @@
      "footer": 1
     },
     "pageH": 2298,
-    "ms": 125,
+    "ms": 101,
     "issues": [
      {
       "h": "H1",
@@ -5469,7 +5386,7 @@
      "footer": 1
     },
     "pageH": 1024,
-    "ms": 89,
+    "ms": 88,
     "issues": [],
     "scores": [
      100,
@@ -5640,7 +5557,7 @@
      "footer": 1
     },
     "pageH": 8826,
-    "ms": 226,
+    "ms": 225,
     "issues": [
      {
       "h": "H4",
@@ -6125,7 +6042,7 @@
      "footer": 1
     },
     "pageH": 1576,
-    "ms": 392,
+    "ms": 389,
     "issues": [
      {
       "h": "H4",
@@ -6380,7 +6297,7 @@
      "input": 2
     },
     "pageH": 800,
-    "ms": 150,
+    "ms": 181,
     "issues": [
      {
       "h": "H6",
@@ -6574,7 +6491,7 @@
      "input": 4
     },
     "pageH": 800,
-    "ms": 158,
+    "ms": 148,
     "issues": [
      {
       "h": "H6",
@@ -6792,7 +6709,7 @@
      "footer": 1
     },
     "pageH": 2543,
-    "ms": 305,
+    "ms": 299,
     "issues": [
      {
       "h": "H3",
@@ -7076,7 +6993,7 @@
      "footer": 1
     },
     "pageH": 1724,
-    "ms": 319,
+    "ms": 294,
     "issues": [
      {
       "h": "H4",
@@ -7329,7 +7246,7 @@
      "footer": 1
     },
     "pageH": 1718,
-    "ms": 225,
+    "ms": 266,
     "issues": [
      {
       "h": "H5",
@@ -7852,7 +7769,7 @@
      "footer": 1
     },
     "pageH": 1429,
-    "ms": 240,
+    "ms": 246,
     "issues": [
      {
       "h": "H6",
@@ -8015,7 +7932,7 @@
      "footer": 1
     },
     "pageH": 1460,
-    "ms": 109,
+    "ms": 119,
     "issues": [],
     "scores": [
      100,
@@ -8143,7 +8060,7 @@
      "footer": 1
     },
     "pageH": 3488,
-    "ms": 132,
+    "ms": 118,
     "issues": [
      {
       "h": "H4",
@@ -8362,7 +8279,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 224,
+    "ms": 274,
     "issues": [
      {
       "h": "H3",
@@ -8550,7 +8467,7 @@
      "footer": 1
     },
     "pageH": 3393,
-    "ms": 168,
+    "ms": 161,
     "issues": [
      {
       "h": "H1",
@@ -8715,7 +8632,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 78,
+    "ms": 121,
     "issues": [
      {
       "h": "H10",
@@ -8849,7 +8766,7 @@
      "footer": 1
     },
     "pageH": 1975,
-    "ms": 76,
+    "ms": 86,
     "issues": [],
     "scores": [
      100,
@@ -8879,6 +8796,149 @@
       "html": "<a class=\"btn btn-lg btn-light\" href=\"#about\">Start scrolling!</a>"
      }
     ]
+   }
+  },
+  {
+   "id": "neg-hidden",
+   "label": "陰性対照（見えていない要素）",
+   "kind": "対照",
+   "set": "control",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "undefined/undefined",
+   "sha256": "1fafac6028783d96",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 1,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 1,
+    "types": {
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 53,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“見えている淡く小さな文字（…” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が1箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
    }
   }
  ]

@@ -453,6 +453,13 @@
       "repo": "scrolling-nav",
       "path": "dist/index.html",
       "set": "holdout2"
+    },
+    {
+      "id": "neg-hidden",
+      "label": "陰性対照（見えていない要素）",
+      "kind": "対照",
+      "local": "fixtures/negative-control-hidden.html",
+      "set": "control"
     }
   ]
 }

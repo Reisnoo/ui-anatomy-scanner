@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>陰性対照（見えていない要素）</title>
+<style>
+body{margin:0;padding:32px 48px;font:16px/1.7 sans-serif;color:#222;background:#fff;max-width:1000px}
+h1{font-size:24px}.low{color:#aaa;font-size:11px}.reveal{opacity:0;transform:translateY(24px)}
+.collapse{height:0;overflow:hidden}.off{position:absolute;left:-9999px;top:0}.vhid{visibility:hidden}.clip{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden}
+.zero{font-size:0}.trans{transform:scale(0)}
+</style></head><body>
+<h1>陰性対照：見えていない要素は、コントラスト・小さな文字の指摘に含めない</h1>
+<p class="good">見えている十分なコントラストの文字（指摘されない）</p>
+<p class="low">見えている淡く小さな文字（指摘される＝正しい検出が1件）</p>
+<!-- 以下はすべて画面に見えない。低コントラスト・小さな文字でも、指摘してはいけない -->
+<section class="reveal"><p class="low">スクロールで現れる予定の文字（祖先 opacity:0）</p><p class="low">同じ</p><p class="low">同じ</p></section>
+<div class="collapse"><p class="low">折りたたまれた中身（高さ0・overflow:hidden）</p><p class="low">同じ</p></div>
+<div class="off"><p class="low">画面外に追い出した文字</p></div>
+<div class="vhid"><p class="low">visibility:hidden の文字</p></div>
+<div class="clip"><span class="low">スクリーンリーダー専用の文字</span></div>
+<div class="trans"><p class="low">scale(0) の文字</p></div>
+</body></html>

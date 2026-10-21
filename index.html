@@ -700,7 +700,18 @@ function runAnalysis(){
   const rect = el => { const r=el.getBoundingClientRect(); return {x:Math.round(r.left+win.scrollX), y:Math.round(r.top+win.scrollY), w:Math.round(r.width), h:Math.round(r.height)}; };
   // ページの高さを超えていても、内側のスクロール領域(overflow:auto/scroll)の中にあれば、スクロールで見える要素として扱う
   const inScroller = el => { for(let n=el.parentElement; n && n!==doc.body && n.nodeType===1; n=n.parentElement){ const st=cs(n); if(/(auto|scroll)/.test(st.overflowY) && n.scrollHeight>n.clientHeight+4) return true; } return false; };
-  const isVis = el => { const s=cs(el); if(s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)===0) return false; const r=rect(el); return r.w>=4 && r.h>=4 && r.x<PAGE_W && r.x+r.w>0 && (r.y<H+10 || inScroller(el)); };
+  // 祖先が見えていない（opacity:0、display:none、overflowで切り取られる祖先が高さ・幅ほぼ0に畳まれている）場合は、中の要素も見えない扱いにする
+  const chainCache = new WeakMap();
+  const chainVis = el => {
+    if(!el || el.nodeType!==1 || el===doc.documentElement) return true;
+    if(chainCache.has(el)) return chainCache.get(el);
+    const s=cs(el); let ok=true;
+    if(s.display==='none' || parseFloat(s.opacity)===0) ok=false;
+    else if(/(hidden|clip|auto|scroll)/.test(s.overflowX+' '+s.overflowY)){ const b=el.getBoundingClientRect(); if(b.width<4 || b.height<4) ok=false; }
+    if(ok) ok=chainVis(el.parentElement);
+    chainCache.set(el, ok); return ok;
+  };
+  const isVis = el => { const s=cs(el); if(s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)===0||!chainVis(el.parentElement)) return false; const r=rect(el); return r.w>=4 && r.h>=4 && r.x<PAGE_W && r.x+r.w>0 && (r.y<H+10 || inScroller(el)); };
   const effBg = el => {
     const layers=[]; let n=el;
     while(n && n.nodeType===1){
