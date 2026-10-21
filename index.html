@@ -74,6 +74,16 @@ textarea { width:100%; min-height:110px; font-family:ui-monospace,Menlo,Consolas
 .page iframe#frameCmp { position:absolute; left:0; top:0; display:none; }
 .tabs { flex-wrap:wrap; }
 .tabs button { min-width:72px; font-size:12.5px; }
+.mx td, .mx th { text-align:center; padding:5px 4px; }
+.mx td:first-child, .mx th:first-child { text-align:left; }
+.mx td.cell { font-weight:700; border-left:2px solid var(--surface); }
+.pmap { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pcard { border:1px solid var(--border); border-radius:10px; padding:6px; background:var(--bg); }
+.pcard .hd { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; margin-bottom:4px; }
+.pcard svg { width:100%; height:auto; display:block; border-radius:6px; background:var(--surface); }
+.pdot { width:11px; height:11px; border-radius:50%; flex:none; }
+.gap-badge { font-size:10px; font-weight:800; color:var(--sev2); background:var(--sev2-bg); border-radius:4px; padding:0 5px; margin-left:4px; }
+@media (max-width:600px){ .pmap { grid-template-columns:1fr; } }
 td.d { font-weight:700; white-space:nowrap; }
 td.d.good { color:var(--ok); } td.d.bad { color:var(--sev3); } td.d.neutral { color:var(--muted); font-weight:500; }
 .cmp-head { display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px; margin-bottom:10px; }
@@ -193,6 +203,7 @@ th { color:var(--muted); font-weight:600; }
         <label class="toggle"><input type="checkbox" id="tgPins"> 指摘ピン</label>
         <label class="toggle"><input type="checkbox" id="tgPath"> 視線の軌跡</label>
         <label class="toggle"><input type="checkbox" id="tgLens"> 読みにくさマップ</label>
+        <label class="toggle"><input type="checkbox" id="tgMulti"> 全ペルソナの軌跡</label>
         <button class="mini" id="saveBase" disabled title="現在の解析結果をBefore(比較元)として保存">📌 Beforeに保存</button><span class="status" id="baseChip"></span>
         <label class="toggle"><input type="checkbox" id="tgHeat"> ヒートマップ</label>
         <span class="status" style="margin-left:auto" id="pageInfo"></span>
@@ -220,6 +231,7 @@ th { color:var(--muted); font-weight:600; }
       <button role="tab" aria-selected="false" data-tab="gaze">③ 仮想視線</button>
       <button role="tab" aria-selected="false" data-tab="lens">④ Age Lens</button>
       <button role="tab" aria-selected="false" data-tab="cmp">⑤ 比較</button>
+      <button role="tab" aria-selected="false" data-tab="multi">⑥ ペルソナ</button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -456,9 +468,9 @@ const S = {
   tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
   hiddenTypes:new Set(['link']),
   gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, useLens:false, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
-  show:{comps:true, pins:false, path:false, heat:false, lensMap:false},
+  show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
-  base:null, cmp:{split:50, show:true}, src:null,
+  base:null, cmp:{split:50, show:true}, src:null, multi:null, multiLens:false,
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
 };
 const frame = $('#frame'), frameLens = $('#frameLens'), frameCmp = $('#frameCmp');
@@ -479,6 +491,7 @@ async function loadHTML(html, name, baseHref){
   setStatus('描画中…');
   S.sourceName = name;
   S.src = {html, baseHref};
+  S.multi = null;
   stopPlay();
   frame.style.height = FOLD_H+'px';
   await new Promise(res=>{ frame.onload=res; frame.srcdoc=prepareHTML(html, baseHref); });
@@ -572,6 +585,16 @@ function renderOverlay(){
     f.forEach((p,i)=>{
       const r = clamp(10+p.dur/45, 12, 34);
       g.push(`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${r.toFixed(0)}" fill="#E11D48" fill-opacity=".28" stroke="#E11D48" stroke-width="2.5"/><text x="${p.x.toFixed(0)}" y="${(p.y+5).toFixed(0)}" font-size="14" text-anchor="middle" font-weight="800" fill="#fff" stroke="#9F1239" stroke-width="3" paint-order="stroke">${i+1}</text>`);
+    });
+  }
+  if(S.show.multi && S.targets.length){
+    const M=ensureMulti();
+    Object.entries(M.per).forEach(([pk,r])=>{
+      const col=PCOL[pk], dash=PDASH[pk];
+      if(r.fix.length>1){ const pts=r.fix.map(p=>`${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(' ');
+        g.push(`<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" opacity=".85"/><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="4" stroke-linejoin="round" ${dash?`stroke-dasharray="${dash}"`:''}/>`); }
+      r.fix.forEach((p,i)=>{ const rad=clamp(9+p.dur/90,10,24);
+        g.push(`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${rad.toFixed(0)}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="2.5"/><text x="${p.x.toFixed(0)}" y="${(p.y+4).toFixed(0)}" font-size="12" text-anchor="middle" font-weight="800" fill="#fff" stroke="${col}" stroke-width="3" paint-order="stroke">${i+1}</text>`); });
     });
   }
   if(S.show.lensMap && S.lens.on){
@@ -1042,7 +1065,7 @@ function renderTabs(){ $$('.tabs button').forEach(b=>b.setAttribute('aria-select
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
-  el.innerHTML = S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCmp() : panelGaze();
+  el.innerHTML = S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCmp() : S.tab==='multi'?panelMulti() : panelGaze();
 }
 
 function panelComps(){
@@ -1272,6 +1295,119 @@ function panelLens(){
 }
 
 /* ============================================================
+   複数ペルソナの並列比較
+   同じ画面・同じタスクで全ペルソナを動かし、軌跡・指標・要素ごとの到達率を並べる
+   ============================================================ */
+const PCOL = {hurry:'#E11D48', senior:'#7C3AED', shopper:'#D97706', worker:'#059669'};
+const PDASH = {hurry:'', senior:'12 7', shopper:'3 6', worker:'18 6 4 6'};
+const PSHORT = {hurry:'20代(急ぎ)', senior:'高齢者', shopper:'30代(比較)', worker:'担当者'};
+const GTYPE_JA = {heading:'見出し',image:'画像',banner:'バナー',button:'ボタン',input:'入力欄',search:'検索',navlink:'ナビ',text:'本文',card:'カード',nav:'ステップ/パンくず'};
+function multiKey(){
+  const L=S.lens, lk = (S.multiLens&&L.on) ? [L.blur,L.contrast,L.yellow,L.tunnel,L.cvd,L.cvdS].join(',') : '-';
+  return [S.sourceName,S.gaze.task,S.gaze.range,S.gaze.trial,S.targets.length,lk].join('|');
+}
+function keyTargetsFor(foldH){
+  return S.targets.filter(t=>t.cy<=foldH && (t.type==='banner'||t.type==='search'||t.type==='nav'||(t.type==='button'&&(t.kind==='primary'||t.isCTA))||(t.type==='heading'&&t.h==='H1')));
+}
+function ensureMulti(){
+  const key=multiKey(); if(S.multi && S.multi.key===key) return S.multi;
+  const g=S.gaze, foldH=foldOf(), N=30, out={key, foldH, task:g.task, per:{}};
+  Object.keys(PERSONAS).forEach(pk=>{
+    const P=PERSONAS[pk], w={wV:P.wV,wR:P.wR,wP:P.wP};
+    const useLens = S.multiLens && S.lens.on && pk==='senior';
+    const fix=runSim(hashStr(S.sourceName+'|'+pk+'|'+g.task)+g.trial*104729, pk, g.task, w, foldH, S.targets, useLens);
+    const base=hashStr('mp|'+S.sourceName+'|'+g.task), reachN=new Map(), ctaT=[];
+    let cta=0,h1=0,banner=0,dwell=0,total=0,amp=0,ampN=0;
+    for(let i=0;i<N;i++){
+      const run=runSim(base+i*7919, pk, g.task, w, foldH, S.targets, useLens); const seen=new Set(); let t=0,f1=false,f2=false;
+      run.forEach((f,idx)=>{
+        seen.add(f.target.id);
+        if(!f1 && f.target.type==='button' && f.target.isCTA){ f1=true; ctaT.push(t); }
+        if(f.target.type==='heading' && f.target.h==='H1') f2=true;
+        if(f.target.type==='banner') banner+=f.dur;
+        dwell+=f.dur; t+=f.dur+30; if(idx>0){ amp+=f.amp; ampN++; }
+      });
+      seen.forEach(id=>reachN.set(id,(reachN.get(id)||0)+1));
+      if(f1) cta++; if(f2) h1++; total+=t;
+    }
+    const reach=new Map(); reachN.forEach((v,k)=>reach.set(k,v/N));
+    out.per[pk]={fix, reach, ctaRate:cta/N, ctaMs:ctaT.length?ctaT.reduce((a,b)=>a+b,0)/ctaT.length:null, h1Rate:h1/N, bannerShare:dwell?banner/dwell:0, totalMs:total/N, amp:ampN?amp/ampN:0};
+  });
+  out.keyT=keyTargetsFor(foldH);
+  out.rows=out.keyT.map(t=>{ const ps={}; let mn=1,mx=0; Object.keys(PERSONAS).forEach(pk=>{ const v=out.per[pk].reach.get(t.id)||0; ps[pk]=v; mn=Math.min(mn,v); mx=Math.max(mx,v); }); return {t,ps,gap:mx-mn}; }).sort((a,b)=>b.gap-a.gap);
+  out.insights=multiInsights(out);
+  S.multi=out; return out;
+}
+function rowName(t){ return `${GTYPE_JA[t.type]||t.type}「${t.label}」`; }
+function multiInsights(M){
+  const keys=Object.keys(PERSONAS), tips=[];
+  M.rows.forEach(r=>{
+    keys.forEach(pk=>{
+      const others=keys.filter(k=>k!==pk), avg=others.reduce((a,k)=>a+r.ps[k],0)/others.length;
+      if(r.ps[pk]<.3 && avg>=.6) tips.push({w:avg-r.ps[pk], txt:`${rowName(r.t)}は、${PSHORT[pk]}では見落とされやすい（到達率 ${Math.round(r.ps[pk]*100)}%／他の平均 ${Math.round(avg*100)}%）`});
+      else if(r.ps[pk]>=.7 && avg<.3) tips.push({w:r.ps[pk]-avg, txt:`${rowName(r.t)}は、${PSHORT[pk]}だけが見つけやすい（${Math.round(r.ps[pk]*100)}%／他の平均 ${Math.round(avg*100)}%）`});
+    });
+  });
+  M.rows.filter(r=>r.gap>=.4).slice(0,2).forEach(r=>{
+    const hi=keys.reduce((a,k)=>r.ps[k]>r.ps[a]?k:a), lo=keys.reduce((a,k)=>r.ps[k]<r.ps[a]?k:a);
+    tips.push({w:.06+r.gap*.01, txt:`${rowName(r.t)}は、ペルソナで見え方が分かれる（${PSHORT[hi]} ${Math.round(r.ps[hi]*100)}% ↔ ${PSHORT[lo]} ${Math.round(r.ps[lo]*100)}%）`});
+  });
+  const cta=keys.filter(k=>M.per[k].ctaMs!==null).sort((a,b)=>M.per[a].ctaMs-M.per[b].ctaMs);
+  if(cta.length>=2) tips.push({w:.05, txt:`主要CTAまでの時間は、${PSHORT[cta[0]]}が最短（${(M.per[cta[0]].ctaMs/1000).toFixed(1)}s）、${PSHORT[cta[cta.length-1]]}が最長（${(M.per[cta[cta.length-1]].ctaMs/1000).toFixed(1)}s）`});
+  const low=keys.filter(k=>M.per[k].ctaRate<.5);
+  if(low.length) tips.push({w:.04, txt:`主要CTAに届く割合が50%未満のペルソナ：${low.map(k=>`${PSHORT[k]}（${Math.round(M.per[k].ctaRate*100)}%）`).join('、')}`});
+  return tips.sort((a,b)=>b.w-a.w).slice(0,6).map(x=>x.txt);
+}
+function wireSVG(pk,r,foldH){
+  const col=PCOL[pk];
+  const boxes=S.targets.filter(t=>t.cy<=foldH).map(t=>{ const c=(TYPES[t.type]||{c:'#94A3B8'}).c; return `<rect x="${t.rect.x}" y="${t.rect.y}" width="${t.rect.w}" height="${Math.min(t.rect.h,foldH-t.rect.y)}" fill="${c}" fill-opacity=".14" stroke="${c}" stroke-opacity=".55" stroke-width="2"/>`; }).join('');
+  const pts=r.fix.map(p=>`${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(' ');
+  const dots=r.fix.map((p,i)=>`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${clamp(12+p.dur/60,14,30).toFixed(0)}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="3"/><text x="${p.x.toFixed(0)}" y="${(p.y+8).toFixed(0)}" font-size="22" text-anchor="middle" font-weight="800" fill="#fff" stroke="${col}" stroke-width="4" paint-order="stroke">${i+1}</text>`).join('');
+  return `<svg viewBox="0 0 ${PAGE_W} ${foldH}" role="img" aria-label="${PERSONAS[pk].name}の視線の軌跡（ワイヤーフレーム上）"><rect width="${PAGE_W}" height="${foldH}" fill="none"/>${boxes}${r.fix.length>1?`<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="5" stroke-linejoin="round" ${PDASH[pk]?`stroke-dasharray="${PDASH[pk]}"`:''}/>`:''}${dots}</svg>`;
+}
+function panelMulti(){
+  if(!S.targets.length) return '<p class="hint">解析するとここに結果が表示されます。</p>';
+  const g=S.gaze, M=ensureMulti(), keys=Object.keys(PERSONAS);
+  let h=`<div class="sec"><span class="sim-badge">仮想シミュレーション（実測ではありません）</span>
+    <div class="form-grid" style="margin-top:10px">
+      <label>タスク<select id="gTask">${Object.entries(TASKS).map(([k,v])=>`<option value="${k}" ${g.task===k?'selected':''}>${v}</option>`).join('')}</select></label>
+      <label>範囲<select id="gRange"><option value="fold" ${g.range==='fold'?'selected':''}>ファーストビュー(800px)</option><option value="full" ${g.range==='full'?'selected':''}>ページ全体(〜2400px)</option></select></label>
+      <label>試行<div class="row"><button class="mini" id="gRetry">別の試行 (#${g.trial+1})</button></div></label>
+      <div style="display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:600;color:var(--muted)">視覚特性<div class="row"><label class="toggle" style="font-weight:600"><input type="checkbox" id="mLens" ${S.multiLens?'checked':''}> 高齢者に④の設定を適用</label></div></div>
+    </div>${S.multiLens&&!S.lens.on?'<p class="hint">④ Age Lens タブでレンズを有効にすると反映されます。</p>':''}</div>`;
+  h+=`<div class="legend" style="margin-bottom:8px">${keys.map(k=>`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="34" height="10" aria-hidden="true"><line x1="0" y1="5" x2="34" y2="5" stroke="${PCOL[k]}" stroke-width="3" ${PDASH[k]?`stroke-dasharray="${PDASH[k].split(' ').map(v=>Math.round(v/3)).join(' ')}"`:''}/></svg>${PERSONAS[k].name}</span>`).join('')}</div>`;
+  h+=`<div class="sec"><h3>ワイヤーフレーム上の視線（1試行・番号は注視の順）</h3><div class="pmap">${keys.map(k=>`<div class="pcard"><div class="hd"><i class="pdot" style="background:${PCOL[k]}"></i>${PERSONAS[k].name}</div>${wireSVG(k,M.per[k],M.foldH)}</div>`).join('')}</div>
+    <p class="hint">ステージ上にも全員の軌跡を重ねています（色と線の種類で区別）。ワイヤーフレームの色は要素の種類です。</p></div>`;
+  const row=(label,fn,fmt,better,minSpread=0)=>{ const vals=keys.map(k=>fn(M.per[k])); const nums=vals.filter(v=>typeof v==='number'); const mn=Math.min(...nums), mx=Math.max(...nums);
+    return `<tr><td>${label}</td>${vals.map(v=>{ let st=''; if(typeof v==='number' && (mx-mn)>=minSpread && mx!==mn && better){ if((better==='high'&&v===mx)||(better==='low'&&v===mn)) st='color:var(--ok);font-weight:800'; else if((better==='high'&&v===mn)||(better==='low'&&v===mx)) st='color:var(--sev3);font-weight:800'; } return `<td style="${st}">${typeof v==='number'?fmt(v):'—'}</td>`; }).join('')}</tr>`; };
+  h+=`<div class="sec"><h3>ペルソナ別の指標（30試行の平均）</h3><div style="overflow-x:auto"><table class="mx"><tr><th>指標</th>${keys.map(k=>`<th><i class="pdot" style="background:${PCOL[k]};display:inline-block"></i><br>${PSHORT[k]}</th>`).join('')}</tr>
+    ${row('主要CTAへの到達率',r=>r.ctaRate,v=>Math.round(v*100)+'%','high',.1)}
+    ${row('主要CTAまでの時間',r=>r.ctaMs,v=>(v/1000).toFixed(1)+'s','low',300)}
+    ${row('H1見出しへの到達率',r=>r.h1Rate,v=>Math.round(v*100)+'%')}
+    ${row('バナーへの注視の割合',r=>r.bannerShare,v=>Math.round(v*100)+'%','low',.05)}
+    ${row('総所要時間',r=>r.totalMs,v=>(v/1000).toFixed(1)+'s')}
+    ${row('平均サッケード長',r=>r.amp,v=>Math.round(v)+'px')}</table></div>
+    <p class="hint">緑＝最良、赤＝最も不利（差が小さい指標＝到達率10pt／時間0.3s／バナー5pt未満は色なし）。ペルソナごとの既定の重みで計算します（③のスライダーは使いません）。</p></div>`;
+  h+=`<div class="sec"><h3>要素×ペルソナの到達率（30試行中、1回でも注視された割合）</h3>`;
+  if(!M.rows.length) h+='<p class="hint">対象となる主要要素がありません。</p>';
+  else h+=`<div style="overflow-x:auto"><table class="mx"><tr><th>要素</th>${keys.map(k=>`<th>${PSHORT[k]}</th>`).join('')}</tr>${M.rows.slice(0,12).map(r=>`<tr><td title="${esc(r.t.label)}">${esc(GTYPE_JA[r.t.type]||r.t.type)}：${esc(r.t.label)}${r.gap>=.4?'<span class="gap-badge">差大</span>':''}</td>${keys.map(k=>`<td class="cell" style="background:rgba(37,99,235,${(r.ps[k]*.55).toFixed(2)})">${Math.round(r.ps[k]*100)}%</td>`).join('')}</tr>`).join('')}</table></div><p class="hint">ペルソナ間の差が大きい順。「差大」は最大と最小の差が40pt以上です。</p>`;
+  h+=`</div>`;
+  h+=`<div class="sec"><h3>自動で出る所見</h3>${M.insights.length?`<div class="note"><ul>${M.insights.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:'<p class="hint">ペルソナ間で目立った差は検出されませんでした。</p>'}</div>
+    <div class="row"><button class="btn" id="multiCopy">比較をコピー(Markdown)</button></div>
+    <p class="hint">各ペルソナの仮定は③タブの説明を参照。数値は仮想であり、実ユーザーの行動を保証しません。</p>`;
+  return h;
+}
+function buildMultiReport(){
+  const M=ensureMulti(), keys=Object.keys(PERSONAS), d=new Date().toISOString().slice(0,10);
+  const pc=v=>Math.round(v*100)+'%', sec=v=>v===null?'—':(v/1000).toFixed(1)+'s';
+  let m=`# ペルソナ並列比較\n\n- 日付: ${d}\n- 対象: ${S.sourceName}\n- タスク: ${TASKS[S.gaze.task]}／範囲: ${S.gaze.range==='fold'?'ファーストビュー':'ページ全体'}\n- 注意: 仮想シミュレーション（30試行・シード固定）であり、実測ではありません。\n\n## 指標\n\n| 指標 | ${keys.map(k=>PERSONAS[k].name).join(' | ')} |\n|---|${keys.map(()=>'---').join('|')}|\n`;
+  m+=`| 主要CTAへの到達率 | ${keys.map(k=>pc(M.per[k].ctaRate)).join(' | ')} |\n| 主要CTAまでの時間 | ${keys.map(k=>sec(M.per[k].ctaMs)).join(' | ')} |\n| H1への到達率 | ${keys.map(k=>pc(M.per[k].h1Rate)).join(' | ')} |\n| バナーへの注視の割合 | ${keys.map(k=>pc(M.per[k].bannerShare)).join(' | ')} |\n\n## 要素ごとの到達率\n\n| 要素 | ${keys.map(k=>PSHORT[k]).join(' | ')} |\n|---|${keys.map(()=>'---').join('|')}|\n`;
+  m+=M.rows.slice(0,12).map(r=>`| ${GTYPE_JA[r.t.type]||r.t.type}：${r.t.label} | ${keys.map(k=>pc(r.ps[k])).join(' | ')} |`).join('\n')+'\n';
+  if(M.insights.length) m+='\n## 所見\n\n'+M.insights.map(t=>'- '+t).join('\n')+'\n';
+  return m;
+}
+
+/* ============================================================
    Before / After 比較
    「Beforeに保存」で解析結果を複製し、現在の画面(After)と同じ基準で比べる
    ============================================================ */
@@ -1470,10 +1606,11 @@ document.addEventListener('click', e=>{
   const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
   if(t.matches('.seg button')){ S.srcMode=t.dataset.src; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b===t)); renderSrc(); return; }
   if(t.matches('.tabs button')){
-    S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens'});
+    S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens', multi:S.tab==='multi'});
     if(S.tab==='lens' && !S.lens.on && !S.lens.preset){ setLensPreset('senior65'); renderTabs(); return; }
     applyLens(); syncToggles(); renderTabs(); renderPanel(); renderOverlay(); return;
   }
+  if(t.id==='multiCopy'){ navigator.clipboard.writeText(buildMultiReport()).then(()=>toast('ペルソナ比較をコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='saveBase'||t.id==='saveBase2'){ saveBase(); return; }
   if(t.id==='clearBase'){ S.base=null; frameCmp.srcdoc=''; updateBaseChip(); renderPanel(); renderOverlay(); return; }
   if(t.id==='swapBA'){ swapBA(); return; }
@@ -1517,6 +1654,8 @@ document.addEventListener('change', e=>{
   else if(t.id==='lCvd'){ S.lens.cvd=t.value; S.lens.preset='custom'; lensChanged(true); }
   else if(t.id==='gLens'){ S.gaze.useLens=t.checked; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='tgLens'){ S.show.lensMap=t.checked; renderOverlay(); }
+  else if(t.id==='tgMulti'){ S.show.multi=t.checked; renderOverlay(); }
+  else if(t.id==='mLens'){ S.multiLens=t.checked; renderPanel(); renderOverlay(); }
   else if(t.id==='tgComps'){ S.show.comps=t.checked; renderOverlay(); }
   else if(t.id==='tgPins'){ S.show.pins=t.checked; renderOverlay(); }
   else if(t.id==='tgPath'){ S.show.path=t.checked; renderOverlay(); }
@@ -1538,7 +1677,7 @@ document.addEventListener('input', e=>{
 document.addEventListener('toggle', e=>{ const d=e.target; if(d.classList&&d.classList.contains('h-card')){ d.open?S.openH.add(d.dataset.h):S.openH.delete(d.dataset.h); } }, true);
 document.addEventListener('mouseover', e=>{ const it=e.target.closest('.item[data-comp]'); const id=it?it.dataset.comp:null; if(id!==S.hlComp){ S.hlComp=id; renderOverlay(); } });
 
-function syncToggles(){ $('#tgLens').checked=S.show.lensMap; $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; }
+function syncToggles(){ $('#tgMulti').checked=S.show.multi; $('#tgLens').checked=S.show.lensMap; $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; }
 $('#stageScroll').addEventListener('mousemove', e=>{
   if(!(S.lens.on && S.lens.tunnel>0)) return;
   const sc=$('#stageScroll'), b=sc.getBoundingClientRect();
