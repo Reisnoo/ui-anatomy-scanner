@@ -134,6 +134,7 @@ td.d.good { color:var(--ok); } td.d.bad { color:var(--sev3); } td.d.neutral { co
 .panel-body { padding:20px; overflow:auto; max-height:calc(100vh - 110px); }
 @media (max-width:1050px){ .panel-body { max-height:none; } }
 h3 { margin:0 0 12px; font-size:14px; font-weight:600; color:var(--text); }
+.note + .sec { margin-top:28px; }
 .lead { margin:0 0 20px; font-size:13px; color:var(--muted); }
 .sec { margin-bottom:28px; }
 .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
@@ -534,7 +535,7 @@ const S = {
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
   base:null, cmp:{split:50, show:true}, src:null, wipe:null, wipeKey:null,
-  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), multi:null, multiLens:false,
+  versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
 };
@@ -1624,7 +1625,7 @@ function saveHistory(){
 }
 function initHistory(){
   try{ const raw=localStorage.getItem('uas-history'); if(!raw) return; const a=JSON.parse(raw);
-    if(Array.isArray(a)){ S.versions=a.filter(v=>v && v.issues && v.targets && v.texts && v.raw).slice(0,MAX_VERSIONS); S.vSeq=S.versions.reduce((m,v)=>Math.max(m,parseInt(String(v.id).slice(1))||0),0); } }catch(e){}
+    if(Array.isArray(a)){ S.versions=a.filter(v=>v && v.issues && v.targets && v.texts).slice(0,MAX_VERSIONS); S.vSeq=S.versions.reduce((m,v)=>Math.max(m,parseInt(String(v.id).slice(1))||0),0); } }catch(e){}
 }
 function addVersion(label, silent){
   if(!S.comps.length || !S.src){ toast('先に画面を解析してください'); return; }
@@ -1704,13 +1705,13 @@ function panelCompare(){
 }
 function panelHistory(){
   const V=S.versions;
-  let h=`<div class="sec row"><button class="btn" id="hAdd">${ico('bookmark')}現在の画面を履歴に追加</button><button class="btn ghost" id="hDemo">デモを開く</button>${V.length?'<button class="btn ghost" id="hClear">履歴を空にする</button>':''}</div>`;
-  if(!V.length) return h+`<div class="note"><b>使い方</b><ul><li>画面を解析して「履歴に追加」を押す（改善の節目ごとに繰り返す。最大${MAX_VERSIONS}件）</li><li>2件以上たまると、指標の推移・10原則の変化・指摘の出入りが表示される</li><li>履歴はこのブラウザに保存される（容量が足りないときはタブを閉じると消える）</li></ul><div style="margin-top:6px">すぐ試すなら「デモを開く」（ECストアの4段階の改善）。</div></div>`;
+  let h=pendingShareHTML()+`<div class="sec row"><button class="btn" id="hAdd">${ico('bookmark')}現在の画面を履歴に追加</button><button class="btn ghost" id="hDemo">デモを開く</button>${V.length?'<button class="btn ghost" id="hClear">履歴を空にする</button>':''}</div>`;
+  if(!V.length) return h+`<div class="note"><b>使い方</b><ul><li>画面を解析して「履歴に追加」を押す（改善の節目ごとに繰り返す。最大${MAX_VERSIONS}件）</li><li>2件以上たまると、指標の推移・10原則の変化・指摘の出入りが表示される</li><li>履歴はこのブラウザに保存される（容量が足りないときはタブを閉じると消える）</li></ul><div style="margin-top:6px">すぐ試すなら「デモを開く」（ECストアの4段階の改善）。</div></div>`+histIO();
   h+=`<div class="sec"><h3>履歴（上から古い順）</h3>${V.map((v,i)=>`<div class="vrow"><span class="vn">${i+1}</span><input type="text" data-vlabel="${v.id}" value="${esc(v.label)}" maxlength="12" aria-label="バージョン名"><span class="vsrc" title="${esc(v.name)}">${esc(v.name)} ・${v.savedAt}</span>
-    <div class="acts"><button class="mini" data-vact="prev" data-v="${v.id}" aria-pressed="${S.histSel===v.id}">ステージに重ねる</button><button class="mini" data-vact="base" data-v="${v.id}">Beforeにする</button><button class="mini" data-vact="up" data-v="${v.id}" ${i===0?'disabled':''}>上へ</button><button class="mini" data-vact="down" data-v="${v.id}" ${i===V.length-1?'disabled':''}>下へ</button><button class="mini" data-vact="del" data-v="${v.id}">削除</button></div></div>`).join('')}
+    <div class="acts"><button class="mini" data-vact="prev" data-v="${v.id}" aria-pressed="${S.histSel===v.id}" ${v.raw?'':'disabled title="HTMLを含めずに書き出された履歴のため、重ね表示はできません"'}>ステージに重ねる</button><button class="mini" data-vact="base" data-v="${v.id}">Beforeにする</button><button class="mini" data-vact="up" data-v="${v.id}" ${i===0?'disabled':''}>上へ</button><button class="mini" data-vact="down" data-v="${v.id}" ${i===V.length-1?'disabled':''}>下へ</button><button class="mini" data-vact="del" data-v="${v.id}">削除</button></div></div>`).join('')}
     <div class="row" style="margin-top:12px"><label class="toggle"><input type="checkbox" id="hCur" ${S.hCur?'checked':''}> 現在の画面を最後に含める</label></div></div>`;
   const rows=histRows();
-  if(rows.length<2) return h+'<p class="hint">推移を表示するには、2件以上（履歴＋現在の画面でも可）が必要です。</p>';
+  if(rows.length<2) return h+'<p class="hint">推移を表示するには、2件以上（履歴＋現在の画面でも可）が必要です。</p>'+histIO();
   const M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), labels=rows.map(r=>shortLabel(r.label));
   const tl=issueTimelineOf(rows);
   h+=`<div class="sec"><h3>推移</h3><div class="charts">${HMETRICS.map(mt=>{ const vals=M.map(m=>m[mt.k]===undefined?null:m[mt.k]); const nn=vals.filter(v=>v!==null);
@@ -1723,6 +1724,7 @@ function panelHistory(){
   h+=`<div class="sec"><h3>自動で出る所見</h3><div class="note"><ul>${ins.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div>
     <div class="row"><button class="btn" id="hCopy">${ico('copy')}履歴レポートをコピー(Markdown)</button></div>
     <p class="hint">推移はルールベースの指標の変化です。ユーザーにとって実際に良くなったかは、ユーザーテストで確認が必要です。</p>`;
+  h+=histIO();
   return h;
 }
 function buildHistReport(){
@@ -1744,6 +1746,120 @@ async function histDemo(){
 function moveVersion(id,dir){ const i=S.versions.findIndex(v=>v.id===id), j=i+dir; if(i<0||j<0||j>=S.versions.length) return; [S.versions[i],S.versions[j]]=[S.versions[j],S.versions[i]]; saveHistory(); renderPanel(); }
 
 /* ============================================================
+   履歴の書き出し・読み込み・共有
+   - JSONファイル: 端末間の受け渡し・バックアップ
+   - 共有リンク: URLの#以降に圧縮して載せる（サーバーには送信されない。小さな履歴向け）
+   外部から来たデータは信頼せず、形式と値を検証して取り込む
+   ============================================================ */
+const HIST_FORMAT = {app:'ui-anatomy-scanner', kind:'history', version:1};
+const MAX_IMPORT_BYTES = 8e6, MAX_LINK_CHARS = 2e6, LINK_WARN_CHARS = 8000;
+const nm = (x,d=0,a=-1e9,b=1e9) => { const n=parseFloat(x); return isFinite(n)?clamp(n,a,b):d; };
+const tx = (x,max=200) => String(x==null?'':x).replace(/[\u0000-\u001f]/g,' ').slice(0,max);
+const TARGET_TYPES = [...Object.keys(TYPES),'navlink','text'];
+const sRect = r => ({x:nm(r&&r.x), y:nm(r&&r.y), w:nm(r&&r.w,0,0,1e5), h:nm(r&&r.h,0,0,1e5)});
+const sCol = c => ({r:nm(c&&c.r,0,0,255), g:nm(c&&c.g,0,0,255), b:nm(c&&c.b,0,0,255), a:1});
+const sCount = o => { const out={}; if(o && typeof o==='object') Object.entries(o).slice(0,30).forEach(([k,x])=>{ out[tx(k,20)]=Math.round(nm(x,0,0,1e5)); }); return out; };
+function sanitizeVersion(v){
+  if(!v || typeof v!=='object' || !Array.isArray(v.issues) || !Array.isArray(v.targets) || !Array.isArray(v.texts)) return null;
+  const hid=new Set([...NIELSEN.map(h=>h.id),'SUP']);
+  const issues=v.issues.slice(0,300).filter(i=>i && typeof i==='object' && hid.has(i.h)).map(i=>({id:tx(i.id,20), h:i.h, sev:Math.round(nm(i.sev,0,0,4)), title:tx(i.title), detail:tx(i.detail,300), fix:tx(i.fix,300),
+    rects:(Array.isArray(i.rects)?i.rects.slice(0,12):[]).map(sRect), evidence:(Array.isArray(i.evidence)?i.evidence.slice(0,6):[]).map(e=>tx(e,80)), auto:!!i.auto,
+    state:['open','dismissed','ng','ok','unreviewed'].includes(i.state)?i.state:'open', msev:Math.round(nm(i.msev,2,1,4))}));
+  const targets=v.targets.slice(0,600).filter(t=>t && typeof t==='object' && TARGET_TYPES.includes(t.type)).map(t=>({id:tx(t.id,24), type:t.type, rect:sRect(t.rect), cx:nm(t.cx), cy:nm(t.cy), label:tx(t.label,40), fs:nm(t.fs,14,1,300),
+    contr:nm(t.contr,.3,0,1), size:nm(t.size,.3,0,1), lowC:!!t.lowC, kind:['primary','secondary','text','icon'].includes(t.kind)?t.kind:undefined, isCTA:!!t.isCTA, h:t.h?tx(t.h,4):undefined, price:!!t.price, textLen:nm(t.textLen,0,0,1e5), el:null}));
+  const texts=v.texts.slice(0,3000).filter(t=>t && typeof t==='object').map(t=>({fs:nm(t.fs,14,1,300), bold:!!t.bold, fg:sCol(t.fg), bg:sCol(t.bg), n:Math.round(nm(t.n,1,1,1e5))}));
+  const bh=String(v.baseHref||'');
+  return {id:null, label:tx(v.label,12).trim()||'無題', name:tx(v.name,80).trim()||'無題', savedAt:tx(v.savedAt,5), H:Math.round(nm(v.H,800,100,20000)),
+    types:sCount(v.types), kinds:sCount(v.kinds), btnStyleN:Math.round(nm(v.btnStyleN,0,0,1000)), bannersFold:Math.round(nm(v.bannersFold,0,0,1000)), links:Math.round(nm(v.links,0,0,1e5)), tap:Math.round(nm(v.tap,0,0,1e5)),
+    issues, targets, texts, raw:typeof v.raw==='string'?v.raw.slice(0,1500000):'', baseHref:/^https?:\/\//.test(bh)?bh.slice(0,500):''};
+}
+function buildHistPayload(){
+  return {...HIST_FORMAT, exportedAt:new Date().toISOString(), includesHtml:!!S.io.raw,
+    versions:S.versions.map(v=>{ const c={...v}; if(!S.io.raw) c.raw=''; return c; }),
+    ...(S.io.pers && customKeys().length ? {personas:customKeys().map(exportPersona)} : {})};
+}
+function applyImport(payload, mode){
+  const src=Array.isArray(payload)?payload:(payload && payload.versions);
+  if(!Array.isArray(src)) { toast('履歴の形式ではありません'); return 0; }
+  if(!Array.isArray(payload) && payload.app && payload.app!==HIST_FORMAT.app){ toast('このツールの履歴ファイルではありません'); return 0; }
+  const ok=[]; let skipped=0; src.slice(0,50).forEach(v=>{ const x=sanitizeVersion(v); if(x) ok.push(x); else skipped++; });
+  if(!ok.length){ toast('読み込める履歴がありませんでした'); return 0; }
+  const base = mode==='replace' ? [] : S.versions.slice();
+  const take=ok.slice(0, Math.max(0,MAX_VERSIONS-base.length)), cut=ok.length-take.length;
+  if(!take.length){ toast(`履歴がいっぱいです（最大${MAX_VERSIONS}件）。不要なものを削除するか、「置き換える」を選んでください`); return 0; }
+  take.forEach(x=>{ x.id='v'+(++S.vSeq); base.push(x); });
+  S.versions=base; S.histSel=null; S.histCache.clear(); saveHistory();
+  let pn=0;
+  if(!Array.isArray(payload) && Array.isArray(payload.personas)){
+    payload.personas.slice(0,MAX_CUSTOM).forEach(c=>{
+      if(!c || typeof c!=='object' || customKeys().length>=MAX_CUSTOM) return;
+      const p=sanitizePersona({...c,key:null}), sig=o=>JSON.stringify([o.name,o.descText||'',o.smallPenalty?1:0,...Object.keys(PLIM).map(f=>o[f]),o.lens]);
+      if(customKeys().some(k=>sig(PERSONAS[k])===sig(p))) return;
+      PERSONAS[p.key]=p;
+      S.pActive.add(p.key); pn++;
+    });
+    if(pn){ savePersonas(); S.multi=null; S.plCache.clear(); }
+  }
+  toast(`${take.length}件を読み込みました${pn?`（自作ペルソナ${pn}件を含む）`:''}${cut?`。上限のため${cut}件は読み込めませんでした`:''}${skipped?`。形式が不正な${skipped}件をスキップしました`:''}`);
+  renderPanel(); renderOverlay(); return take.length;
+}
+function importText(txt, mode){
+  if(txt.length>MAX_IMPORT_BYTES){ toast('ファイルが大きすぎます（8MBまで）'); return; }
+  let d; try{ d=JSON.parse(txt); }catch(e){ toast('JSONを読み込めませんでした'); return; }
+  applyImport(d, mode);
+}
+async function deflateB64(str){
+  const cs=new CompressionStream('deflate-raw'), w=cs.writable.getWriter(); w.write(new TextEncoder().encode(str)); w.close();
+  const u=new Uint8Array(await new Response(cs.readable).arrayBuffer()); let bin=''; for(let i=0;i<u.length;i+=0x8000) bin+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));
+  return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+async function inflateB64(b64, cap=MAX_IMPORT_BYTES){
+  const bin=atob(b64.replace(/-/g,'+').replace(/_/g,'/')), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+  const ds=new DecompressionStream('deflate-raw'), w=ds.writable.getWriter(); w.write(u).catch(()=>{}); w.close().catch(()=>{});
+  const rd=ds.readable.getReader(), parts=[]; let total=0;
+  for(;;){ const {done,value}=await rd.read(); if(done) break; total+=value.length; if(total>cap){ try{ rd.cancel(); }catch(e){} throw new Error('too large'); } parts.push(value); }
+  const all=new Uint8Array(total); let o=0; parts.forEach(c=>{ all.set(c,o); o+=c.length; });
+  return new TextDecoder().decode(all);
+}
+async function buildShareLink(){
+  if(typeof CompressionStream==='undefined') throw new Error('unsupported');
+  // リンク用は、履歴の比較に不要な項目（指摘の座標・説明・根拠）を省き、小数を丸めて短くする
+  const pl=buildHistPayload();
+  pl.versions=pl.versions.map(v=>({...v, issues:v.issues.map(i=>({id:i.id,h:i.h,sev:i.sev,title:i.title,auto:i.auto,state:i.state,msev:i.msev}))}));
+  const b64=await deflateB64(JSON.stringify(pl,(k,v)=>(typeof v==='number' && !Number.isInteger(v)) ? Math.round(v*1000)/1000 : v));
+  return location.origin+location.pathname+'#share='+b64;
+}
+async function checkShareHash(){
+  const m=location.hash.match(/^#share=([A-Za-z0-9_-]+)$/); if(!m) return;
+  try{
+    if(typeof DecompressionStream==='undefined') throw new Error('unsupported');
+    const d=JSON.parse(await inflateB64(m[1]));
+    const n=Array.isArray(d)?d.length:(d && Array.isArray(d.versions)?d.versions.length:0);
+    if(!n || (!Array.isArray(d) && d.app!==HIST_FORMAT.app)) throw new Error('format');
+    S.pendingShare=d;
+    S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,lensMap:false,multi:false}); syncToggles(); applyLens(); renderAll();
+  }catch(e){ toast('共有リンクを読み込めませんでした（壊れているか、対応していないブラウザです）'); }
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+}
+function pendingShareHTML(){
+  const d=S.pendingShare; if(!d) return '';
+  const arr=Array.isArray(d)?d:d.versions, labels=arr.slice(0,8).map(v=>tx(v&&v.label,12)||'無題').join(' → '), pn=(!Array.isArray(d)&&Array.isArray(d.personas))?d.personas.length:0;
+  return `<div class="note" style="border-color:var(--primary);margin-bottom:24px"><b style="color:var(--text)">共有された履歴を受け取りました</b><div style="margin:6px 0 10px">${arr.length}件：${esc(labels)}${pn?`（自作ペルソナ${pn}件を含む）`:''}<br>現在の履歴は${S.versions.length}件です。取り込む方法を選んでください。</div>
+    <div class="row"><button class="btn" id="shAdd">追加して開く</button><button class="btn ghost" id="shRep">置き換える</button><button class="btn ghost" id="shDrop">破棄</button></div></div>`;
+}
+function histIO(){
+  const io=S.io, kb=Math.round(JSON.stringify(buildHistPayload()).length/1024);
+  return `<div class="sec"><h3>書き出し・読み込み・共有</h3>
+    <div class="row"><label class="toggle"><input type="checkbox" id="hRaw" ${io.raw?'checked':''}> 画面のHTMLを含める</label><label class="toggle"><input type="checkbox" id="hPers" ${io.pers?'checked':''}> 自作ペルソナを含める</label></div>
+    <p class="hint">含めない場合は解析結果の数値だけが入り、ステージの重ね表示はできなくなります。HTMLを含めると、解析した画面の中身も相手に渡ります。現在の書き出しサイズの目安：約${kb}KB</p>
+    <div class="row" style="margin-top:12px"><button class="btn" id="hExport" ${S.versions.length?'':'disabled'}>JSONファイルに書き出す</button><button class="btn ghost" id="hImportBtn">ファイルから読み込む</button><input type="file" id="hFile" accept=".json,application/json" hidden></div>
+    <div class="row" style="margin-top:8px"><label style="font-size:12px;color:var(--muted)">読み込み方<select id="hMode" aria-label="読み込み方" style="margin-left:6px"><option value="append" ${io.mode==='append'?'selected':''}>いまの履歴の後ろに追加</option><option value="replace" ${io.mode==='replace'?'selected':''}>いまの履歴を置き換える</option></select></label></div>
+    <div class="row" style="margin-top:12px"><button class="btn ghost" id="hLink" ${S.versions.length?'':'disabled'}>共有リンクをコピー</button><span class="hint" id="hLinkInfo" style="margin:0"></span></div>
+    <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">JSONを貼り付けて読み込む</summary><textarea id="hPaste" placeholder="書き出したJSONを貼り付け" aria-label="履歴のJSON" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><button class="mini" id="hPasteGo">貼り付けた内容を読み込む</button></div></details>
+    <p class="hint">共有は、JSONファイルを渡すか、共有リンクを送る方法です。リンクはURLの「#」以降にデータを入れるため、サイトのサーバーには送信されませんが、データが多いとチャットやメールで途中で切れます。その場合はファイルを使ってください。読み込んだデータは、形式と値を検証してから取り込みます。</p></div>`;
+}
+
+/* ============================================================
    Before / After 比較
    「Beforeに保存」で解析結果を複製し、現在の画面(After)と同じ基準で比べる
    ============================================================ */
@@ -1751,8 +1867,8 @@ const cmpActive = () => !!(S.wipe && S.tab==='cmp' && S.cmp.show);
 function syncWipe(){
   let w=null;
   if(S.tab==='cmp'){
-    if(S.cTab==='pair' && S.base) w={H:S.base.H, raw:S.base.raw, baseHref:S.base.baseHref, key:'b'+S.base.uid, label:'Before | After'};
-    else if(S.cTab==='history' && S.histSel){ const v=S.versions.find(x=>x.id===S.histSel); if(v) w={H:v.H, raw:v.raw, baseHref:v.baseHref, key:'v'+v.id, label:shortLabel(v.label)+' | 現在'}; }
+    if(S.cTab==='pair' && S.base && S.base.raw) w={H:S.base.H, raw:S.base.raw, baseHref:S.base.baseHref, key:'b'+S.base.uid, label:'Before | After'};
+    else if(S.cTab==='history' && S.histSel){ const v=S.versions.find(x=>x.id===S.histSel); if(v && v.raw) w={H:v.H, raw:v.raw, baseHref:v.baseHref, key:'v'+v.id, label:shortLabel(v.label)+' | 現在'}; }
   }
   S.wipe=w;
   if(w && S.wipeKey!==w.key){ frameCmp.srcdoc=prepareHTML(w.raw,w.baseHref); S.wipeKey=w.key; }
@@ -1961,6 +2077,16 @@ document.addEventListener('click', e=>{
   if(t.id==='hAdd'||t.id==='saveHist'){ addVersion(); return; }
   if(t.id==='hDemo'){ histDemo(); return; }
   if(t.id==='hClear'){ if(confirm('履歴をすべて削除します。よろしいですか？')){ S.versions=[]; S.histSel=null; S.histCache.clear(); saveHistory(); renderPanel(); renderOverlay(); } return; }
+  if(t.id==='hExport'){ const txt=JSON.stringify(buildHistPayload(),null,1), a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'})); a.download='ui-anatomy-history-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast(`${S.versions.length}件を書き出しました`); return; }
+  if(t.id==='hImportBtn'){ const f=$('#hFile'); if(f) f.click(); return; }
+  if(t.id==='hPasteGo'){ importText(($('#hPaste')||{value:''}).value, S.io.mode); return; }
+  if(t.id==='hLink'){ const info=$('#hLinkInfo'); buildShareLink().then(url=>{
+      if(url.length>MAX_LINK_CHARS){ if(info) info.textContent='データが大きすぎてリンクにできません。ファイルを使ってください。'; return; }
+      navigator.clipboard.writeText(url).then(()=>toast('共有リンクをコピーしました'),()=>toast('コピーできませんでした'));
+      if(info) info.textContent=`リンクの長さ：${url.length.toLocaleString()}文字${url.length>LINK_WARN_CHARS?'（長いので、チャットやメールでは切れることがあります。ファイルを推奨）':''}`;
+    }).catch(()=>{ if(info) info.textContent='このブラウザは共有リンクに対応していません。ファイルを使ってください。'; }); return; }
+  if(t.id==='shAdd'||t.id==='shRep'){ if(S.pendingShare){ const d=S.pendingShare; S.pendingShare=null; applyImport(d, t.id==='shRep'?'replace':'append'); } return; }
+  if(t.id==='shDrop'){ S.pendingShare=null; renderPanel(); return; }
   if(t.id==='hCopy'){ navigator.clipboard.writeText(buildHistReport()).then(()=>toast('履歴レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.dataset.vact){
     const id=t.dataset.v, a=t.dataset.vact;
@@ -2019,6 +2145,10 @@ document.addEventListener('change', e=>{
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
+  else if(t.id==='hFile'){ const f=t.files&&t.files[0]; t.value=''; if(!f) return; if(f.size>MAX_IMPORT_BYTES){ toast('ファイルが大きすぎます（8MBまで）'); return; } const r=new FileReader(); r.onload=()=>importText(String(r.result), S.io.mode); r.onerror=()=>toast('ファイルを読み込めませんでした'); r.readAsText(f); }
+  else if(t.id==='hRaw'){ S.io.raw=t.checked; renderPanel(); }
+  else if(t.id==='hPers'){ S.io.pers=t.checked; renderPanel(); }
+  else if(t.id==='hMode'){ S.io.mode=t.value; }
   else if(t.id==='hCur'){ S.hCur=t.checked; renderPanel(); }
   else if(t.id==='cmpShow'){ S.cmp.show=t.checked; renderOverlay(); }
   else if(t.dataset.lens){ computeLens(); renderPanel(); }
@@ -2073,7 +2203,7 @@ function toggleTheme(){ const d=document.documentElement; const next=d.dataset.t
 initPersonas(); initHistory();
 renderSrc();
 renderPanel();
-(function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); })();
+(function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name).then(checkShareHash); })();
 </script>
 </body>
 </html>
