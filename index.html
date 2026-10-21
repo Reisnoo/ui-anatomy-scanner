@@ -139,6 +139,31 @@ td.d.good { color:var(--ok); } td.d.bad { color:var(--sev3); } td.d.neutral { co
 .tabs button[aria-selected="true"] { color:var(--primary-strong); border-bottom-color:var(--primary); background:var(--surface); }
 .panel-body { padding:20px; overflow:auto; max-height:calc(100vh - 110px); }
 @media (max-width:1050px){ .panel-body { max-height:none; } }
+/* 結果パネル：画面の高さに収め、タブは常に見える。タブは1段（狭いときは横スクロール） */
+.panel { display:flex; flex-direction:column; max-height:calc(100vh - 56px); }   /* 上の固定位置12px＋ページ下の余白40px を引く */
+.panel-body { flex:1 1 auto; min-height:0; max-height:none; }
+@media (max-width:1050px){ .panel { max-height:none; } }
+.tabs { flex-wrap:nowrap; overflow-x:auto; flex:0 0 auto; scroll-snap-type:x proximity; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tabs button { position:relative; flex:0 0 auto; min-width:78px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; padding:7px 10px; white-space:nowrap; line-height:1.25; scroll-snap-align:start; }
+.tabs .tn { font-size:16px; }
+.tabs .tl { font-size:12.5px; }
+@media (min-width:1300px){ .tabs { overflow-x:visible; } .tabs button { flex:1 1 0; min-width:0; padding:7px 2px; } }
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+/* 狭い画面（1列）：入力 → 結果 → 画面 の順に並べる。結果までのスクロールを減らす */
+@media (max-width:1050px){
+  .layout > section { display:contents; }
+  .input-card { order:1; } .panel { order:2; } .stage-card { order:3; }
+  .layout { padding-bottom:84px; }
+}
+/* 狭い画面だけ：結果と画面を行き来する、下の切り替え */
+.jump { display:none; }
+@media (max-width:1050px){
+  .jump { display:flex; position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:30; gap:4px; padding:4px; background:var(--surface); border:1px solid var(--border); border-radius:999px; box-shadow:0 4px 16px rgba(15,23,42,.18); }
+  .jump button { border:0; background:transparent; min-height:44px; min-width:96px; padding:0 18px; border-radius:999px; font-weight:600; color:var(--muted); font-size:14px; }
+  .jump button[aria-pressed="true"] { background:var(--primary-strong); color:#fff; }
+  .jump[hidden] { display:none; }
+}
 h3 { margin:0 0 12px; font-size:14px; font-weight:600; color:var(--text); }
 .note + .sec { margin-top:28px; }
 .lead { margin:0 0 20px; font-size:13px; color:var(--muted); }
@@ -282,16 +307,17 @@ th { color:var(--muted); font-weight:600; }
     </div>
   </section>
 
+  <nav class="jump" id="jump" aria-label="結果と画面の切り替え" hidden><button type="button" data-jump="panel" aria-pressed="true">結果</button><button type="button" data-jump="stage" aria-pressed="false">画面</button></nav>
   <aside class="card panel">
     <div class="tabs" role="tablist" aria-label="分析結果">
-      <button role="tab" aria-selected="true" data-tab="comps">① 構成要素</button>
-      <button role="tab" aria-selected="false" data-tab="heur">② 10原則</button>
-      <button role="tab" aria-selected="false" data-tab="gaze">③ 仮想視線</button>
-      <button role="tab" aria-selected="false" data-tab="lens">④ Age Lens</button>
-      <button role="tab" aria-selected="false" data-tab="cmp">⑤ 比較</button>
-      <button role="tab" aria-selected="false" data-tab="multi">⑥ ペルソナ</button>
-      <button role="tab" aria-selected="false" data-tab="resp">⑦ 画面幅</button>
-      <button role="tab" aria-selected="false" data-tab="kp">⑧ Where・When・Why</button>
+      <button role="tab" aria-selected="true" data-tab="comps"><span class="tn" aria-hidden="true">①</span><span class="tl">構成要素</span><span class="sr-only">① 構成要素</span></button>
+      <button role="tab" aria-selected="false" data-tab="heur"><span class="tn" aria-hidden="true">②</span><span class="tl">10原則</span><span class="sr-only">② 10原則</span></button>
+      <button role="tab" aria-selected="false" data-tab="gaze"><span class="tn" aria-hidden="true">③</span><span class="tl">仮想視線</span><span class="sr-only">③ 仮想視線</span></button>
+      <button role="tab" aria-selected="false" data-tab="lens"><span class="tn" aria-hidden="true">④</span><span class="tl">Age Lens</span><span class="sr-only">④ Age Lens</span></button>
+      <button role="tab" aria-selected="false" data-tab="cmp"><span class="tn" aria-hidden="true">⑤</span><span class="tl">比較</span><span class="sr-only">⑤ 比較</span></button>
+      <button role="tab" aria-selected="false" data-tab="multi"><span class="tn" aria-hidden="true">⑥</span><span class="tl">ペルソナ</span><span class="sr-only">⑥ ペルソナ</span></button>
+      <button role="tab" aria-selected="false" data-tab="resp"><span class="tn" aria-hidden="true">⑦</span><span class="tl">画面幅</span><span class="sr-only">⑦ 画面幅</span></button>
+      <button role="tab" aria-selected="false" data-tab="kp" title="Where・When・Why（どの要素・どの画面・なぜ）"><span class="tn" aria-hidden="true">⑧</span><span class="tl">記録(3W)</span><span class="sr-only">⑧ Where・When・Why</span></button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -793,17 +819,17 @@ function renderScreens(){
   $('#scrReveal').checked = S.screenReveal;
   $('#scrNote').textContent = `1つのHTMLに${n}つの画面を検出しました。画面を選ぶと、その画面だけを表示して解析します（JSは実行しません）。`;
 }
-async function selectScreen(i){
+async function selectScreen(i, quiet){
   if(!S.srcAll || !S.screens) return;
-  await loadHTML(S.srcAll.html, S.sourceName, S.srcAll.baseHref, {screen:i});
+  await loadHTML(S.srcAll.html, S.sourceName, S.srcAll.baseHref, {screen:i, scroll:!quiet});
 }
 async function analyzeAllScreens(){
   if(!S.srcAll || !S.screens) return;
   const room=MAX_VERSIONS-S.versions.length, items=S.screens.items;
   if(room<1){ toast(`履歴は${MAX_VERSIONS}件までです。不要なものを削除してください`); return; }
   const n=Math.min(room, items.length), keep=S.screenIdx;
-  for(let i=0;i<n;i++){ await selectScreen(i); addVersion((items[i].id||items[i].label), true); }
-  await selectScreen(keep==null?null:keep);
+  for(let i=0;i<n;i++){ await selectScreen(i,true); addVersion((items[i].id||items[i].label), true); }
+  await selectScreen(keep==null?null:keep, true);
   S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
   toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑤比較→履歴で、画面どうしを比べられます`);
 }
@@ -951,6 +977,8 @@ async function loadHTML(html, name, baseHref, opt={}){
   renderAll();
   const cut = doc.documentElement.scrollHeight > MAX_H;
   renderScreens();
+  if(S._jumpUpd) S._jumpUpd();
+  if(opt.scroll) scrollToResults();
   setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${srcLabel()}）${cut?`。ページが長いため先頭${MAX_H}pxまでを解析`:''}${S.layoutShift?'。画面の高さに依存するレイアウトのため、ステージ上の位置は実際と異なる場合があります（解析は1280×800の表示で実施）':''}`, false);
 }
 
@@ -964,7 +992,7 @@ async function loadURL(url, proxy){
     const res = await fetch(target, {mode:'cors'});
     if(!res.ok) throw new Error('HTTP '+res.status);
     const html = await res.text();
-    await loadHTML(html, u.host, u.href);
+    await loadHTML(html, u.host, u.href, {scroll:true});
     if(!/<(body|main|div)/i.test(html) || html.length<800) toast('JSで描画されるサイトは、中身が少なく解析される場合があります');
   }catch(e){
     setStatus('取得できませんでした。ブラウザのCORS制約の可能性が高いです。中継URLを設定するか、「HTML貼り付け」を使ってください。', true);
@@ -1714,7 +1742,20 @@ function startPlay(){
    パネル描画
    ============================================================ */
 function renderAll(){ updateBaseChip(); renderTabs(); renderPanel(); renderOverlay(); }
-function renderTabs(){ $$('.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===S.tab)); }
+function renderTabs(){
+  $$('.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===S.tab));
+  const bar=$('.tabs'), cur=bar&&bar.querySelector('[aria-selected="true"]');   // 横スクロールのとき、選んだタブを見える位置に
+  if(cur && bar.scrollWidth>bar.clientWidth+1) bar.scrollTo({left:Math.max(0,cur.offsetLeft-(bar.clientWidth-cur.offsetWidth)/2), behavior:'smooth'});
+}
+const isNarrow = () => matchMedia('(max-width:1050px)').matches;
+function scrollToResults(){ if(isNarrow()){ const el=$('.panel'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } }
+function focusStage(){ if(isNarrow()){ const el=$('.stage-card'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } }
+function initJump(){
+  const nav=$('#jump'), panel=$('.panel'), stage=$('.stage-card'); if(!nav||!panel||!stage||!('IntersectionObserver' in window)) return;
+  const vis=new Map(), upd=()=>{ nav.hidden=!S.comps.length; const p=vis.get(panel)||0, s=vis.get(stage)||0, on=s>p?'stage':'panel'; $$('#jump button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.jump===on)); };
+  const io=new IntersectionObserver(es=>{ es.forEach(e=>vis.set(e.target,e.intersectionRatio)); upd(); },{threshold:[0,.1,.25,.5,.75,1]});
+  io.observe(panel); io.observe(stage); S._jumpUpd=upd; upd();
+}
 const LEAD = {
   comps:'この画面が、どんな部品でできているかを数えます。',
   heur:'ニールセンの10原則で、どこが弱いかを見ます。',
@@ -3168,6 +3209,7 @@ document.addEventListener('click', e=>{
   const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
   if(t.dataset.scr!==undefined){ selectScreen(t.dataset.scr==='all'?null:+t.dataset.scr); return; }
   if(t.id==='scrAll'){ analyzeAllScreens(); return; }
+  if(t.dataset.jump){ const el=t.dataset.jump==='stage'?$('.stage-card'):$('.panel'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }
   if(t.id==='kpAdd'){ kpAddFromForm(); return; }
   if(t.id==='kpDraft'){ kpDraftFromIssues(); return; }
   if(t.id==='kpCsv'){ const blob=new Blob([kpCSV()],{type:'text/csv'}), a2=document.createElement('a'); a2.href=URL.createObjectURL(blob); a2.download='keypoints-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a2.click(); setTimeout(()=>URL.revokeObjectURL(a2.href),30000); toast('CSVを保存しました'); return; }
@@ -3228,13 +3270,13 @@ document.addEventListener('click', e=>{
   if(t.id==='cmpDl'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildCmpReport()],{type:'text/markdown'})); a.download='ui-before-after-report.md'; a.click(); return; }
   if(t.dataset.lensPreset){ setLensPreset(t.dataset.lensPreset); return; }
   if(t.dataset.lrect){ const l=S.lensList[+t.dataset.lrect]; if(l) scrollToRect(l.rect); return; }
-  if(t.dataset.sample){ const s=SAMPLES.find(x=>x.key===t.dataset.sample); S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); return; }
+  if(t.dataset.sample){ const s=SAMPLES.find(x=>x.key===t.dataset.sample); S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name, undefined, {scroll:true}); return; }
   if(t.id==='urlGo'){ loadURL($('#urlIn').value.trim(), $('#proxyIn')?.value.trim()); return; }
   if(t.id==='htmlGo'){
     const v=$('#htmlIn').value; if(v.trim().length<20){ setStatus('HTMLを貼り付けてください', true); return; }
     const raw=($('#baseIn')&&$('#baseIn').value||'').trim(); let base='', name='貼り付けたHTML';
     if(raw){ try{ const u=new URL(raw); if(!/^https?:$/.test(u.protocol)) throw 0; base=u.href; name=u.host; S.htmlBase=raw; }catch(e){ setStatus('元のページのURLの形式が正しくありません（https://… で入力）', true); return; } }
-    loadHTML(v, name, base); return; }
+    loadHTML(v, name, base, {scroll:true}); return; }
   if(t.id==='themeBtn'){ toggleTheme(); return; }
   if(t.id==='copyReport'){ navigator.clipboard.writeText(buildReport()).then(()=>toast('レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='dlReport'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildReport()],{type:'text/markdown'})); a.download='ui-analysis-report.md'; a.click(); return; }
@@ -3339,14 +3381,14 @@ document.addEventListener('drop', e=>{
   if(S.srcMode!=='img'){ S.srcMode='img'; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b.dataset.src==='img')); renderSrc(); }
   loadShotFile(f);
 });
-function scrollToRect(r){ if(!r) return; const sc=$('#stageScroll'); sc.scrollTo({top:Math.max(0, r.y*S.scale-90), behavior:'smooth'}); }
+function scrollToRect(r){ if(!r) return; focusStage(); const sc=$('#stageScroll'); sc.scrollTo({top:Math.max(0, r.y*S.scale-90), behavior:'smooth'}); }
 
 /* テーマ */
 function toggleTheme(){ const d=document.documentElement; const next=d.dataset.theme==='dark'?'light':'dark'; d.dataset.theme=next; $('#themeBtn').innerHTML=ico(next==='dark'?'sun':'moon',18); try{ localStorage.setItem('uas-theme',next); }catch(e){} }
 (function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').innerHTML=ico(t==='dark'?'sun':'moon',18); })();
 
 /* 起動 */
-initPersonas(); initHistory(); kpLoad(); loadRep();
+initPersonas(); initHistory(); kpLoad(); loadRep(); initJump();
 renderSrc(); renderVpUI();
 renderPanel();
 (function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name).then(checkShareHash); })();
