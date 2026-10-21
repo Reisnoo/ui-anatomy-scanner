@@ -92,7 +92,7 @@ textarea { width:100%; min-height:110px; font-family:ui-monospace,Menlo,Consolas
 .toggle input { margin:0; }
 .toggle:has(input:checked) { background:var(--primary-light); border-color:var(--primary); color:var(--primary-strong); }
 .stage-scroll { position:relative; height:calc(100vh - 250px); min-height:460px; overflow:auto; background:var(--canvas); }
-.page-holder { position:relative; margin:0; }
+.page-holder { position:relative; margin:0 auto; }
 .page { position:absolute; left:0; top:0; width:1280px; transform-origin:0 0; background:#fff; box-shadow:0 0 0 1px var(--border); }
 .page iframe { display:block; width:1280px; border:0; pointer-events:none; background:#fff; }
 .page canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; mix-blend-mode:multiply; opacity:.8; }
@@ -199,6 +199,13 @@ th { color:var(--muted); font-weight:600; }
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0F172A; color:#fff; padding:8px 16px; border-radius:6px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; }
 .toast.on { opacity:1; }
 .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+.vp-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted); }
+.vp-row select, .vp-row input { font-size:12px; padding:3px 6px; min-height:28px; }
+.vp-row input[type=number] { width:68px; }
+.code-box { margin:6px 0; border:1px solid var(--border); border-radius:6px; background:var(--bg); }
+.code-box > summary { cursor:pointer; padding:5px 8px; font-size:12px; font-weight:600; list-style:none; }
+.code-box > summary::-webkit-details-marker { display:none; }
+.code-box pre { margin:0; padding:8px 10px; font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; overflow:auto; max-height:260px; white-space:pre; border-top:1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -227,6 +234,10 @@ th { color:var(--muted); font-weight:600; }
         <span class="status" id="status" role="status">準備中…</span>
       </div>
       <div class="src-body" id="srcBody"></div>
+      <div class="vp-row" id="vpRow"><label for="vpSel">解析する画面幅</label>
+        <select id="vpSel" aria-label="解析する画面幅"></select>
+        <span id="vpCustom" hidden><input type="number" id="vpW" min="320" max="3840" step="1" aria-label="幅(px)" value="1280">×<input type="number" id="vpH" min="480" max="2400" step="1" aria-label="高さ(px)" value="800"><button class="mini" id="vpApply">適用</button></span>
+        <span id="vpNote"></span></div>
     </div>
 
     <div class="card stage-card">
@@ -264,6 +275,7 @@ th { color:var(--muted); font-weight:600; }
       <button role="tab" aria-selected="false" data-tab="lens">④ Age Lens</button>
       <button role="tab" aria-selected="false" data-tab="cmp">⑤ 比較</button>
       <button role="tab" aria-selected="false" data-tab="multi">⑥ ペルソナ</button>
+      <button role="tab" aria-selected="false" data-tab="resp">⑦ 画面幅</button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -283,7 +295,17 @@ const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-const PAGE_W = 1280, FOLD_H = 800, MAX_H = 12000;
+let PAGE_W = 1280, FOLD_H = 800;   // 解析する画面の幅・高さ（setViewport で切り替える）
+const MAX_H = 12000;
+/* 解析する画面幅のプリセット（論理ピクセル）。ノートPC13インチは MacBook Air/Pro 13インチの標準的な表示（1440×900）。Windowsの小型ノートは1366×768が多い */
+const VIEWPORTS = [
+  {key:'mobile', name:'スマホ', w:375, h:812, note:'iPhone 標準サイズ相当'},
+  {key:'tablet', name:'タブレット', w:768, h:1024, note:'iPad 縦向き相当'},
+  {key:'pc', name:'PC', w:1280, h:800, note:'既定。小さめのデスクトップ・ノートPC'},
+  {key:'laptop', name:'ノートPC 13インチ', w:1440, h:900, note:'MacBook 13インチの標準的な表示'},
+  {key:'desktop', name:'大画面', w:1920, h:1080, note:'フルHDモニター'},
+];
+const vpOf = k => VIEWPORTS.find(v=>v.key===k) || null;
 /* 単色の線画アイコン（太さ1.75で統一。絵文字は使わない） */
 const ICON_PATHS = {
   moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
@@ -347,6 +369,122 @@ const lin = v => { v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.05
 const lum = c => 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b);
 const contrast = (a,b) => { const l1=lum(a), l2=lum(b); return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05); };
 const colorDist = (a,b) => Math.hypot(a.r-b.r, a.g-b.g, a.b-b.b);
+/* ---------- 修正コードの生成 ---------- */
+const toHex = c => '#'+[c.r,c.g,c.b].map(v=>Math.round(clamp(v,0,255)).toString(16).padStart(2,'0')).join('').toUpperCase();
+// 背景に対して target 以上になるまで、文字色を黒（背景が明るいとき）または白（暗いとき）へ近づけた色を返す
+function fixColor(fg,bg,target){
+  const end = lum(bg)>.179 ? {r:0,g:0,b:0} : {r:255,g:255,b:255};
+  for(let t=0;t<=1.0001;t+=.02){ const c={r:fg.r+(end.r-fg.r)*t, g:fg.g+(end.g-fg.g)*t, b:fg.b+(end.b-fg.b)*t, a:1}; if(contrast(c,bg)>=target) return c; }
+  return {...end,a:1};
+}
+const selHint = el => { const id=el.getAttribute&&el.getAttribute('id'); if(id && !/\d{3,}/.test(id)) return '#'+id; const c=((el.getAttribute&&el.getAttribute('class'))||'').trim().split(/\s+/).filter(x=>x&&x.length<28)[0]; return el.tagName.toLowerCase()+(c?'.'+c:''); };
+function contrastCode(lowC){
+  const seen=new Set(), rows=[];
+  for(const x of lowC){ const h=selHint(x.el); if(seen.has(h)) continue; seen.add(h); if(rows.length>=5) break;
+    const n=fixColor(x.fgc,x.bgc,x.large?3:4.5);
+    rows.push(`${h} {\n  color: ${toHex(n)};   /* 現在 ${toHex(x.fgc)}（${x.ratio.toFixed(1)}:1） → ${contrast(n,x.bgc).toFixed(1)}:1（背景 ${toHex(x.bgc)}） */\n}`); }
+  return '/* 文字色だけを変える最小の例（背景色は変えない）。実際は色の変数（デザイントークン）で一括して直すのが安全 */\n/* opacity で薄くしている場合は、opacity を上げるか、色を直接指定する */\n'+rows.join('\n')+(lowC.length>rows.length?`\n/* ほか${lowC.length-rows.length}件も、同様に背景との比を確認して直す */`:'');
+}
+function smallCode(small){
+  const seen=new Set(), rows=[];
+  small.forEach(e=>{ const h=selHint(e); if(seen.has(h)||rows.length>=5) return; seen.add(h); rows.push(`${h} { font-size: ${Math.max(12,Math.ceil(parseFloat(D.cs(e).fontSize)))}px; }   /* 現在 ${Math.round(parseFloat(D.cs(e).fontSize)*10)/10}px。補足文でも12px以上 */`); });
+  return '/* 最小でも12px。本文は16px前後にする */\nbody { font-size: 16px; line-height: 1.7; }\n'+rows.join('\n');
+}
+/* タイトルから決まる、定型の修正コード（具体的な値は、各ページに合わせて変える） */
+const STATIC_CODES = [
+  [/ナビゲーションに現在地|現在のステップが示されて/, `<!-- 現在のページのリンクに aria-current を付け、見た目でも区別する -->
+<nav aria-label="メインメニュー">
+  <a href="/products" aria-current="page">商品一覧</a>
+  <a href="/cart">カート</a>
+</nav>
+<style>
+  nav a[aria-current="page"] { font-weight: 600; border-bottom: 2px solid #2563EB; color: #1D4ED8; }
+</style>`],
+  [/戻る／キャンセル/, `<!-- 主操作の隣に、目立たない二次操作（戻る・キャンセル）を置く -->
+<div class="actions">
+  <button type="button" class="btn-text" onclick="history.back()">戻る</button>
+  <button type="submit" class="btn-primary">申請する</button>
+</div>`],
+  [/ボタンの角丸/, `/* 角丸・余白・色は変数にまとめ、全ボタンで同じ値を使う */
+:root { --radius: 10px; }
+.btn, button, input[type="submit"] { border-radius: var(--radius); }`],
+  [/フォントファミリー/, `/* 書体は1つに統一する */
+:root { --font: "Noto Sans JP", system-ui, sans-serif; }
+body, button, input, select, textarea { font-family: var(--font); }`],
+  [/文字サイズが揃っていない/, `/* 見出しのサイズは、レベルごとに1つに決める */
+h1 { font-size: 28px; } h2 { font-size: 22px; } h3 { font-size: 18px; }`],
+  [/破壊的な操作/, `/* 破壊的な操作は主操作から離し、確認を挟む */
+.actions { display: flex; gap: 8px; }
+.btn-danger { margin-inline-start: 32px; }   /* 主操作から離す */
+/* JS: if (!confirm('本当に削除しますか？ この操作は取り消せません')) return; */`],
+  [/アイコンのみのボタン/, `<!-- アイコンだけのボタンには、見えない名前を付ける -->
+<button type="button" aria-label="検索">
+  <svg aria-hidden="true" focusable="false" width="20" height="20">…</svg>
+</button>`],
+  [/ラベルのない入力欄/, `<!-- placeholder だけにせず、必ず label を付ける -->
+<label for="email">メールアドレス</label>
+<input id="email" name="email" type="email" autocomplete="email" placeholder="例：taro@example.com">`],
+  [/autocomplete/, `<!-- 個人情報の入力欄には autocomplete を付ける -->
+<input name="name" autocomplete="name">
+<input name="email" type="email" autocomplete="email">
+<input name="tel" type="tel" autocomplete="tel">
+<input name="zip" autocomplete="postal-code">
+<input name="addr" autocomplete="street-address">`],
+  [/エラーを伝える領域/, `<!-- エラーは、入力欄の近くに文章で出し、読み上げにも伝える -->
+<input id="email" aria-invalid="true" aria-describedby="email-err">
+<p id="email-err" role="alert">メールアドレスの形式が正しくありません。例：taro@example.com</p>`],
+  [/操作領域が24px未満/, `/* タップ領域は最低24px、できれば44px以上。隣との間隔も8px以上 */
+button, [role="button"], input[type="submit"], .icon-btn { min-width: 44px; min-height: 44px; padding: 10px 16px; }
+.toolbar { display: flex; gap: 8px; }`],
+  [/alt属性のない画像/, `<!-- 意味のある画像：内容を説明 / 装飾の画像：空の alt -->
+<img src="product.jpg" alt="黒いレザーのビジネスバッグ（正面）">
+<img src="divider.svg" alt="">`],
+];
+const RESP_CODES = {
+  overflow: `/* 横スクロールの原因を、親の幅に収める */
+*, *::before, *::after { box-sizing: border-box; }
+img, video, iframe, svg, canvas { max-width: 100%; height: auto; }
+.container { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+table { display: block; overflow-x: auto; }          /* 表は横スクロールできる箱に入れる */
+p, h1, h2, h3, li, pre { overflow-wrap: anywhere; }  /* 長い語・URLで広がらないように */
+/* 固定幅（width: 960px など）は max-width にする：  width: 960px;  →  width: 100%; max-width: 960px; */`,
+  viewport: `<!-- <head> の中に入れる。これがないとスマホでは約980px幅で描かれ、縮小表示になる -->
+<meta name="viewport" content="width=device-width, initial-scale=1">`,
+  zoom: `<!-- 拡大を禁止する指定は外す（WCAG 1.4.4：200%まで拡大できること） -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- NG: user-scalable=no / maximum-scale=1 -->`,
+  tap: `/* スマホ・タブレットでは、操作領域を44px以上にする */
+button, [role="button"], input[type="submit"], nav a, .icon-btn { min-width: 44px; min-height: 44px; }
+nav a { display: inline-flex; align-items: center; padding: 10px 12px; }
+/* 隣り合う操作との間隔は8px以上 */
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }`,
+  inputzoom: `/* iOS Safari は、16px未満の入力欄にフォーカスすると画面を自動で拡大してしまう */
+input, select, textarea { font-size: 16px; }`,
+  nav: `<!-- スマホではメニューを折りたたみ、ボタンで開く -->
+<button class="nav-toggle" aria-expanded="false" aria-controls="menu" aria-label="メニューを開く">
+  <svg aria-hidden="true" width="24" height="24">…</svg>
+</button>
+<nav id="menu" aria-label="メインメニュー">…</nav>
+<style>
+  @media (max-width: 767px) { #menu { display: none; } #menu.open { display: block; } }
+  @media (min-width: 768px) { .nav-toggle { display: none; } }
+</style>
+<!-- JS: ボタンで #menu.open を切り替え、aria-expanded を true/false に更新 -->`,
+  fixed: `/* スマホでは固定表示の帯を小さくするか、スクロールに任せる */
+@media (max-width: 600px) {
+  .sticky-header, .cookie-banner, .promo-bar { position: static; }   /* または高さを56px以内に */
+}`,
+  mq: `/* モバイルファースト：基本はスマホ向け、広い画面で上書きする */
+.layout { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+@media (min-width: 768px)  { .layout { grid-template-columns: repeat(2, 1fr); } }   /* タブレット */
+@media (min-width: 1280px) { .layout { grid-template-columns: repeat(3, 1fr); max-width: 1200px; margin-inline: auto; } }
+/* メディアクエリを使わずに、grid の auto-fit で自動的に折り返す方法もある： */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }`,
+  measure: `/* 1行が長すぎると読みにくい。本文の幅は、日本語で35〜45字前後を目安にする */
+.article p, .prose { max-width: 40em; }   /* 日本語は 38〜40em、英語は 65ch 前後 */`,
+};
+
+
 const sat = c => { const mx=Math.max(c.r,c.g,c.b), mn=Math.min(c.r,c.g,c.b); return mx===0?0:(mx-mn)/mx; };
 const hex = c => c ? '#'+[c.r,c.g,c.b].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('') : 'none';
 
@@ -440,7 +578,7 @@ small{color:#9ca3af;font-size:11px}
 function sampleSaaS(){
   const feat=[['書く','アイデアを素早くメモ。入力はそのまま保存されます。'],['整理する','タグとフォルダで、探さなくても見つかる。'],['共有する','リンク1つでチームと同期。権限も細かく管理。']]
     .map(([t,d],i)=>`<div class="card"><img src="${thumb(['#bfdbfe','#c7d2fe','#bbf7d0'][i],'#f8fafc')}" alt="${t}の画面イメージ" width="360" height="140"><h3>${t}</h3><p>${d}</p><a href="#">${t}機能の詳細</a></div>`).join('');
-  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>
 *{box-sizing:border-box}body{margin:0;font:16px/1.7 sans-serif;color:#0f172a;background:#fff}
 header{display:flex;align-items:center;gap:28px;padding:14px 56px;border-bottom:1px solid #e2e8f0}
 .logo{font-weight:800;font-size:20px;color:#1d4ed8}nav{display:flex;gap:22px}nav a{color:#334155;text-decoration:none;padding:6px 0}
@@ -453,9 +591,13 @@ nav a[aria-current=page]{color:#1d4ed8;font-weight:700;border-bottom:3px solid #
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:16px 56px 40px}
 .card{border:1px solid #e2e8f0;border-radius:12px;padding:16px}.card img{width:100%;height:auto;border-radius:8px}.card h3{margin:10px 0 2px}.card p{margin:0 0 8px;color:#475569;font-size:15px}.card a{color:#1d4ed8;font-weight:600}
 footer{background:#0f172a;color:#cbd5e1;padding:28px 56px;display:flex;gap:28px;font-size:14px}footer a{color:#e2e8f0}
+.menu-btn{display:none;border:0;background:transparent;min-width:44px;min-height:44px;color:#334155;align-items:center;justify-content:center}
+nav a{display:inline-flex;align-items:center;min-height:44px}.link{display:inline-flex;align-items:center;min-height:44px;padding:0 6px}.cta{min-height:44px}.srch input{font-size:16px}
+@media (max-width:1023px){header{padding:12px 24px;gap:16px}.hero{flex-direction:column;align-items:flex-start;padding:32px 24px}.hero img{width:100%;max-width:520px}.cards{grid-template-columns:repeat(2,1fr);padding:16px 24px 32px}footer{padding:24px;flex-wrap:wrap}}
+@media (max-width:599px){header{flex-wrap:wrap;padding:8px 16px;gap:8px}.menu-btn{display:inline-flex}nav{display:none}.sp{display:none}.srch{order:5;flex:1 0 100%}.srch input{width:100%}.hero{padding:24px 16px}.hero h1{font-size:30px}.hero p{font-size:16px}.hero .sub{display:inline-block;margin:12px 0 0}.cards{grid-template-columns:1fr;padding:8px 16px 24px}footer{padding:20px 16px;gap:8px 20px}}
 </style></head><body>
-<header><div class="logo">ノートリー</div>
-<nav aria-label="メイン"><a href="#" aria-current="page">製品</a><a href="#">料金</a><a href="#">導入事例</a><a href="#">ブログ</a></nav><div class="sp"></div>
+<header><div class="logo">ノートリー</div><button class="menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="gnav">${ICON('M4 7h16M4 12h16M4 17h16')}</button>
+<nav id="gnav" aria-label="メイン"><a href="#" aria-current="page">製品</a><a href="#">料金</a><a href="#">導入事例</a><a href="#">ブログ</a></nav><div class="sp"></div>
 <form class="srch" role="search"><label for="q" class="sr" style="position:absolute;left:-9999px">サイト内検索</label><input id="q" type="search" placeholder="サイト内を検索" autocomplete="off"></form>
 <a class="link" href="#">ヘルプ</a><a class="link" href="#">ログイン</a><button class="cta">無料で始める</button></header>
 <section class="hero"><div class="t"><h1>考えをまとめる時間を、<br>もっと軽く。</h1><p>メモ、タスク、ドキュメントを1つの場所に。チームで使っても迷いません。</p><button class="big">無料で始める</button><a class="sub" href="#">デモを見る →</a></div><img src="${thumb('#93c5fd','#e0e7ff')}" alt="アプリの画面イメージ" width="520" height="340"></section>
@@ -487,7 +629,7 @@ function sampleECStep(n){
 function sampleECFixed(){
   const names=['ワイヤレスイヤホン Pro','ワイヤレスイヤホン Pro II','ノイズキャンセリングヘッドホン','スマートウォッチ S3','モバイルバッテリー 10000','USB-C 急速充電器 65W','ポータブルスピーカー','Bluetoothキーボード'];
   const cards=names.map((n,i)=>`<div class="card"><img src="${thumb(['#93c5fd','#fca5a5','#86efac','#fcd34d'][i%4],'#e5e7eb')}" alt="${n}" width="260" height="150"><div class="nm">${n}</div><div class="pr">¥${(3980+i*1200).toLocaleString()}</div><div class="rv">レビュー ${100+i*13}件</div><button>カートに入れる</button></div>`).join('');
-  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>
 *{box-sizing:border-box}body{margin:0;font:15px/1.7 sans-serif;color:#1f2937;background:#fff}
 header.top{display:flex;align-items:center;gap:28px;padding:14px 40px;border-bottom:1px solid #e5e7eb}
 .logo{font-size:22px;font-weight:800;color:#1d4ed8}nav.main{display:flex;gap:22px}nav.main a{color:#374151;text-decoration:none;padding:6px 0}
@@ -504,9 +646,13 @@ h2{margin:24px 40px 8px;font-size:22px}.grid{display:grid;grid-template-columns:
 .cartbar .clear{background:transparent;border:0;color:#4b5563;text-decoration:underline;font-size:14px;padding:12px 8px}
 .cartbar .go{background:#1d4ed8;color:#fff;border:0;border-radius:8px;padding:12px 28px;font-weight:800;font-size:16px}
 footer{background:#111827;color:#e5e7eb;padding:28px 40px;font-size:14px;display:flex;gap:28px}footer a{color:#e5e7eb}
+.menu-btn{display:none;border:0;background:transparent;min-width:44px;min-height:44px;color:#374151;align-items:center;justify-content:center}
+nav.main a{display:inline-flex;align-items:center;min-height:44px}.search input{font-size:16px;min-height:44px}
+@media (max-width:1023px){header.top{flex-wrap:wrap;gap:8px 16px;padding:12px 20px}.search{order:5;flex:1 0 100%}.hero{margin:16px 20px;padding:0 28px;height:auto;min-height:200px}.hero h1{font-size:32px}h2{margin:20px 20px 8px}.grid{grid-template-columns:repeat(2,1fr);padding:0 20px}.cartbar{margin:20px;flex-wrap:wrap;gap:8px}footer{padding:24px 20px;flex-wrap:wrap}}
+@media (max-width:599px){header.top{padding:8px 16px}.menu-btn{display:inline-flex}nav.main{display:none}.ic button{min-width:44px}.hero{margin:12px 16px;padding:20px}.hero h1{font-size:26px}h2{margin:16px 16px 8px}.grid{grid-template-columns:1fr;padding:0 16px}.cartbar{margin:16px}footer{padding:20px 16px;gap:8px 20px}}
 </style></head><body>
-<header class="top"><div class="logo">ミライストア</div>
-<nav class="main" aria-label="メイン"><a href="#" aria-current="page">ホーム</a><a href="#">新着</a><a href="#">セール</a><a href="#">ブランド</a><a href="#">特集</a></nav>
+<header class="top"><div class="logo">ミライストア</div><button class="menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="gnav">${ICON('M4 7h16M4 12h16M4 17h16')}</button>
+<nav class="main" id="gnav" aria-label="メイン"><a href="#" aria-current="page">ホーム</a><a href="#">新着</a><a href="#">セール</a><a href="#">ブランド</a><a href="#">特集</a></nav>
 <form class="search" role="search"><label for="q" style="position:absolute;left:-9999px">商品を探す</label><input id="q" type="search" placeholder="商品名・ブランドで探す" autocomplete="off"></form>
 <div class="ic"><button>${ICON('M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z')}お気に入り</button><button>${ICON('M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0')}マイページ</button><button>${ICON('M3 4h2l2.5 11h10l2-8H6')}カート</button></div></header>
 <section class="hero"><h1>サマーセール 最大70%OFF</h1><p>期間限定・人気ブランドが集結</p><button>セール商品を見る</button></section>
@@ -529,7 +675,7 @@ const SAMPLES = [
 const S = {
   srcMode:'sample', sampleKey:null, sourceName:'', frameH:FOLD_H,
   comps:[], targets:[], issues:[], stats:{}, scale:1,
-  tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
+  vp:'pc', vpCustom:{w:1280,h:800}, resp:null, imageMode:false, respInfo:null, tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
   hiddenTypes:new Set(['link']),
   gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, useLens:false, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
@@ -559,13 +705,14 @@ async function loadHTML(html, name, baseHref){
   S.src = {html, baseHref};
   S.multi = null; S.plCache = new Map();
   stopPlay();
+  applyViewportSize();
   frame.style.height = FOLD_H+'px';
   await new Promise(res=>{ frame.onload=res; frame.srcdoc=prepareHTML(html, baseHref); });
   const doc = frame.contentDocument;
   const imgs = [...doc.images].filter(i=>!i.complete);
   if(imgs.length) await Promise.race([Promise.all(imgs.map(i=>new Promise(r=>{i.onload=i.onerror=r;}))), new Promise(r=>setTimeout(r,2500))]);
   try{ await doc.fonts.ready; }catch(e){}
-  const nat = clamp(doc.documentElement.scrollHeight, FOLD_H, MAX_H);   // 実際の1280×800の表示での高さ
+  const nat = clamp(doc.documentElement.scrollHeight, FOLD_H, MAX_H);   // 選んだ画面幅・高さ（既定は1280×800）の表示での高さ
   let h = nat; frame.style.height = h+'px';
   h = clamp(doc.documentElement.scrollHeight, FOLD_H, MAX_H);
   frame.style.height = h+'px';
@@ -574,7 +721,7 @@ async function loadHTML(html, name, baseHref){
   $('#empty').style.display='none';
   layoutStage();
   // 全高のiframeでは 100vh や固定サイドバーが伸びて、実際の表示と配置が変わる。
-  // そのため解析は常に実際の1280×800のビューポートで行い、表示のときだけ全高にする
+  // そのため解析は常に実際のビューポート（選んだ幅×高さ）で行い、表示のときだけ全高にする
   frame.style.height = FOLD_H+'px'; S.anaH = nat;
   const probe = [...doc.body.querySelectorAll('*')].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).slice(0,400).map(e=>[e, e.getBoundingClientRect().top]);
   runAnalysis();
@@ -618,7 +765,7 @@ function layoutStage(){
   $('#page').style.transform = `scale(${S.scale})`;
   $('#page').style.height = S.frameH+'px'; frameLens.style.height = S.frameH+'px';
   const hd = $('#holder'); hd.style.width = PAGE_W*S.scale+'px'; hd.style.height = S.frameH*S.scale+'px';
-  $('#pageInfo').textContent = `1280×${S.frameH}px（表示 ${Math.round(S.scale*100)}%）`;
+  $('#pageInfo').textContent = `${PAGE_W}×${S.frameH}px（表示 ${Math.round(S.scale*100)}%）`;
   const svg = $('#ov'); svg.setAttribute('width', PAGE_W); svg.setAttribute('height', S.frameH); svg.setAttribute('viewBox', `0 0 ${PAGE_W} ${S.frameH}`);
 }
 new ResizeObserver(()=>{ if(S.comps.length){ layoutStage(); } }).observe($('#stageScroll'));
@@ -878,7 +1025,7 @@ function buildIssues(){
   const {doc,win,cs,cls,rect,isVis,effBg,labelOf,pageBg} = D;
   const issues=[]; let n=0;
   const R = els => els.filter(Boolean).map(e=>typeof e.w==='number' ? e : (e.rect||rect(e)));
-  const add = (h,sev,title,detail,fix,els=[],evidence=[]) => issues.push({id:'i'+(n++), h, sev, title, detail, fix, rects:R(els), evidence, auto:true, state:'open'});
+  const add = (h,sev,title,detail,fix,els=[],evidence=[],code='') => issues.push({id:'i'+(n++), h, sev, title, detail, fix, rects:R(els), evidence, auto:true, state:'open', code});
   const comps=S.comps, ofType=t=>comps.filter(c=>c.type===t);
   const buttons=ofType('button');
   const inFold = c => c.rect.y < FOLD_H;
@@ -1028,10 +1175,10 @@ function buildIssues(){
     if(op<1){ const B=effBg(el.parentElement); if(!B) return; const mix=(a,b)=>({r:a.r*op+b.r*(1-op), g:a.g*op+b.g*(1-op), b:a.b*op+b.b*(1-op), a:1}); fgc=mix(fgc,B); bgc=mix(bg,B); }
     const ratio=contrast(fgc,bgc);
     const large = fs>=24 || (fs>=18.66 && parseInt(s.fontWeight)>=700);
-    if(ratio < (large?3:4.5)){ if(bgUnderUnknown(el)){ lowUnknown.push(el); return; } lowC.push({el,ratio}); }
+    if(ratio < (large?3:4.5)){ if(bgUnderUnknown(el)){ lowUnknown.push(el); return; } lowC.push({el,ratio,fgc,bgc,large}); }
   });
-  if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), [...lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`), ...(lowUnknown.length?[`背景が重なっていて判定できない文字${lowUnknown.length}件は除外`]:[])]); }
-  if(small.length) add('SUP', small.length>=5?2:1, `12px未満の小さな文字が${small.length}箇所ある`, '小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。', '本文は14〜16px以上を基本にする。', small.slice(0,12));
+  if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), [...lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`), ...(lowUnknown.length?[`背景が重なっていて判定できない文字${lowUnknown.length}件は除外`]:[])], contrastCode(lowC)); }
+  if(small.length) add('SUP', small.length>=5?2:1, `12px未満の小さな文字が${small.length}箇所ある`, '小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。', '本文は14〜16px以上を基本にする。', small.slice(0,12), small.slice(0,3).map(e=>`“${labelOf(e,14)}” ${Math.round(parseFloat(cs(e).fontSize)*10)/10}px`), smallCode(small));
   const nb=[...new Set([...D.doc.body.querySelectorAll('a[href],button,input:not([type=hidden]),select,[role=button]')].filter(isVis))].map(e=>({e,r:rect(e)}));
   const spaced=(r,self)=>{ const cx=r.x+r.w/2, cy=r.y+r.h/2; return nb.every(o=>{ if(o.e===self || o.e.contains(self) || self.contains(o.e)) return true; const q=o.r;
     if(Math.min(q.w,q.h)<24) return Math.hypot(cx-(q.x+q.w/2), cy-(q.y+q.h/2))>=24;
@@ -1041,6 +1188,70 @@ function buildIssues(){
   if(tgt.length+tgtI.length) add('SUP',2,`操作領域が24px未満の要素が${tgt.length+tgtI.length}個`,'WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）','タップ領域は最低24px、可能なら44px以上にする。',[...tgt,...tgtI]);
   const noAlt=D.doc.body.querySelectorAll('img:not([alt])'); const noAltV=[...noAlt].filter(i=>isVis(i)&&rect(i).w>=48);
   if(noAltV.length) add('SUP',2,`alt属性のない画像が${noAltV.length}枚ある`,'画像の代替テキストがなく、スクリーンリーダーで内容が伝わらない。','意味のある画像には説明、装飾画像には alt="" を指定する。',noAltV);
+
+  /* 画面幅に関する診断（解析している画面幅に応じて内容が変わる） */
+  const addR = (...a) => { add(...a); issues[issues.length-1].resp=true; };
+  const vw=PAGE_W, mobileW=vw<=600, tabletW=vw<=1024;
+  const srcHtml=(S.src&&S.src.html)||'';
+  const docW=Math.max(D.doc.documentElement.scrollWidth, D.doc.body.scrollWidth);
+  const RI={vw, docW, overflow:docW>vw+2, tapMin:null, tapN:0, fsMin:null, navLinks:0, navToggle:false, fixedH:0};
+  { // 横方向のはみ出し
+    if(docW>vw+2){
+      const clipped=el=>{ for(let n=el.parentElement; n && n!==D.doc.body; n=n.parentElement){ if(/(hidden|clip|auto|scroll)/.test(cs(n).overflowX)) return true; } return false; };
+      const off=[...D.doc.body.querySelectorAll('*')].filter(e=>{ if(!isVis(e) || clipped(e)) return false; const st=cs(e); if(st.position==='fixed') return false; const r=rect(e); return r.x+r.w>vw+2; });
+      const roots=off.filter(e=>!off.some(p=>p!==e && p.contains(e))).map(e=>({e, over:rect(e).x+rect(e).w-vw})).sort((a,b)=>b.over-a.over);
+      RI.overN=roots.length;
+      addR('SUP', mobileW?3:2, `画面幅${vw}pxで、横にはみ出す要素がある（横スクロールが出る）`, `ページの横幅が${docW}pxあり、画面幅${vw}pxを${docW-vw}px超えている。固定幅の要素や、折り返されない長い語・表・画像が原因になりやすい。`, '固定幅を max-width に変え、画像・表・長い文字列を親の幅に収める。',
+        roots.slice(0,12).map(x=>x.e), roots.slice(0,4).map(x=>`<${selHint(x.e)}> が右に${x.over}px超過`), RESP_CODES.overflow);
+    }
+  }
+  if(srcHtml && !S.imageMode){ // viewport メタタグ
+    const mv=srcHtml.match(/<meta[^>]+name=["']viewport["'][^>]*>/i);
+    if(!mv) addR('SUP',2,'viewport メタタグがない（スマホで縮小表示される）','スマホのブラウザは、viewport の指定がないページを約980px幅で描いて縮小表示する。ここでの解析幅にかかわらず、実機では文字が小さく表示される。','<head> に viewport メタタグを入れる。',[],[],RESP_CODES.viewport);
+    else if(/user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?(?![\d.])/i.test(mv[0])) addR('SUP',2,'ピンチ拡大が禁止されている','viewport の指定で拡大が禁止されており、弱視の利用者が文字を拡大して読めない（WCAG 1.4.4）。','user-scalable=no と maximum-scale=1 を外す。',[],[mv[0].slice(0,90)],RESP_CODES.zoom);
+  }
+  { // 文字サイズの最小値
+    let mn=1e9; D.doc.body.querySelectorAll('*').forEach(el=>{ if(!isVis(el) || ![...el.childNodes].some(t=>t.nodeType===3&&t.textContent.trim())) return; const f=parseFloat(cs(el).fontSize); if(f<mn) mn=f; });
+    RI.fsMin = mn<1e9 ? Math.round(mn*10)/10 : null;
+  }
+  { // 操作領域（スマホ・タブレットでは44pxを目安）
+    const cand=[...buttons.map(c=>c.el), ...ofType('input').filter(c=>!['checkbox','radio','hidden'].includes(c.el.getAttribute('type')||'')).map(c=>c.el), ...[...D.doc.body.querySelectorAll('nav a,[role=navigation] a')].filter(isVis)];
+    const uniq=[...new Set(cand)].map(e=>({e,r:rect(e)}));
+    if(uniq.length){ RI.tapMin=Math.min(...uniq.map(x=>Math.min(x.r.w,x.r.h))); }
+    const small44=uniq.filter(x=>Math.min(x.r.w,x.r.h)<44);
+    RI.tapN=small44.length;
+    if(tabletW && small44.length) addR('SUP', small44.length>=4?2:1, `操作領域が44px未満の要素が${small44.length}個（${vw}px幅）`, 'スマホ・タブレットでは指で押すため、44px前後（Apple 44pt／Material 48dp）が目安。WCAG 2.2 の最小基準は24px（AA）。', '押せる範囲を44px以上にし、隣との間隔を8px以上あける。', small44.slice(0,12).map(x=>x.e),
+      small44.sort((a,b)=>Math.min(a.r.w,a.r.h)-Math.min(b.r.w,b.r.h)).slice(0,3).map(x=>`“${labelOf(x.e,12)}” ${x.r.w}×${x.r.h}px`), RESP_CODES.tap);
+  }
+  if(mobileW){ // 入力欄の文字サイズ（iOSの自動拡大）
+    const f16=[...D.doc.body.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]),select,textarea')].filter(e=>isVis(e) && parseFloat(cs(e).fontSize)<16);
+    if(f16.length) addR('SUP',1,`入力欄の文字が16px未満（${f16.length}個）`,'iOS Safari は、16px未満の入力欄にフォーカスすると画面を自動で拡大し、レイアウトがずれる。','入力欄の font-size を16px以上にする。',f16.slice(0,12),f16.slice(0,3).map(e=>`${selHint(e)} ${Math.round(parseFloat(cs(e).fontSize)*10)/10}px`),RESP_CODES.inputzoom);
+  }
+  if(mobileW){ // メニューが折りたたまれているか
+    const links=[...D.doc.body.querySelectorAll('nav a,[role=navigation] a,header a')].filter(e=>isVis(e) && rect(e).y<FOLD_H);
+    RI.navLinks=links.length;
+    const tog=[...D.doc.body.querySelectorAll('button,[role=button],summary,label,input[type=checkbox]')].some(e=>isVis(e) && /menu|nav|burger|hamburger|toggle|drawer|メニュー|≡|☰/i.test((e.getAttribute('aria-label')||'')+' '+(e.getAttribute('class')||'')+' '+(e.getAttribute('id')||'')+' '+(e.textContent||'').slice(0,20)));
+    RI.navToggle=tog;
+    if(links.length>=5 && !tog) addR('SUP',2,`${vw}px幅でも、ナビゲーションのリンク${links.length}個が並んだまま`,'狭い画面で全リンクを並べると、折り返して画面の大半を占めたり、押し間違いの原因になる。メニューを開閉するボタン（ハンバーガー等）が見つからない。','狭い画面ではメニューをボタンで開く形に変える。',links.slice(0,12),links.slice(0,3).map(e=>`“${labelOf(e,10)}”`),RESP_CODES.nav);
+  }
+  if(mobileW){ // 固定表示の帯が画面を占める割合
+    const fx=[...D.doc.body.querySelectorAll('*')].filter(e=>{ const st=cs(e); return (st.position==='fixed'||st.position==='sticky') && isVis(e) && rect(e).w>=vw*.5; });
+    const fh=fx.reduce((a,e)=>a+rect(e).h,0); RI.fixedH=fh;
+    if(fh>FOLD_H*.3) addR('SUP',2,`固定表示の帯が画面の高さの${Math.round(fh/FOLD_H*100)}%を占める（${vw}px幅）`,'スクロールしても動かない帯が大きいと、狭い画面で本文が読める範囲がほとんど残らない。','スマホでは固定をやめるか、高さを画面の15%以内に抑える。',fx.slice(0,6),fx.slice(0,3).map(e=>`${selHint(e)} 高さ${rect(e).h}px`),RESP_CODES.fixed);
+  }
+  if(vw<=768){ // 画面幅別のCSS（メディアクエリ）
+    let total=0, mq=0, ok=true;
+    try{ for(const sh of D.doc.styleSheets){ total++; let rules; try{ rules=sh.cssRules; }catch(e){ ok=false; break; } for(const r of rules){ if(r.type===CSSRule.MEDIA_RULE && /(min|max)-width|width\s*[<>]=?|\bwidth\s*:/.test(r.conditionText||r.media.mediaText||'')) mq++; } } }catch(e){ ok=false; }
+    if(ok && total>0 && mq===0 && RI.overflow) addR('SUP',1,'画面幅に応じたCSS（メディアクエリ）が見つからない','画面幅別のCSSがなく、横にはみ出している。flex/grid や clamp() で可変にしている場合は、はみ出さない限り問題ない。','モバイルファーストで、広い画面向けの指定を min-width のメディアクエリで足す。',[],[],RESP_CODES.mq);
+  }
+  if(vw>=1280){ // 1行の長さ
+    const longP=[...D.doc.body.querySelectorAll('p,li')].filter(e=>{ if(!isVis(e)) return false; const t=(e.innerText||'').trim(); if(t.length<120) return false; const r=rect(e), f=parseFloat(cs(e).fontSize); return r.w/f>45; });
+    if(longP.length) addR('SUP',1,`本文の1行が長すぎる段落が${longP.length}つ（${vw}px幅）`,'1行が約45em（日本語で約45字）を超えると、行の終わりから次の行の頭へ視線を戻しにくくなる。広い画面では特に起きやすい。','本文の幅に max-width を指定する（40em前後）。',longP.slice(0,12),longP.slice(0,3).map(e=>`${selHint(e)} 約${Math.round(rect(e).w/parseFloat(cs(e).fontSize))}em`),RESP_CODES.measure);
+  }
+  S.respInfo=RI;
+
+  /* 定型の修正コードを付ける（個別に付いているものは、そのまま） */
+  issues.forEach(i=>{ if(!i.code){ const m=STATIC_CODES.find(([re])=>re.test(i.title)); if(m) i.code=m[1]; } });
 
   /* 手動チェック項目 */
   NIELSEN.forEach(h=>(MANUAL[h.id]||[]).forEach((q,i)=>issues.push({id:`m_${h.id}_${i}`, h:h.id, sev:0, title:q, detail:'', fix:'', rects:[], evidence:[], auto:false, state:'unreviewed', msev:2})));
@@ -1277,13 +1488,14 @@ const LEAD = {
   lens:'年齢や視覚特性で、何が読めなくなるかを見ます。',
   cmp:'Beforeに保存した画面と、いまの画面の差を見ます。',
   multi:'ペルソナによって、見え方がどう分かれるかを見ます。',
+  resp:'画面幅（スマホ〜大画面）で、指摘と視線がどう変わるかを見ます。',
   multiEdit:'重みと視覚特性を決めて、自分のペルソナを保存します。',
   cmpHist:'バージョンを順に並べて、何がいつ良くなり、どこで後退したかを見ます。',
 };
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
-  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : panelGaze());
+  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : panelGaze());
 }
 
 function panelComps(){
@@ -1331,6 +1543,7 @@ function issueHTML(is){
     return `<div class="issue${sel}${dim}" data-issue="${is.id}"><div class="ttl"><span class="sev s${is.sev}">重大度${is.sev}</span><span>${esc(is.title)}</span></div>
       <div class="ev">${esc(is.detail)}${is.evidence.length?`<br>根拠：${is.evidence.map(e=>`<code>${esc(e)}</code>`).join(' ')}`:''}</div>
       <div class="fix"><b>改善案</b>${esc(is.fix)}</div>
+      ${is.code?`<details class="code-box"><summary>修正の書き方（コード例）</summary><pre><code>${esc(is.code)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" data-act="copycode" data-issue="${is.id}">コードをコピー</button></div></details>`:''}
       <div class="row">${is.rects.length?`<button class="mini" data-act="show" data-issue="${is.id}">ステージで見る (${is.rects.length})</button>`:''}<button class="mini" data-act="dismiss" data-issue="${is.id}" aria-pressed="${is.state==='dismissed'}">${is.state==='dismissed'?'却下済み（戻す）':'却下する'}</button></div></div>`;
   }
   return `<div class="issue${sel}" data-issue="${is.id}"><div class="ttl"><span class="badge-manual">要確認</span><span>${esc(is.title)}</span></div>
@@ -1449,7 +1662,7 @@ function computeLens(){
   S.lensEval=map; S.lensList=list; S.lensNoJudge=noJudge;
   S.lensTap=S.comps.filter(c=>(c.type==='button'||c.type==='input'||c.type==='search') && c.el.tagName!=='TEXTAREA' && Math.min(c.rect.w,c.rect.h)<44);
   const R = L.tunnel>0 ? 780-660*L.tunnel : Infinity;
-  S.lensOut = L.tunnel>0 ? S.comps.filter(c=>(c.type==='banner'||c.type==='search'||(c.type==='button'&&c.bi.kind==='primary')) && Math.hypot(c.rect.x+c.rect.w/2-640, c.rect.y+c.rect.h/2-400)>R) : [];
+  S.lensOut = L.tunnel>0 ? S.comps.filter(c=>(c.type==='banner'||c.type==='search'||(c.type==='button'&&c.bi.kind==='primary')) && Math.hypot(c.rect.x+c.rect.w/2-PAGE_W/2, c.rect.y+c.rect.h/2-FOLD_H/2)>R) : [];
   S.lensCollide=[];
   if(L.cvd!=='none' && S.btnStyles){ const f=S.btnStyles.filter(x=>x.bi.filled);
     for(let i=0;i<f.length;i++) for(let j=i+1;j<f.length;j++){ const a=f[i].bi.bg, b=f[j].bi.bg, d0=colorDist(a,b), d1=colorDist(lensColor(a),lensColor(b)); if(d0>90 && d1<d0*.4) S.lensCollide.push({a:f[i].label,b:f[j].label}); } }
@@ -1983,7 +2196,7 @@ function buildReportHTML(){
 <section><h2>${n0+3}. 分析の条件</h2><table><tr><th>項目</th><th>内容</th></tr>
 <tr><td>仮想視線のペルソナ／タスク</td><td>${esc(P.name)}／${esc(TASKS[g.task])}（${g.range==='fold'?'ファーストビュー':'ページ全体'}、30試行・乱数シード固定）</td></tr>
 <tr><td>Age Lens（読みにくさの判定）</td><td>${esc(lensName)}：ぼやけ ${(+LP.blur).toFixed(1)}px／コントラスト感度 ${Math.round(LP.contrast*100)}%／黄変 ${Math.round(LP.yellow*100)}%／視野狭窄 ${Math.round(LP.tunnel*100)}%／色覚 ${esc(CVD_JA[LP.cvd])}</td></tr>
-<tr><td>表示条件</td><td>幅1280px・高さ800px（ファーストビュー）</td></tr><tr><td>作成</td><td>UI Anatomy Scanner（プロトタイプ）、${dateStr}</td></tr></table></section>
+<tr><td>表示条件</td><td>幅${PAGE_W}px・高さ${FOLD_H}px（ファーストビュー）</td></tr><tr><td>作成</td><td>UI Anatomy Scanner（プロトタイプ）、${dateStr}</td></tr></table></section>
 <section><h2>${n0+4}. 方法と限界</h2><div class="note"><ul>
 <li>指摘は、画面のHTMLとCSSから機械的に判定した<b>ルールベースの推定</b>です。実ユーザーテストの代わりにはなりません。</li>
 <li>視線は<b>実測ではなく仮想</b>です。要素の目立ち・タスクとの関連・位置の傾向と、ペルソナごとの仮定から確率的に生成しています。</li>
@@ -2042,7 +2255,7 @@ function collectTexts(){
 }
 function makeSnap(){
   const types={}, kinds={}; S.comps.forEach(c=>{ types[c.type]=(types[c.type]||0)+1; if(c.type==='button') kinds[c.bi.kind]=(kinds[c.bi.kind]||0)+1; });
-  return { name:S.sourceName, H:S.frameH, types, kinds, btnStyleN:(S.btnStyles||[]).length,
+  return { name:S.sourceName, H:S.frameH, vw:PAGE_W, vh:FOLD_H, types, kinds, btnStyleN:(S.btnStyles||[]).length,
     bannersFold:S.comps.filter(c=>c.type==='banner' && c.rect.y<FOLD_H).length, links:S.stats.links,
     issues:JSON.parse(JSON.stringify(S.issues)), targets:S.targets.map(t=>({...t, el:null})),
     texts:collectTexts(), tap:S.lensTap.length };
@@ -2186,13 +2399,120 @@ function buildReport(){
   m+=Object.keys(TYPES).filter(t=>by[t]).map(t=>`- ${TYPES[t].ja}: ${by[t]}`).join('\n')+'\n\n## ニールセン10原則\n\n| 原則 | スコア |\n|---|---|\n'+NIELSEN.map(h=>`| ${h.id} ${h.ja} | ${hScore(h.id)} |`).join('\n')+'\n';
   [...NIELSEN,SUP].forEach(h=>{ const l=S.issues.filter(i=>i.h===h.id && isActive(i)); if(!l.length) return;
     m+=`\n### ${h.id==='SUP'?'補助':h.id} ${h.ja}\n\n`;
-    l.forEach(i=>{ m+=`- **[重大度${i.sev}] ${i.title}**${i.auto?'':'（手動判定）'}\n`; if(i.detail) m+=`  - 内容: ${i.detail}\n`; if(i.evidence.length) m+=`  - 根拠: ${i.evidence.join(' / ')}\n`; if(i.fix) m+=`  - 改善案: ${i.fix}\n`; });
+    l.forEach(i=>{ m+=`- **[重大度${i.sev}] ${i.title}**${i.auto?'':'（手動判定）'}\n`; if(i.detail) m+=`  - 内容: ${i.detail}\n`; if(i.evidence.length) m+=`  - 根拠: ${i.evidence.join(' / ')}\n`; if(i.fix) m+=`  - 改善案: ${i.fix}\n`; if(i.code) m+='  - 修正例:\n\n'+i.code.split('\n').map(l=>'        '+l).join('\n')+'\n\n'; });
   });
   const g=S.gaze; if(g.fix.length){ m+=`\n## 仮想視線（${PERSONAS[g.persona].name} / ${TASKS[g.task]}）\n\n- 総注視時間: ${(g.fix.reduce((a,b)=>a+b.dur,0)/1000).toFixed(1)}s、注視${g.fix.length}回\n- 注視順: ${g.fix.map((x,i)=>`${i+1}.${x.target.label}`).join(' → ')}\n`; }
   if(S.lens.on){ const L=S.lens, n2=S.lensList.filter(l=>l.level===2).length, n1=S.lensList.filter(l=>l.level===1).length;
     m+=`\n## Age Lens（${L.preset&&LENS_PRESETS[L.preset]?LENS_PRESETS[L.preset].name:'カスタム'}）\n\n- ぼやけ ${L.blur}px／コントラスト ${Math.round(L.contrast*100)}%／黄変 ${Math.round(L.yellow*100)}%／視野狭窄 ${Math.round(L.tunnel*100)}%／色覚 ${CVD_JA[L.cvd]}\n- 読みにくい文字: 重大 ${n2}件、注意 ${n1}件。押しにくい操作領域(<44px): ${S.lensTap.length}件\n- 簡易シミュレーションであり、医学的な再現ではありません。\n`;
     S.lensList.slice(0,8).forEach(l=>{ m+=`  - [${l.level===2?'重大':'注意'}] ${l.label}（${Math.round(l.fs)}px, ${l.base.toFixed(1)}→${l.ratio.toFixed(1)}:1）\n`; });
   }
+  return m;
+}
+
+/* ============================================================
+   画面幅（ビューポート）
+   ============================================================ */
+function curVp(){ return S.vp==='custom' ? {key:'custom',name:'カスタム',w:S.vpCustom.w,h:S.vpCustom.h,note:'任意の幅・高さ'} : (vpOf(S.vp)||vpOf('pc')); }
+function applyViewportSize(){
+  const v=curVp(); PAGE_W=v.w; FOLD_H=v.h;
+  [$('#page'),frame,frameLens,frameCmp].forEach(el=>{ el.style.width=PAGE_W+'px'; });
+  S.lens.cx=Math.round(PAGE_W/2); S.lens.cy=Math.round(FOLD_H/2);
+}
+function renderVpUI(){
+  const sel=$('#vpSel'); if(!sel) return;
+  if(!sel.options.length) sel.innerHTML=VIEWPORTS.map(v=>`<option value="${v.key}">${v.name}（${v.w}×${v.h}）</option>`).join('')+'<option value="custom">カスタム…</option>';
+  sel.value=S.vp; const v=curVp();
+  $('#vpCustom').hidden = S.vp!=='custom'; $('#vpW').value=S.vpCustom.w; $('#vpH').value=S.vpCustom.h;
+  sel.disabled = !!S.imageMode;
+  $('#vpNote').textContent = S.imageMode ? 'スクリーンショットは、画像の幅で解析します' : `${v.w}×${v.h}px　${v.note||''}`;
+}
+async function setViewport(key, opt={}){
+  if(key==='custom'){ const c=opt.custom||S.vpCustom; S.vpCustom={w:clamp(Math.round(+c.w||1280),320,3840), h:clamp(Math.round(+c.h||800),480,2400)}; }
+  S.vp=key; applyViewportSize(); renderVpUI();
+  if(S.src && S.comps.length && !opt.noReload) await loadHTML(S.src.html, S.sourceName, S.src.baseHref);
+}
+const respSig = () => S.src ? `${S.sourceName}|${(S.src.html||'').length}` : '';
+const normTitle = t => t.replace(/画面幅\d+pxで、/,'').replace(/（\d+px幅）/,'').replace(/^\d+px幅でも、/,'').replace(/\d+(?=個|枚|箇所|件|つ|%)/g,'〇');
+function respMetrics(v){
+  const act=S.issues.filter(isActive), sev=[0,0,0,0,0]; act.forEach(i=>{ sev[i.sev]++; });
+  const RI=S.respInfo||{}, g=S.gaze, N=g.agg?g.agg.N:0;
+  const cta=S.targets.filter(t=>t.isCTA), ctaFold=cta.filter(t=>t.rect.y+t.rect.h<=FOLD_H).length;
+  const ctaReach = (cta.length && g.agg && N) ? Math.max(...cta.map(t=>(g.agg.reach.get(t.id)||0)/N)) : null;
+  return {key:v.key, name:v.name, w:PAGE_W, h:FOLD_H, pageH:S.frameH, comps:S.comps.length, sev, total:act.length, resp:act.filter(i=>i.resp).length,
+    overflow:!!RI.overflow, docW:RI.docW, tapMin:RI.tapMin, tapN:RI.tapN, fsMin:RI.fsMin, cta:cta.length, ctaFold, ctaReach,
+    first:g.fix[0]?g.fix[0].target.label:null,
+    titles:[...new Set(act.map(i=>normTitle(i.title)))],
+    fixes:act.filter(i=>i.resp||i.code).map(i=>({title:i.title, sev:i.sev, fix:i.fix, code:i.code||'', resp:!!i.resp}))};
+}
+async function analyzeAllWidths(){
+  if(!S.src || !S.comps.length){ toast('先に画面を解析してください'); return; }
+  const start=S.vp, startCustom={...S.vpCustom}, rows=[]; S.respBusy=true;
+  try{
+    for(const v of VIEWPORTS){ setStatus(`画面幅を比べています… ${v.name}（${v.w}px）`); await setViewport(v.key); rows.push(respMetrics(v)); }
+  } finally {
+    S.resp={sig:respSig(), rows, persona:PERSONAS[S.gaze.persona].name, task:TASKS[S.gaze.task]};
+    await setViewport(start, {custom:startCustom}); S.respBusy=false;
+  }
+  S.tab='resp'; renderAll(); setStatus(`${VIEWPORTS.length}つの画面幅で解析しました`);
+}
+function panelResp(){
+  const v=curVp(), RI=S.respInfo||{}, cur=S.issues.filter(i=>i.resp && isActive(i));
+  let h=`<div class="sec"><div class="tiles">
+    <div class="tile"><b>${v.w}×${v.h}</b><span>解析中の画面幅（${esc(v.name)}）</span></div>
+    <div class="tile"><b>${RI.overflow?'あり':'なし'}</b><span>横はみ出し${RI.overflow?`（ページ幅 ${RI.docW}px）`:''}</span></div>
+    <div class="tile"><b>${RI.tapMin==null?'—':RI.tapMin+'px'}</b><span>操作領域の最小（目安44px）</span></div>
+    <div class="tile"><b>${RI.fsMin==null?'—':RI.fsMin+'px'}</b><span>文字の最小</span></div></div></div>
+    <div class="row" style="margin:6px 0 10px"><button class="btn" id="respRun">${VIEWPORTS.length}つの画面幅で比べる</button>${S.resp&&S.resp.sig===respSig()?'<button class="btn ghost" id="respCopy">比較をコピー(Markdown)</button>':''}</div>
+    <p class="hint">上の「解析する画面幅」で切り替えると、ステージの表示・指摘・視線がその幅に変わります。比較は、ペルソナ「${esc(PERSONAS[S.gaze.persona].name)}」・タスク「${esc(TASKS[S.gaze.task])}」の設定で行います。</p>`;
+  const R=S.resp && S.resp.sig===respSig() ? S.resp : null;
+  if(R){
+    const f=x=>x==null?'—':x, pc=x=>x==null?'—':Math.round(x*100)+'%';
+    h+=`<div class="sec"><h3>画面幅ごとの比較</h3><div style="overflow-x:auto"><table class="mx"><tr><th>画面幅</th><th>要素</th><th>指摘<br>(重大度3+/全)</th><th>幅の<br>指摘</th><th>横はみ出し</th><th>操作領域<br>最小</th><th>文字<br>最小</th><th>CTA<br>FV内/全</th><th>CTAへの<br>到達率</th><th>最初の注視</th></tr>
+      ${R.rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${r.w}×${r.h}</small></td><td>${r.comps}</td><td>${r.sev[3]+r.sev[4]} / ${r.total}</td><td>${r.resp}</td><td>${r.overflow?`<b style="color:var(--sev3)">あり</b>`:'なし'}</td><td>${r.tapMin==null?'—':r.tapMin+'px'}</td><td>${f(r.fsMin)==='—'?'—':r.fsMin+'px'}</td><td>${r.ctaFold} / ${r.cta}</td><td>${pc(r.ctaReach)}</td><td>${esc(r.first||'—')}</td></tr>`).join('')}</table></div>
+      <p class="hint">CTA=主要ボタン。FV=ファーストビュー。到達率は、仮想視線30回のうち、CTAのどれかに視線が届いた割合（実測ではありません）。</p></div>`;
+    const all=[...new Set(R.rows.flatMap(r=>r.titles))];
+    const diff=all.filter(t=>R.rows.some(r=>!r.titles.includes(t)));
+    h+=`<div class="sec"><h3>画面幅で出たり消えたりする指摘</h3>${diff.length?`<div style="overflow-x:auto"><table class="mx"><tr><th>指摘</th>${R.rows.map(r=>`<th>${r.w}</th>`).join('')}</tr>${diff.slice(0,20).map(t=>`<tr><td>${esc(t)}</td>${R.rows.map(r=>`<td style="text-align:center">${r.titles.includes(t)?'●':'—'}</td>`).join('')}</tr>`).join('')}</table></div>`:'<p class="hint">どの画面幅でも、同じ指摘が出ています。</p>'}</div>`;
+  } else {
+    h+=`<p class="hint">「${VIEWPORTS.length}つの画面幅で比べる」を押すと、スマホ・タブレット・PC・ノートPC・大画面の5つを順に解析して、表にまとめます（数秒かかります）。</p>`;
+  }
+  h+=`<div class="sec"><h3>この画面幅（${v.w}px）の指摘と、直し方</h3>${cur.length?cur.map(issueHTML).join(''):'<p class="hint">この画面幅に特有の指摘は出ていません。</p>'}</div>
+    <div class="sec"><h3>画面幅に対応させる書き方（基本形）</h3>
+    <details class="code-box" open><summary>モバイルファーストのCSS（コピーして使えます）</summary><pre><code>${esc(RESP_BASE)}</code></pre><div class="row" style="padding:0 8px 8px"><button class="mini" id="respBaseCopy">コードをコピー</button></div></details>
+    <p class="hint">境目（ブレークポイント）の目安：〜599px スマホ／600〜1023px タブレット／1024px〜 PC。実際は、内容が崩れる幅で決めるのが基本です。</p></div>`;
+  return h;
+}
+const RESP_BASE = `<meta name="viewport" content="width=device-width, initial-scale=1">
+
+/* 1. すべての幅で共通：はみ出さない・読みやすい */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-size: 16px; line-height: 1.7; }
+img, video, svg { max-width: 100%; height: auto; }
+
+/* 2. スマホ（基本）：1列、操作は44px以上 */
+.container { width: 100%; padding-inline: 16px; margin-inline: auto; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+button, a.btn { min-height: 44px; }
+input, select, textarea { font-size: 16px; }
+
+/* 3. タブレット：2列 */
+@media (min-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } .container { padding-inline: 24px; } }
+
+/* 4. PC：3列＋幅の上限（本文は読みやすい幅に） */
+@media (min-width: 1280px) { .container { max-width: 1200px; } .grid { grid-template-columns: repeat(3, 1fr); } .prose { max-width: 40em; } }
+
+/* 5. 大画面：広がりすぎないようにする */
+@media (min-width: 1920px) { .container { max-width: 1400px; } }`;
+function buildRespReport(){
+  const R=S.resp; if(!R) return '';
+  const d=new Date().toISOString().slice(0,10);
+  let m=`# 画面幅ごとの比較：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定。視線は実測ではなく仮想（ペルソナ「${R.persona}」・タスク「${R.task}」）\n\n`;
+  m+='| 画面幅 | 要素 | 指摘(重3+/全) | 幅の指摘 | 横はみ出し | 操作領域最小 | 文字最小 | CTA(FV内/全) | CTA到達率 |\n|---|---|---|---|---|---|---|---|---|\n';
+  R.rows.forEach(r=>{ m+=`| ${r.name} ${r.w}×${r.h} | ${r.comps} | ${r.sev[3]+r.sev[4]} / ${r.total} | ${r.resp} | ${r.overflow?'あり':'なし'} | ${r.tapMin==null?'—':r.tapMin+'px'} | ${r.fsMin==null?'—':r.fsMin+'px'} | ${r.ctaFold} / ${r.cta} | ${r.ctaReach==null?'—':Math.round(r.ctaReach*100)+'%'} |\n`; });
+  R.rows.forEach(r=>{ const l=r.fixes.filter(x=>x.resp); if(!l.length) return;
+    m+=`\n## ${r.name}（${r.w}px）の画面幅の指摘\n\n`;
+    l.forEach(x=>{ m+=`- **[重大度${x.sev}] ${x.title}**\n  - 改善案: ${x.fix}\n`; if(x.code) m+='\n'+x.code.split('\n').map(q=>'        '+q).join('\n')+'\n\n'; });
+  });
   return m;
 }
 
@@ -2276,12 +2596,17 @@ document.addEventListener('click', e=>{
   if(t.id==='themeBtn'){ toggleTheme(); return; }
   if(t.id==='copyReport'){ navigator.clipboard.writeText(buildReport()).then(()=>toast('レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='dlReport'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildReport()],{type:'text/markdown'})); a.download='ui-analysis-report.md'; a.click(); return; }
+  if(t.id==='vpApply'){ setViewport('custom',{custom:{w:$('#vpW').value, h:$('#vpH').value}}); return; }
+  if(t.id==='respRun'){ analyzeAllWidths(); return; }
+  if(t.id==='respCopy'){ navigator.clipboard.writeText(buildRespReport()).then(()=>toast('画面幅の比較をコピーしました'),()=>toast('コピーできませんでした')); return; }
+  if(t.id==='respBaseCopy'){ navigator.clipboard.writeText(RESP_BASE).then(()=>toast('コードをコピーしました'),()=>toast('コピーできませんでした')); return; }
   if(t.id==='gRetry'){ S.gaze.trial++; simulate(); renderPanel(); renderOverlay(); return; }
   if(t.id==='playBtn'){ if(S.gaze.timer) stopPlay(); else startPlay(); return; }
   if(t.id==='wReset'){ S.gaze.wV=S.gaze.wR=S.gaze.wP=null; simulate(); renderPanel(); renderOverlay(); return; }
   const act=t.dataset.act, id=t.dataset.issue;
   if(act && id){
     const is=S.issues.find(i=>i.id===id);
+    if(act==='copycode'){ navigator.clipboard.writeText(is.code||'').then(()=>toast('コードをコピーしました'),()=>toast('コピーできませんでした')); return; }
     if(act==='show'){ S.selIssue=id; S.show.pins=true; $('#tgPins').checked=true; scrollToRect(is.rects[0]); renderPanel(); renderOverlay(); }
     else if(act==='dismiss'){ is.state=is.state==='dismissed'?'open':'dismissed'; renderPanel(); renderOverlay(); }
     else if(act==='ng'){ is.state=is.state==='ng'?'unreviewed':'ng'; is.sev=is.state==='ng'?(is.msev||2):0; renderPanel(); renderOverlay(); }
@@ -2296,6 +2621,7 @@ document.addEventListener('change', e=>{
   const t=e.target;
   if(t.dataset.type){ t.checked?S.hiddenTypes.delete(t.dataset.type):S.hiddenTypes.add(t.dataset.type); renderOverlay(); }
   else if(t.dataset.act==='msev'){ const is=S.issues.find(i=>i.id===t.dataset.issue); is.msev=+t.value; is.sev=+t.value; renderPanel(); renderOverlay(); }
+  else if(t.id==='vpSel'){ if(t.value==='custom'){ S.vp='custom'; renderVpUI(); } else setViewport(t.value); }
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
@@ -2345,8 +2671,8 @@ document.addEventListener('mouseover', e=>{ const it=e.target.closest('.item[dat
 function syncToggles(){ $('#tgMulti').checked=S.show.multi; $('#tgLens').checked=S.show.lensMap; $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; }
 $('#stageScroll').addEventListener('mousemove', e=>{
   if(!(S.lens.on && S.lens.tunnel>0)) return;
-  const sc=$('#stageScroll'), b=sc.getBoundingClientRect();
-  S.lens.cx=Math.round((e.clientX-b.left+sc.scrollLeft)/S.scale); S.lens.cy=Math.round((e.clientY-b.top+sc.scrollTop)/S.scale);
+  const hb=$('#holder').getBoundingClientRect();
+  S.lens.cx=Math.round((e.clientX-hb.left)/S.scale); S.lens.cy=Math.round((e.clientY-hb.top)/S.scale);
   const R=780-660*S.lens.tunnel; $('#vig').style.background=`radial-gradient(circle at ${S.lens.cx}px ${S.lens.cy}px, rgba(0,0,0,0) ${R*.55}px, rgba(0,0,0,.9) ${R*1.2}px)`;
 });
 function scrollToRect(r){ if(!r) return; const sc=$('#stageScroll'); sc.scrollTo({top:Math.max(0, r.y*S.scale-90), behavior:'smooth'}); }
@@ -2357,7 +2683,7 @@ function toggleTheme(){ const d=document.documentElement; const next=d.dataset.t
 
 /* 起動 */
 initPersonas(); initHistory(); loadRep();
-renderSrc();
+renderSrc(); renderVpUI();
 renderPanel();
 (function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name).then(checkShareHash); })();
 </script>
