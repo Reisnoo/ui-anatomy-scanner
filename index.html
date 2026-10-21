@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Anatomy Scanner | UI構成・ヒューリスティクス・仮想視線</title>
+<style>
+:root {
+  --primary:#3B82F6; --primary-strong:#2563EB; --primary-light:#EFF6FF; --bg:#F8FAFC; --surface:#FFFFFF;
+  --border:#E2E8F0; --text:#0F172A; --muted:#64748B; --navy:#1E3A8A; --canvas:#E9EEF5;
+  --sev1:#A16207; --sev2:#C2410C; --sev3:#DC2626; --sev4:#7E22CE;
+  --sev1-bg:#FEF9C3; --sev2-bg:#FFEDD5; --sev3-bg:#FEE2E2; --sev4-bg:#F3E8FF;
+  --ok:#15803D; --ok-bg:#DCFCE7; --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+}
+:root[data-theme="dark"] {
+  --primary:#60A5FA; --primary-strong:#93C5FD; --primary-light:#1E3A8A; --bg:#0B1120; --surface:#1E293B;
+  --border:#334155; --text:#F8FAFC; --muted:#94A3B8; --navy:#E2E8F0; --canvas:#0F172A;
+  --sev1:#FDE047; --sev2:#FDBA74; --sev3:#FCA5A5; --sev4:#D8B4FE;
+  --sev1-bg:#422006; --sev2-bg:#431407; --sev3-bg:#450A0A; --sev4-bg:#3B0764;
+  --ok:#86EFAC; --ok-bg:#052E16; --shadow:none;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",Roboto,sans-serif; line-height:1.6; }
+button,select,input,textarea { font:inherit; color:inherit; }
+button { cursor:pointer; }
+:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+.app-bar { display:flex; align-items:center; gap:16px; padding:10px 20px; background:var(--surface); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:var(--navy); letter-spacing:.01em; }
+.brand svg { width:26px; height:26px; }
+.tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--primary-light); color:var(--primary-strong); border:1px solid var(--border); }
+.disclaimer { flex:1; min-width:260px; font-size:12px; color:var(--muted); }
+.icon-btn { border:1px solid var(--border); background:var(--surface); border-radius:8px; padding:6px 10px; min-height:36px; }
+.layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(380px,1fr); gap:16px; padding:16px 20px 28px; align-items:start; }
+.layout > * { min-width:0; }
+@media (max-width:1050px){ .layout { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:600px){ .layout { padding:12px; } .app-bar { padding:10px 12px; } .form-grid { grid-template-columns:1fr; } .stage-scroll { height:60vh; } }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); }
+.input-card { padding:12px 14px; margin-bottom:16px; }
+.seg { display:inline-flex; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:3px; gap:2px; }
+.seg button { border:0; background:transparent; padding:6px 14px; border-radius:8px; font-weight:600; color:var(--muted); min-height:34px; }
+.seg button[aria-selected="true"] { background:var(--surface); color:var(--primary-strong); box-shadow:0 1px 3px rgba(15,23,42,.15); }
+.src-body { margin-top:12px; }
+.sample-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
+.sample { text-align:left; border:1px solid var(--border); background:var(--bg); border-radius:10px; padding:10px 12px; }
+.sample:hover { border-color:var(--primary); }
+.sample[aria-pressed="true"] { border-color:var(--primary); background:var(--primary-light); }
+.sample b { display:block; color:var(--navy); }
+.sample span { font-size:12px; color:var(--muted); }
+.row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.row > input[type=text],.row > input[type=url] { flex:1; min-width:220px; }
+input[type=text],input[type=url],textarea,select { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:38px; }
+textarea { width:100%; min-height:110px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; }
+.btn { border:0; background:var(--primary-strong); color:#fff; font-weight:700; padding:8px 16px; border-radius:8px; min-height:38px; }
+:root[data-theme="dark"] .btn { color:#0B1120; }
+.btn.ghost { background:transparent; color:var(--primary-strong); border:1px solid var(--border); }
+.hint { font-size:12px; color:var(--muted); margin:8px 0 0; }
+.status { font-size:12px; color:var(--muted); }
+.status.err { color:var(--sev3); font-weight:600; }
+.stage-card { overflow:hidden; }
+.stage-bar { display:flex; gap:8px; align-items:center; padding:8px 12px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.toggle { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:4px 10px; border:1px solid var(--border); border-radius:999px; background:var(--bg); cursor:pointer; user-select:none; min-height:30px; }
+.toggle input { margin:0; }
+.toggle:has(input:checked) { background:var(--primary-light); border-color:var(--primary); color:var(--primary-strong); }
+.stage-scroll { position:relative; height:calc(100vh - 250px); min-height:460px; overflow:auto; background:var(--canvas); }
+.page-holder { position:relative; margin:0; }
+.page { position:absolute; left:0; top:0; width:1280px; transform-origin:0 0; background:#fff; box-shadow:0 2px 12px rgba(0,0,0,.18); }
+.page iframe { display:block; width:1280px; border:0; pointer-events:none; background:#fff; }
+.page canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; mix-blend-mode:multiply; opacity:.8; }
+.page svg { position:absolute; inset:0; overflow:visible; pointer-events:none; }
+.page svg .pin { pointer-events:auto; cursor:pointer; }
+.empty { position:absolute; inset:0; display:grid; place-items:center; color:var(--muted); font-size:14px; text-align:center; padding:20px; }
+.panel { padding:0; overflow:hidden; position:sticky; top:12px; }
+@media (max-width:1050px){ .panel { position:static; } }
+.tabs { display:flex; border-bottom:1px solid var(--border); background:var(--bg); }
+.tabs button { flex:1; border:0; background:transparent; padding:11px 8px; font-weight:700; color:var(--muted); border-bottom:3px solid transparent; min-height:44px; }
+.tabs button[aria-selected="true"] { color:var(--primary-strong); border-bottom-color:var(--primary); background:var(--surface); }
+.panel-body { padding:14px; overflow:auto; max-height:calc(100vh - 110px); }
+@media (max-width:1050px){ .panel-body { max-height:none; } }
+h3 { margin:0 0 8px; font-size:14px; color:var(--navy); }
+.sec { margin-bottom:18px; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px; }
+.tile { border:1px solid var(--border); border-radius:10px; padding:8px 10px; background:var(--bg); }
+.tile b { display:block; font-size:20px; line-height:1.2; color:var(--navy); }
+.tile span { font-size:11px; color:var(--muted); }
+.type-row { display:flex; align-items:center; gap:8px; padding:6px 4px; border-bottom:1px solid var(--border); font-size:13px; }
+.type-row:last-child { border-bottom:0; }
+.sw { width:12px; height:12px; border-radius:3px; flex:none; }
+.type-row .n { margin-left:auto; font-weight:700; }
+.item { display:flex; gap:8px; align-items:baseline; font-size:12px; padding:4px 6px; border-radius:6px; cursor:default; }
+.item:hover,.item.hl { background:var(--primary-light); }
+.item .t { color:var(--muted); min-width:84px; }
+.item .l { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item .p { color:var(--muted); font-variant-numeric:tabular-nums; }
+details.grp { border:1px solid var(--border); border-radius:10px; margin-bottom:8px; background:var(--surface); }
+details.grp > summary { padding:8px 10px; cursor:pointer; font-size:13px; font-weight:600; list-style:none; display:flex; gap:8px; align-items:center; }
+details.grp > summary::-webkit-details-marker { display:none; }
+details.grp > summary::before { content:"▸"; color:var(--muted); transition:transform .15s; }
+details.grp[open] > summary::before { transform:rotate(90deg); }
+details.grp .inner { padding:2px 8px 8px; }
+.style-chip { display:inline-flex; align-items:center; justify-content:center; padding:5px 12px; font-size:12px; border:1px solid transparent; margin:3px 6px 3px 0; }
+.sev { display:inline-block; font-size:11px; font-weight:800; padding:1px 7px; border-radius:999px; }
+.sev.s0 { background:var(--ok-bg); color:var(--ok); }
+.sev.s1 { background:var(--sev1-bg); color:var(--sev1); } .sev.s2 { background:var(--sev2-bg); color:var(--sev2); }
+.sev.s3 { background:var(--sev3-bg); color:var(--sev3); } .sev.s4 { background:var(--sev4-bg); color:var(--sev4); }
+.h-card { border:1px solid var(--border); border-radius:10px; margin-bottom:8px; background:var(--surface); }
+.h-card > summary { padding:9px 10px; cursor:pointer; list-style:none; display:flex; gap:8px; align-items:center; }
+.h-card > summary::-webkit-details-marker { display:none; }
+.h-code { font-weight:800; font-size:12px; background:var(--primary-light); color:var(--primary-strong); border-radius:6px; padding:1px 7px; min-width:36px; text-align:center; }
+.h-name { font-weight:700; font-size:13px; flex:1; }
+.h-name small { display:block; font-weight:400; color:var(--muted); font-size:11px; }
+.score { font-size:12px; font-weight:800; font-variant-numeric:tabular-nums; }
+.h-body { padding:0 10px 10px; }
+.issue { border-top:1px dashed var(--border); padding:10px 0; font-size:13px; }
+.issue:first-child { border-top:0; }
+.issue.sel { background:var(--primary-light); border-radius:8px; padding:10px 8px; }
+.issue.dim { opacity:.5; }
+.issue .ttl { font-weight:700; display:flex; gap:6px; align-items:flex-start; }
+.issue .ev { color:var(--muted); font-size:12px; margin:4px 0; }
+.issue .fix { font-size:12px; background:var(--bg); border-left:3px solid var(--primary); padding:5px 8px; border-radius:0 6px 6px 0; margin:6px 0; }
+.mini { border:1px solid var(--border); background:var(--bg); border-radius:6px; padding:3px 9px; font-size:12px; min-height:28px; }
+.mini[aria-pressed="true"] { background:var(--primary-light); border-color:var(--primary); color:var(--primary-strong); font-weight:700; }
+.badge-manual { font-size:10px; font-weight:800; color:var(--muted); border:1px solid var(--border); border-radius:4px; padding:0 5px; }
+.legend { display:flex; gap:10px; flex-wrap:wrap; font-size:11px; color:var(--muted); }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.form-grid label { display:flex; flex-direction:column; gap:2px; font-size:12px; font-weight:600; color:var(--muted); }
+.form-grid label.full { grid-column:1/-1; }
+.slider-row { display:grid; grid-template-columns:96px 1fr 34px; gap:8px; align-items:center; font-size:12px; }
+.bar { height:8px; border-radius:4px; background:var(--border); overflow:hidden; flex:1; }
+.bar > i { display:block; height:100%; background:var(--primary); border-radius:4px; }
+.bar-row { display:flex; gap:8px; align-items:center; font-size:12px; padding:2px 0; }
+.bar-row .nm { width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bar-row .v { width:44px; text-align:right; font-variant-numeric:tabular-nums; }
+table { border-collapse:collapse; width:100%; font-size:12px; }
+th,td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+th { color:var(--muted); font-weight:600; }
+.note { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:12px; color:var(--muted); }
+.note ul { margin:4px 0 0; padding-left:18px; }
+.sim-badge { display:inline-block; font-size:11px; font-weight:800; color:var(--sev2); background:var(--sev2-bg); border-radius:6px; padding:2px 8px; }
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0F172A; color:#fff; padding:8px 16px; border-radius:8px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; }
+.toast.on { opacity:1; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="2" y="3" width="28" height="26" rx="5" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="12" height="5" rx="1.5" fill="currentColor"/><rect x="6" y="16" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="2"/><circle cx="23" cy="20" r="4" stroke="#3B82F6" stroke-width="2"/><circle cx="23" cy="20" r="1.2" fill="#3B82F6"/></svg>
+    UI Anatomy Scanner <span class="tag">Prototype</span>
+  </div>
+  <div class="disclaimer">構成要素の抽出・ヒューリスティクスの指摘・仮想の視線はすべて<b>ルールベースの推定</b>です。実ユーザーテストの代替ではなく、一次レビューを速くするための道具です。視線は実測ではありません。</div>
+  <button class="icon-btn" id="themeBtn" aria-label="ダークモード切替">🌙</button>
+</header>
+
+<main class="layout">
+  <section>
+    <div class="card input-card">
+      <div class="row" style="justify-content:space-between">
+        <div class="seg" role="tablist" aria-label="入力方法">
+          <button role="tab" aria-selected="true" data-src="sample">サンプル</button>
+          <button role="tab" aria-selected="false" data-src="url">URL</button>
+          <button role="tab" aria-selected="false" data-src="html">HTML貼り付け</button>
+        </div>
+        <span class="status" id="status" role="status">準備中…</span>
+      </div>
+      <div class="src-body" id="srcBody"></div>
+    </div>
+
+    <div class="card stage-card">
+      <div class="stage-bar">
+        <label class="toggle"><input type="checkbox" id="tgComps" checked> 構成要素</label>
+        <label class="toggle"><input type="checkbox" id="tgPins"> 指摘ピン</label>
+        <label class="toggle"><input type="checkbox" id="tgPath"> 視線の軌跡</label>
+        <label class="toggle"><input type="checkbox" id="tgHeat"> ヒートマップ</label>
+        <span class="status" style="margin-left:auto" id="pageInfo"></span>
+      </div>
+      <div class="stage-scroll" id="stageScroll">
+        <div class="empty" id="empty">サンプルを選ぶか、URL / HTML を入力して解析してください</div>
+        <div class="page-holder" id="holder">
+          <div class="page" id="page">
+            <iframe id="frame" sandbox="allow-same-origin" tabindex="-1" title="解析対象ページ"></iframe>
+            <canvas id="heat"></canvas>
+            <svg id="ov" aria-hidden="true"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="card panel">
+    <div class="tabs" role="tablist" aria-label="分析結果">
+      <button role="tab" aria-selected="true" data-tab="comps">① 構成要素</button>
+      <button role="tab" aria-selected="false" data-tab="heur">② ヒューリスティクス</button>
+      <button role="tab" aria-selected="false" data-tab="gaze">③ 仮想視線</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+/* ============================================================
+   UI Anatomy Scanner — 単一HTMLプロトタイプ
+   1. 入力(サンプル/URL/HTML) → サンドボックスiframeに描画 (スクリプトは実行しない)
+   2. DOMとcomputed styleから構成要素を抽出
+   3. ニールセン10原則 + 補助(WCAG由来)に沿ってルールで指摘
+   4. ペルソナ×タスクで「仮想の」視線をシミュレーション (実測ではない)
+   ============================================================ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const PAGE_W = 1280, FOLD_H = 800, MAX_H = 3000;
+
+/* ---------- 定数 ---------- */
+const NIELSEN = [
+  {id:'H1', ja:'システム状態の視認性', en:'Visibility of system status'},
+  {id:'H2', ja:'実世界とのマッチ', en:'Match between system and real world'},
+  {id:'H3', ja:'ユーザーの主導権と自由', en:'User control and freedom'},
+  {id:'H4', ja:'一貫性と標準', en:'Consistency and standards'},
+  {id:'H5', ja:'エラーの予防', en:'Error prevention'},
+  {id:'H6', ja:'記憶より認識', en:'Recognition rather than recall'},
+  {id:'H7', ja:'柔軟性と効率性', en:'Flexibility and efficiency of use'},
+  {id:'H8', ja:'美的で最小限のデザイン', en:'Aesthetic and minimalist design'},
+  {id:'H9', ja:'エラーの認識・診断・回復', en:'Help users recognize, diagnose, recover from errors'},
+  {id:'H10', ja:'ヘルプとドキュメント', en:'Help and documentation'},
+];
+const SUP = {id:'SUP', ja:'補助チェック（アクセシビリティ）', en:'Not part of Nielsen\'s 10 — WCAG-based'};
+const SEV_LABEL = ['問題なし','軽微(外観)','小(低優先)','重大(要対応)','致命的'];
+const SEV_WEIGHT = [0,5,12,22,35];
+const MANUAL = {
+  H1:['操作後に完了・読み込み中などのフィードバックが返るか','長い処理で進捗や所要時間が示されるか'],
+  H2:['用語・アイコンがユーザーの日常語や慣習と一致しているか','情報の順序が実際の手順・自然な流れに沿っているか'],
+  H3:['取り消し・戻る・やり直しがどの画面でもできるか','不意のポップアップなど強制的な割り込みがないか'],
+  H4:['同じ意味の操作が全画面で同じ文言・位置・見た目か','業界の慣習(ロゴ=トップへ、等)に従っているか'],
+  H5:['破壊的な操作の前に確認・取り消しがあるか','入力形式の制約や初期値で誤入力を未然に防げているか'],
+  H6:['選択肢や直前の情報が画面上に見えており、記憶に頼らずに済むか','ラベルや説明が操作対象の近くにあるか'],
+  H7:['検索・絞り込み・ショートカットなど熟練者向けの近道があるか','よく使う操作に少ない手順で到達できるか'],
+  H8:['すべての情報が目的に関連しているか(不要な装飾・広告がないか)','視覚的な優先順位が情報の重要度と一致しているか'],
+  H9:['エラー文が原因と対処を平易な言葉で示しているか','エラー時に入力内容が保持され、すぐ修正できるか'],
+  H10:['必要な場面で文脈に沿ったヘルプが得られるか','ヘルプは探しやすく、手順が具体的か'],
+};
+const TYPES = {
+  button:{ja:'ボタン', c:'#2563EB'}, banner:{ja:'バナー', c:'#DB2777'}, nav:{ja:'ナビゲーション', c:'#0D9488'},
+  form:{ja:'フォーム', c:'#7C3AED'}, input:{ja:'入力欄', c:'#8B5CF6'}, search:{ja:'検索', c:'#0891B2'},
+  card:{ja:'カード', c:'#D97706'}, image:{ja:'画像', c:'#059669'}, media:{ja:'動画・埋込', c:'#BE185D'},
+  heading:{ja:'見出し', c:'#475569'}, footer:{ja:'フッター', c:'#64748B'},
+};
+const BTN_KIND_JA = {primary:'プライマリ(塗り・彩度高)', secondary:'セカンダリ(枠線/グレー塗り)', text:'テキストボタン', icon:'アイコンのみ'};
+
+/* ---------- 色ユーティリティ ---------- */
+function parseColor(s){
+  if(!s) return null;
+  let m = s.match(/rgba?\(([^)]+)\)/);
+  if(m){ const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(parseFloat); return {r:p[0],g:p[1],b:p[2],a:p.length>3?p[3]:1}; }
+  m = s.match(/color\(srgb ([^)]+)\)/);
+  if(m){ const p = m[1].split(/[ \/]+/).filter(Boolean).map(parseFloat); return {r:p[0]*255,g:p[1]*255,b:p[2]*255,a:p.length>3?p[3]:1}; }
+  return null;
+}
+const over = (f,b) => ({r:f.r*f.a+b.r*(1-f.a), g:f.g*f.a+b.g*(1-f.a), b:f.b*f.a+b.b*(1-f.a), a:1});
+const lin = v => { v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4); };
+const lum = c => 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b);
+const contrast = (a,b) => { const l1=lum(a), l2=lum(b); return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05); };
+const colorDist = (a,b) => Math.hypot(a.r-b.r, a.g-b.g, a.b-b.b);
+const sat = c => { const mx=Math.max(c.r,c.g,c.b), mn=Math.min(c.r,c.g,c.b); return mx===0?0:(mx-mn)/mx; };
+const hex = c => c ? '#'+[c.r,c.g,c.b].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('') : 'none';
+
+/* ---------- 乱数 (シード固定で再現可能) ---------- */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hashStr(s){ let h=2166136261; for(const ch of s){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619); } return h>>>0; }
+function gauss(r){ let u=0,v=0; while(!u) u=r(); while(!v) v=r(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+/* ============================================================
+   サンプルページ（架空のサイト。意図的に弱点を仕込んである）
+   ============================================================ */
+const thumb = (c1,c2) => 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="260" height="170"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><rect width="260" height="170" fill="url(#g)"/></svg>`);
+const ICON = d => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="${d}"/></svg>`;
+
+function sampleEC(){
+  const names=['ワイヤレスイヤホン Pro','ワイヤレスイヤホン Pro II','ノイズキャンセリングヘッドホン','スマートウォッチ S3','モバイルバッテリー 10000','USB-C 急速充電器 65W','ポータブルスピーカー','Bluetoothキーボード'];
+  const styles=[
+    'background:#16a34a;color:#fff;border:0;border-radius:999px;padding:8px 18px;font-size:13px',
+    'background:#2563eb;color:#fff;border:0;border-radius:0;padding:10px 14px;font-size:15px',
+    'background:#fff;color:#111;border:2px solid #111;border-radius:4px;padding:8px 16px;font-size:13px',
+    'background:transparent;color:#2563eb;border:0;padding:8px 6px;font-size:13px;text-decoration:underline'];
+  const labels=['カートに入れる','購入する','詳細を見る','かごへ'];
+  const cards=names.map((n,i)=>`<div class="card"><img src="${thumb(['#93c5fd','#fca5a5','#86efac','#fcd34d'][i%4],'#e5e7eb')}" alt="${n}" width="260" height="150"><div class="nm">${n}</div><div class="pr">¥${(3980+i*1200).toLocaleString()}</div><div class="rv">レビュー ${100+i*13}件</div><button style="${styles[i%4]}">${labels[i%4]}</button></div>`).join('');
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}body{margin:0;font:14px/1.6 sans-serif;color:#222;background:#fff}
+.ann{background:#ffd600;color:#111;text-align:center;padding:8px;font-weight:700}
+header.top{display:flex;align-items:center;gap:24px;padding:14px 40px;border-bottom:1px solid #ddd}
+.logo{font-size:22px;font-weight:800;color:#c2185b}nav.main a{margin-right:18px;color:#444;text-decoration:none}
+.search{flex:1}.search input{width:100%;padding:8px 12px;border:1px solid #bbb;border-radius:4px}
+.ic button{border:0;background:transparent;width:32px;height:32px;color:#444}
+.hero-banner{margin:20px 40px;height:250px;border-radius:10px;background:linear-gradient(120deg,#ef4444,#f59e0b);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 60px;gap:10px}
+.hero-banner h1{margin:0;font-size:44px;letter-spacing:.04em}
+.hero-banner button{width:200px;background:#fff;color:#dc2626;border:0;border-radius:999px;padding:12px;font-weight:800;font-size:16px}
+.promos{display:flex;gap:16px;margin:0 40px}.promo{flex:1;height:100px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-weight:700}
+.promo.a{background:#dbeafe;color:#1e3a8a}.promo.b{background:#fde68a;color:#78350f}
+.promo.a button{background:#fb923c;color:#fff;border:0;border-radius:0;padding:10px 16px}.promo.b button{background:transparent;border:1.5px solid #78350f;color:#78350f;border-radius:8px;padding:8px 14px}
+h2{margin:24px 40px 8px;font-size:22px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:0 40px}
+.card{border:1px solid #e5e7eb;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:2px}.card img{width:100%;height:auto;border-radius:6px}
+.nm{font-weight:700;margin-top:6px}.pr{color:#b91c1c;font-weight:800;font-size:18px}.rv{font-size:11px;color:#aaa}.card button{margin-top:6px;align-self:flex-start}
+.cartbar{margin:20px 40px;padding:16px;background:#f3f4f6;border-radius:8px;display:flex;gap:8px;align-items:center}
+.cartbar .clear{background:#dc2626;color:#fff;border:0;border-radius:6px;padding:10px 18px}.cartbar .go{background:#ea580c;color:#fff;border:0;border-radius:6px;padding:10px 18px;margin-left:0}
+footer{background:#222;color:#888;padding:30px 40px;font-size:11px;display:flex;gap:30px}footer a{color:#888}
+</style></head><body>
+<div class="ann">🎉 今だけ全品ポイント10倍！ 先着1,000名様限定</div>
+<header class="top"><div class="logo">ミライストア</div>
+<nav class="main"><a href="#">ホーム</a><a href="#">新着</a><a href="#">セール</a><a href="#">ブランド</a><a href="#">特集</a></nav>
+<div class="search"><input type="text" placeholder="キーワードで探す"></div>
+<div class="ic"><button>${ICON('M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z')}</button><button>${ICON('M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0')}</button><button>${ICON('M3 4h2l2.5 11h10l2-8H6')}</button></div></header>
+<div class="hero-banner"><h1>SUMMER SALE 最大70%OFF</h1><div>期間限定・人気ブランドが集結</div><button>今すぐチェック</button></div>
+<div class="promos"><div class="promo a">送料無料キャンペーン実施中<button>詳しく見る</button></div><div class="promo b">新規会員登録で500円OFF<button>登録する</button></div></div>
+<h2>おすすめ商品</h2><div class="grid">${cards}</div>
+<div class="cartbar"><span>カートに 2 点</span><button class="clear">カートを空にする</button><button class="go">注文へ進む</button></div>
+<footer><a href="#">会社概要</a><a href="#">利用規約</a><a href="#">プライバシー</a><span>© Mirai Store</span></footer>
+</body></html>`;
+}
+
+function sampleForm(){
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}body{margin:0;font:14px/1.6 sans-serif;color:#1f2937;background:#f3f4f6}
+.top{height:52px;background:#1f2937;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-weight:700}
+.top button{background:transparent;border:0;color:#fff;width:32px;height:32px}
+.wrap{display:flex;min-height:760px}.side{width:220px;background:#fff;border-right:1px solid #e5e7eb;padding:16px 0}
+.side a{display:block;padding:10px 20px;color:#374151;text-decoration:none}
+.main{flex:1;padding:24px 40px}h1{font-size:22px;margin:0 0 14px}
+ol.stepper{display:flex;gap:0;list-style:none;padding:0;margin:0 0 20px}
+ol.stepper li{flex:1;padding:10px 14px;background:#e5e7eb;color:#9ca3af;font-size:13px}
+ol.stepper li.active{background:#e9ebef;color:#8b929e}
+.panel{background:#fff;border-radius:8px;padding:24px;max-width:720px}
+.f{margin-bottom:14px}.f input,.f select,.f textarea{width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:4px;font-size:14px}
+.f textarea{height:80px}.row{display:flex;gap:12px;margin-top:20px;align-items:center}
+.row .del{background:#fff;color:#dc2626;border:1px solid #dc2626;border-radius:4px;padding:10px 16px}
+.row .ok{background:#2563eb;color:#fff;border:0;border-radius:4px;padding:10px 24px;font-weight:700}
+.row .rs{background:#e5e7eb;color:#374151;border:0;border-radius:4px;padding:10px 14px}
+small{color:#9ca3af;font-size:11px}
+</style></head><body>
+<div class="top"><span>社内申請ポータル</span><button>${ICON('M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0')}</button></div>
+<div class="wrap"><nav class="side"><a href="#">ダッシュボード</a><a href="#">経費申請</a><a href="#">休暇申請</a><a href="#">購買申請</a><a href="#">承認待ち</a><a href="#">履歴</a></nav>
+<div class="main"><h1>経費申請</h1>
+<ol class="stepper"><li class="active">1 申請内容</li><li>2 承認者</li><li>3 確認</li></ol>
+<form class="panel"><small>※ 必要事項を入力してください</small>
+<div class="f"><input type="text" placeholder="氏名"></div>
+<div class="f"><input type="text" placeholder="メールアドレス" name="email"></div>
+<div class="f"><input type="text" placeholder="電話番号" name="tel"></div>
+<div class="f"><select><option>申請種別を選択</option><option>交通費</option><option>出張費</option><option>備品購入</option></select></div>
+<div class="f"><input type="text" placeholder="金額"></div>
+<div class="f"><textarea placeholder="備考"></textarea></div>
+<div class="row"><button class="del">下書きを削除</button><button class="ok">申請する</button><button class="rs">リセット</button></div></form></div></div>
+</body></html>`;
+}
+
+function sampleSaaS(){
+  const feat=[['書く','アイデアを素早くメモ。入力はそのまま保存されます。'],['整理する','タグとフォルダで、探さなくても見つかる。'],['共有する','リンク1つでチームと同期。権限も細かく管理。']]
+    .map(([t,d],i)=>`<div class="card"><img src="${thumb(['#bfdbfe','#c7d2fe','#bbf7d0'][i],'#f8fafc')}" alt="${t}の画面イメージ" width="360" height="140"><h3>${t}</h3><p>${d}</p><a href="#">${t}機能の詳細</a></div>`).join('');
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.7 sans-serif;color:#0f172a;background:#fff}
+header{display:flex;align-items:center;gap:28px;padding:14px 56px;border-bottom:1px solid #e2e8f0}
+.logo{font-weight:800;font-size:20px;color:#1d4ed8}nav{display:flex;gap:22px}nav a{color:#334155;text-decoration:none;padding:6px 0}
+nav a[aria-current=page]{color:#1d4ed8;font-weight:700;border-bottom:3px solid #1d4ed8}
+.sp{flex:1}.srch{display:flex;align-items:center;gap:6px}.srch input{padding:8px 12px;border:1px solid #94a3b8;border-radius:8px;width:220px;font-size:15px}
+.link{color:#334155;text-decoration:none;font-size:15px}.cta{background:#1d4ed8;color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:700;font-size:15px}
+.hero{display:flex;align-items:center;gap:40px;padding:56px 56px 40px}.hero .t{flex:1}.hero h1{font-size:44px;line-height:1.25;margin:0 0 14px}.hero p{color:#475569;font-size:18px;margin:0 0 22px}
+.hero .big{background:#1d4ed8;color:#fff;border:0;border-radius:10px;padding:14px 28px;font-size:17px;font-weight:700}.hero .sub{margin-left:16px;color:#1d4ed8;font-weight:600}
+.hero img{width:520px;height:auto;border-radius:12px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:16px 56px 40px}
+.card{border:1px solid #e2e8f0;border-radius:12px;padding:16px}.card img{width:100%;height:auto;border-radius:8px}.card h3{margin:10px 0 2px}.card p{margin:0 0 8px;color:#475569;font-size:15px}.card a{color:#1d4ed8;font-weight:600}
+footer{background:#0f172a;color:#cbd5e1;padding:28px 56px;display:flex;gap:28px;font-size:14px}footer a{color:#e2e8f0}
+</style></head><body>
+<header><div class="logo">ノートリー</div>
+<nav aria-label="メイン"><a href="#" aria-current="page">製品</a><a href="#">料金</a><a href="#">導入事例</a><a href="#">ブログ</a></nav><div class="sp"></div>
+<form class="srch" role="search"><label for="q" class="sr" style="position:absolute;left:-9999px">サイト内検索</label><input id="q" type="search" placeholder="サイト内を検索" autocomplete="off"></form>
+<a class="link" href="#">ヘルプ</a><a class="link" href="#">ログイン</a><button class="cta">無料で始める</button></header>
+<section class="hero"><div class="t"><h1>考えをまとめる時間を、<br>もっと軽く。</h1><p>メモ、タスク、ドキュメントを1つの場所に。チームで使っても迷いません。</p><button class="big">無料で始める</button><a class="sub" href="#">デモを見る →</a></div><img src="${thumb('#93c5fd','#e0e7ff')}" alt="アプリの画面イメージ" width="520" height="340"></section>
+<section class="cards">${feat}</section>
+<footer><a href="#">ヘルプセンター</a><a href="#">お問い合わせ</a><a href="#">利用規約</a><span>© Notely</span></footer>
+</body></html>`;
+}
+
+const SAMPLES = [
+  {key:'ec', name:'ECストア（広告・装飾が多い）', desc:'バナー乱立／ボタンの見た目がバラバラ／アイコンのみのボタン', build:sampleEC},
+  {key:'form', name:'社内申請フォーム（業務システム）', desc:'ラベルなし入力／現在地が弱いステップ／削除と申請が隣接', build:sampleForm},
+  {key:'saas', name:'SaaSランディング（整理された例）', desc:'比較用。CTAが明確・ヘルプあり・現在地表示あり', build:sampleSaaS},
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+const S = {
+  srcMode:'sample', sampleKey:null, sourceName:'', frameH:FOLD_H,
+  comps:[], targets:[], issues:[], stats:{}, scale:1,
+  tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
+  hiddenTypes:new Set(['link']),
+  gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
+  show:{comps:true, pins:false, path:false, heat:false},
+};
+const frame = $('#frame');
+
+/* ============================================================
+   読み込み
+   ============================================================ */
+function setStatus(msg, err=false){ const el=$('#status'); el.textContent=msg; el.classList.toggle('err', err); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),1800); }
+
+function prepareHTML(html, baseHref){
+  const inject = `<meta charset="utf-8">${baseHref?`<base href="${esc(baseHref)}">`:''}<style>*{animation:none!important;transition:none!important;caret-color:transparent!important}html{overflow:hidden!important}</style>`;
+  if(/<head[^>]*>/i.test(html)) return html.replace(/<head[^>]*>/i, m=>m+inject);
+  return inject + html;
+}
+
+async function loadHTML(html, name, baseHref){
+  setStatus('描画中…');
+  S.sourceName = name;
+  stopPlay();
+  frame.style.height = FOLD_H+'px';
+  await new Promise(res=>{ frame.onload=res; frame.srcdoc=prepareHTML(html, baseHref); });
+  const doc = frame.contentDocument;
+  const imgs = [...doc.images].filter(i=>!i.complete);
+  if(imgs.length) await Promise.race([Promise.all(imgs.map(i=>new Promise(r=>{i.onload=i.onerror=r;}))), new Promise(r=>setTimeout(r,2500))]);
+  try{ await doc.fonts.ready; }catch(e){}
+  let h = clamp(doc.documentElement.scrollHeight, FOLD_H, MAX_H);
+  frame.style.height = h+'px';
+  h = clamp(doc.documentElement.scrollHeight, FOLD_H, MAX_H);
+  frame.style.height = h+'px';
+  S.frameH = h;
+  $('#empty').style.display='none';
+  layoutStage();
+  runAnalysis();
+  S.selIssue=null;
+  S.gaze.trial=0;
+  simulate();
+  renderAll();
+  setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${name}）`);
+}
+
+async function loadURL(url, proxy){
+  let u;
+  try{ u = new URL(url); if(!/^https?:$/.test(u.protocol)) throw 0; }catch(e){ setStatus('URLの形式が正しくありません（https://… で入力）', true); return; }
+  setStatus('取得中…');
+  let target = u.href;
+  if(proxy){ target = proxy.includes('{url}') ? proxy.replace('{url}', encodeURIComponent(u.href)) : proxy + (proxy.includes('?')?'&':'?') + 'url=' + encodeURIComponent(u.href); }
+  try{
+    const res = await fetch(target, {mode:'cors'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const html = await res.text();
+    await loadHTML(html, u.host, u.href);
+    if(!/<(body|main|div)/i.test(html) || html.length<800) toast('JSで描画されるサイトは、中身が少なく解析される場合があります');
+  }catch(e){
+    setStatus('取得できませんでした。ブラウザのCORS制約の可能性が高いです。中継URLを設定するか、「HTML貼り付け」を使ってください。', true);
+  }
+}
+
+/* ============================================================
+   ステージ(配置・スケール・オーバーレイ)
+   ============================================================ */
+function layoutStage(){
+  const sc = $('#stageScroll');
+  const avail = sc.clientWidth - 0;
+  S.scale = Math.min(1, avail / PAGE_W);
+  $('#page').style.transform = `scale(${S.scale})`;
+  $('#page').style.height = S.frameH+'px';
+  const hd = $('#holder'); hd.style.width = PAGE_W*S.scale+'px'; hd.style.height = S.frameH*S.scale+'px';
+  $('#pageInfo').textContent = `1280×${S.frameH}px（表示 ${Math.round(S.scale*100)}%）`;
+  const svg = $('#ov'); svg.setAttribute('width', PAGE_W); svg.setAttribute('height', S.frameH); svg.setAttribute('viewBox', `0 0 ${PAGE_W} ${S.frameH}`);
+}
+new ResizeObserver(()=>{ if(S.comps.length){ layoutStage(); } }).observe($('#stageScroll'));
+
+function renderOverlay(){
+  const svg = $('#ov');
+  const g = [];
+  g.push(`<line x1="0" y1="${FOLD_H}" x2="${PAGE_W}" y2="${FOLD_H}" stroke="#64748B" stroke-width="2" stroke-dasharray="8 6"/><text x="8" y="${FOLD_H-8}" font-size="14" fill="#64748B" font-weight="700">▲ ファーストビュー(800px)</text>`);
+  if(S.show.comps){
+    S.comps.forEach(c=>{
+      if(S.hiddenTypes.has(c.type)) return;
+      const col = TYPES[c.type].c, hl = S.hlComp===c.id;
+      g.push(`<rect x="${c.rect.x}" y="${c.rect.y}" width="${c.rect.w}" height="${c.rect.h}" fill="${col}" fill-opacity="${hl?.28:.07}" stroke="${col}" stroke-width="${hl?4:2}"/>`);
+      const lab = TYPES[c.type].ja + (c.sub?`·${c.sub}`:'');
+      const tw = lab.length*11+10;
+      g.push(`<rect x="${c.rect.x}" y="${Math.max(0,c.rect.y-16)}" width="${tw}" height="16" fill="${col}"/><text x="${c.rect.x+5}" y="${Math.max(0,c.rect.y-16)+12}" font-size="11" fill="#fff" font-weight="700">${esc(lab)}</text>`);
+    });
+  }
+  if(S.show.pins){
+    S.issues.forEach(is=>{
+      if(!isActive(is) || !is.rects.length) return;
+      const col = `var(--sev${is.sev})`;
+      const sel = S.selIssue===is.id;
+      const colHex = ['#16A34A','#CA8A04','#EA580C','#DC2626','#7E22CE'][is.sev];
+      if(sel) is.rects.forEach(r=>g.push(`<rect x="${r.x-4}" y="${r.y-4}" width="${r.w+8}" height="${r.h+8}" fill="${colHex}" fill-opacity=".12" stroke="${colHex}" stroke-width="4" stroke-dasharray="10 5" rx="4"/>`));
+      const r0 = is.rects[0];
+      const px = clamp(r0.x+r0.w-10, 12, PAGE_W-34), py = Math.max(12, r0.y+2);
+      g.push(`<g class="pin" data-issue="${is.id}"><circle cx="${px}" cy="${py+10}" r="${sel?16:12}" fill="${colHex}" stroke="#fff" stroke-width="2"/><text x="${px}" y="${py+14}" font-size="${sel?11:9}" text-anchor="middle" fill="#fff" font-weight="800">${is.h==='SUP'?'A':is.h}</text></g>`);
+    });
+  }
+  if(S.show.path && S.gaze.fix.length){
+    const f = S.gaze.fix.slice(0, S.gaze.upTo);
+    if(f.length>1){
+      const pts = f.map(p=>`${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(' ');
+      g.push(`<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" opacity=".9"/><polyline points="${pts}" fill="none" stroke="#E11D48" stroke-width="3.5" stroke-linejoin="round"/>`);
+    }
+    f.forEach((p,i)=>{
+      const r = clamp(10+p.dur/45, 12, 34);
+      g.push(`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${r.toFixed(0)}" fill="#E11D48" fill-opacity=".28" stroke="#E11D48" stroke-width="2.5"/><text x="${p.x.toFixed(0)}" y="${(p.y+5).toFixed(0)}" font-size="14" text-anchor="middle" font-weight="800" fill="#fff" stroke="#9F1239" stroke-width="3" paint-order="stroke">${i+1}</text>`);
+    });
+  }
+  svg.innerHTML = g.join('');
+  const hc = $('#heat'); hc.style.display = S.show.heat ? 'block':'none';
+}
+
+/* ============================================================
+   解析: 構成要素の抽出
+   ============================================================ */
+let D = null; // 解析コンテキスト (doc, win, 補助関数)
+
+function runAnalysis(){
+  const doc = frame.contentDocument, win = frame.contentWindow;
+  const H = S.frameH;
+  const cs = el => win.getComputedStyle(el);
+  const cls = el => (el.getAttribute && el.getAttribute('class')) || '';
+  const rect = el => { const r=el.getBoundingClientRect(); return {x:Math.round(r.left+win.scrollX), y:Math.round(r.top+win.scrollY), w:Math.round(r.width), h:Math.round(r.height)}; };
+  const isVis = el => { const s=cs(el); if(s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)===0) return false; const r=rect(el); return r.w>=4 && r.h>=4 && r.x<PAGE_W && r.x+r.w>0 && r.y<H+10; };
+  const effBg = el => {
+    const layers=[]; let n=el;
+    while(n && n.nodeType===1){
+      const s=cs(n);
+      if(s.backgroundImage && s.backgroundImage!=='none') return null;
+      const c=parseColor(s.backgroundColor);
+      if(c && c.a>0){ layers.push(c); if(c.a>=1) break; }
+      n=n.parentElement;
+    }
+    let base={r:255,g:255,b:255,a:1};
+    for(let i=layers.length-1;i>=0;i--) base=over(layers[i], base);
+    return base;
+  };
+  const labelOf = (el,max=26) => {
+    let t=(el.getAttribute('aria-label')||'').trim();
+    if(!t) t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+    if(!t) t=String(el.getAttribute('alt')||el.getAttribute('title')||el.value||el.getAttribute('placeholder')||el.getAttribute('name')||'').trim();
+    if(!t) t='<'+el.tagName.toLowerCase()+'>';
+    return t.length>max ? t.slice(0,max-1)+'…' : t;
+  };
+  const pageBg = effBg(doc.body) || {r:255,g:255,b:255};
+  D = {doc,win,cs,cls,rect,isVis,effBg,labelOf,pageBg,H};
+
+  const body = doc.body;
+  const all = [...body.querySelectorAll('*')];
+  const comps = []; let seq=0;
+  const add = (type, el, extra={}) => comps.push({id:'c'+(seq++), type, el, rect:rect(el), label:labelOf(el), sub:'', ...extra});
+
+  /* ボタン */
+  const btnSet = new Set();
+  const btnSel = 'button,[role=button],input[type=submit],input[type=button],input[type=reset]';
+  body.querySelectorAll(btnSel).forEach(el=>{ if(isVis(el)) btnSet.add(el); });
+  body.querySelectorAll('a').forEach(a=>{
+    if(!isVis(a) || btnSet.has(a)) return;
+    const r=rect(a), s=cs(a);
+    const padL=parseFloat(s.paddingLeft)||0;
+    const filled = (()=>{ const c=parseColor(s.backgroundColor); const pb=effBg(a.parentElement)||pageBg; return c&&c.a>.5&&colorDist(c,pb)>45; })();
+    const bw=parseFloat(s.borderTopWidth)||0, bc=parseColor(s.borderTopColor);
+    const outlined = bw>=1 && bc && bc.a>.3 && padL>=8;
+    if((filled||outlined) && padL>=6 && r.h>=24 && r.h<=80 && r.w<=420 && !a.querySelector('div,p,h1,h2,h3,ul')) btnSet.add(a);
+    else if(/\b(btn|button|cta)\b/i.test(cls(a)) && r.h<=80) btnSet.add(a);
+  });
+  const btnInfo = el => {
+    const s=cs(el);
+    const bg=parseColor(s.backgroundColor)||{r:0,g:0,b:0,a:0}, col=parseColor(s.color)||{r:0,g:0,b:0,a:1};
+    const pbRaw=effBg(el.parentElement), pb=pbRaw||pageBg;
+    const onImage = pbRaw===null; // 画像・グラデ上のボタン
+    const filled = bg.a>.5 && (onImage || colorDist(bg,pb)>45);
+    const bw=parseFloat(s.borderTopWidth)||0, bcol=parseColor(s.borderTopColor);
+    const outlined = !filled && bw>=1 && bcol && bcol.a>.3;
+    const text=((el.innerText||'').trim()||(el.value||'')).trim();
+    let kind;
+    if(!text) kind='icon';
+    else if(filled) kind = (sat(bg)>.35 || lum(bg)<.12 || onImage) ? 'primary':'secondary';
+    else if(outlined) kind='secondary';
+    else kind='text';
+    const radius=Math.round(parseFloat(s.borderTopLeftRadius)||0), fs=Math.round(parseFloat(s.fontSize)||14);
+    const sig=[filled?hex(bg):'-', hex(col), radius>=20?'pill':radius, fs, outlined?'o':'-'].join('|');
+    return {kind, filled, outlined, sig, bg, col, radius, fs, text, bw, bcol, ariaLabel:(el.getAttribute('aria-label')||el.getAttribute('title')||'').trim()};
+  };
+  btnSet.forEach(el=>{ const bi=btnInfo(el); add('button', el, {sub:BTN_KIND_JA[bi.kind].replace(/\(.*\)/,''), bi}); });
+
+  /* バナー */
+  const banners=[];
+  body.querySelectorAll('div,section,aside,a,figure,header').forEach(el=>{
+    if(!isVis(el)) return;
+    const r=rect(el); if(r.w<200||r.h<36||r.h>600) return;
+    const name=(el.id||'')+' '+cls(el);
+    const nameHit=/banner|hero|promo|campaign|sale|announce|notice|carousel|slider|jumbotron|billboard/i.test(name);
+    const s=cs(el); const c=parseColor(s.backgroundColor);
+    const hasBg = (c&&c.a>.5&&colorDist(c,pageBg)>30) || (s.backgroundImage&&s.backgroundImage!=='none');
+    const wide = r.w>=PAGE_W*.6;
+    const inStruct = el.closest('form,nav,footer,[role=navigation]');
+    const tall = r.h>=60 && el.querySelector('h1,h2,h3,button,a');
+    const strip = r.h<=90 && r.y<100;
+    if((nameHit && !inStruct) || (wide && hasBg && !inStruct && !el.matches('header') && (tall||strip))) banners.push(el);
+  });
+  const bAcc=[];
+  // 他の候補を2つ以上含むコンテナは除外し、中身(個々のバナー)を採用する
+  const bCand=banners.filter(el=>banners.filter(o=>o!==el && el.contains(o)).length<2);
+  bCand.sort((a,b)=>{const ra=rect(a), rb=rect(b); return rb.w*rb.h-ra.w*ra.h;}).forEach(el=>{
+    if(bAcc.some(p=>p.contains(el) || el.contains(p))) return;
+    bAcc.push(el);
+  });
+  bAcc.forEach(el=>{
+    const r=rect(el);
+    const sub = r.h>=240?'ヒーロー' : (r.h<=90&&r.y<120)?'お知らせバー' : r.w<PAGE_W*.5?'サイド広告' : '帯バナー';
+    add('banner', el, {sub});
+  });
+
+  /* ナビゲーション */
+  body.querySelectorAll('nav,[role=navigation],[role=tablist]').forEach(el=>{
+    if(!isVis(el)) return;
+    const a=(el.getAttribute('aria-label')||'')+cls(el);
+    const sub = /breadcrumb|パンくず/i.test(a)?'パンくず' : el.getAttribute('role')==='tablist'?'タブ' : el.closest('footer')?'フッター用' : 'グローバル';
+    add('nav', el, {sub});
+  });
+  body.querySelectorAll('ol,ul,div').forEach(el=>{
+    if(!isVis(el)) return;
+    if(/(^|\s)(steps?|stepper|wizard|breadcrumbs?)(\s|$|-|_)/i.test(cls(el)) && !comps.some(c=>c.el===el)) add('nav', el, {sub:/bread/i.test(cls(el))?'パンくず':'ステップ表示'});
+  });
+
+  /* フォーム・入力 */
+  body.querySelectorAll('form').forEach(el=>{ if(isVis(el)) add('form', el); });
+  body.querySelectorAll('input,select,textarea').forEach(el=>{
+    const t=(el.getAttribute('type')||'text').toLowerCase();
+    if(['hidden','submit','button','reset','image'].includes(t) || !isVis(el)) return;
+    const isSearch = t==='search' || /search|検索|探す/i.test((el.getAttribute('placeholder')||'')+(el.name||'')+(el.getAttribute('aria-label')||''));
+    add(isSearch?'search':'input', el, {sub:el.tagName==='SELECT'?'セレクト':el.tagName==='TEXTAREA'?'テキストエリア':t});
+  });
+
+  /* カード(同じ構造の兄弟が3つ以上) */
+  const cardSeen=new Set();
+  body.querySelectorAll('*').forEach(p=>{
+    if(p.children.length<3 || p.closest('nav,footer,[role=navigation],ol.stepper') || ['UL','OL','SELECT','TABLE','TBODY','TR'].includes(p.tagName)) return;
+    const groups=new Map();
+    [...p.children].forEach(ch=>{ if(!isVis(ch)) return; const k=ch.tagName+'|'+cls(ch); (groups.get(k)||groups.set(k,[]).get(k)).push(ch); });
+    groups.forEach(list=>{
+      if(list.length<3) return;
+      const ok=list.every(ch=>{ const r=rect(ch); return r.w>=120&&r.h>=80&&r.w<=700 && ch.querySelector('img,svg,h1,h2,h3,h4,a,button'); });
+      if(!ok) return;
+      list.forEach(ch=>{ if(!cardSeen.has(ch)){ cardSeen.add(ch); add('card', ch, {sub:'一覧'}); } });
+    });
+  });
+
+  /* 画像・動画・見出し・フッター */
+  body.querySelectorAll('img').forEach(el=>{ const r=rect(el); if(isVis(el)&&r.w>=48&&r.h>=48) add('image', el); });
+  body.querySelectorAll('video,iframe').forEach(el=>{ if(isVis(el)) add('media', el); });
+  body.querySelectorAll('h1,h2,h3').forEach(el=>{ if(isVis(el)) add('heading', el, {sub:el.tagName}); });
+  body.querySelectorAll('footer').forEach(el=>{ if(isVis(el)) add('footer', el); });
+
+  S.comps = comps;
+  S.compIndex = new Map(comps.map(c=>[c.el,c]));
+  S.stats = {links:[...body.querySelectorAll('a[href]')].filter(isVis).length, all};
+
+  buildIssues();
+  buildTargets();
+}
+
+/* ============================================================
+   解析: ニールセン10原則 + 補助
+   ============================================================ */
+function buildIssues(){
+  const {doc,win,cs,cls,rect,isVis,effBg,labelOf,pageBg} = D;
+  const issues=[]; let n=0;
+  const R = els => els.filter(Boolean).map(e=>typeof e.w==='number' ? e : (e.rect||rect(e)));
+  const add = (h,sev,title,detail,fix,els=[],evidence=[]) => issues.push({id:'i'+(n++), h, sev, title, detail, fix, rects:R(els), evidence, auto:true, state:'open'});
+  const comps=S.comps, ofType=t=>comps.filter(c=>c.type===t);
+  const buttons=ofType('button');
+  const inFold = c => c.rect.y < FOLD_H;
+  const lang=(doc.documentElement.getAttribute('lang')||'').toLowerCase();
+
+  /* H1 */
+  const stepper = comps.find(c=>c.type==='nav' && c.sub==='ステップ表示');
+  if(stepper){
+    const kids=[...stepper.el.children].filter(isVis);
+    const act=kids.filter(k=>k.hasAttribute('aria-current')||/active|current|selected/i.test(cls(k)));
+    if(!act.length) add('H1',3,'現在のステップが示されていない','ステップ表示はあるが、現在地を示す状態（aria-current / active）が見つからない。','現在のステップを塗り・太字・アイコンなどで明確に区別し、aria-current="step" を付ける。',[stepper]);
+    else {
+      const a=act[0], i=kids.find(k=>!act.includes(k));
+      if(i){
+        const sa=cs(a), si=cs(i);
+        const bgA=effBg(a), bgI=effBg(i), cA=parseColor(sa.color), cI=parseColor(si.color);
+        const dBg=bgA&&bgI?colorDist(bgA,bgI):999, dCol=cA&&cI?colorDist(cA,cI):999;
+        const wDiff=Math.abs(parseInt(sa.fontWeight)-parseInt(si.fontWeight));
+        if(dBg<40 && dCol<60 && wDiff<100){
+          const ratio = bgA&&cA ? contrast(over(cA,bgA),bgA).toFixed(1) : '—';
+          add('H1',3,'現在地の強調が弱い（有効/無効の視覚差が小さい）','現在のステップと他のステップで、背景色・文字色・太さの差がほとんどない。',
+            '現在地は、背景色の反転・太字・下線などで差を付ける（コントラスト比 3:1 以上の差が目安）。',[a,i],[`背景差 ${dBg.toFixed(0)} / 文字色差 ${dCol.toFixed(0)}`, `現在地の文字コントラスト比 ${ratio}:1`]);
+        }
+      }
+    }
+  }
+  comps.filter(c=>c.type==='nav' && c.sub==='グローバル').forEach(nv=>{
+    const links=[...nv.el.querySelectorAll('a')];
+    if(links.length>=3 && !links.some(a=>a.hasAttribute('aria-current')||/active|current|selected/i.test(cls(a)||'')))
+      add('H1',1,'ナビゲーションに現在地の表示がない','グローバルナビ内に aria-current や active 状態のリンクが見つからない。','現在のページに該当するリンクを強調し、aria-current="page" を付ける。',[nv]);
+  });
+
+  /* H2 */
+  const vague=['こちら','詳細','もっと見る','more','click here','here','続きを読む','>>','read more'];
+  const anchors=[...D.doc.body.querySelectorAll('a[href]')].filter(isVis);
+  const vagueA=anchors.filter(a=>vague.includes((a.innerText||'').trim().toLowerCase()));
+  if(vagueA.length) add('H2',1,'リンク文言が曖昧','「こちら」「詳細」など、遷移先が文言だけでは分からないリンクがある。','「経費申請の手順を見る」のように、遷移先・目的を文言に含める。',vagueA,vagueA.slice(0,3).map(a=>'“'+labelOf(a)+'”'));
+  const labCnt={}; buttons.forEach(b=>{ if(b.bi.text) labCnt[b.bi.text]=(labCnt[b.bi.text]||0)+1; });
+  const mixed = buttons.filter(b=>/^[\x20-\x7E]+$/.test(b.bi.text||'') && b.bi.text);
+  if(lang.startsWith('ja') && mixed.length>=3) add('H2',1,'ボタン文言に英語が混在','日本語ページに英語のみのボタンラベルが複数ある。','文言の言語を揃え、ユーザーの日常語に合わせる。',mixed);
+  const synonyms = buttons.map(b=>b.bi.text).filter(t=>/カート|かご|バスケット/.test(t));
+  if(new Set(synonyms).size>=2) add('H2',2,'同じ意味の操作に別の言葉が使われている','「カートに入れる」「かごへ」のように、同義の操作で呼び方が揺れている。','用語を1つに統一し、用語集で管理する。',buttons.filter(b=>/カート|かご|バスケット/.test(b.bi.text)),[...new Set(synonyms)].map(t=>'“'+t+'”'));
+
+  /* H3 */
+  const dialogs=[...D.doc.body.querySelectorAll('dialog[open],[role=dialog],[aria-modal=true],[class*=modal i]')].filter(isVis);
+  dialogs.forEach(d=>{ const closer=[...d.querySelectorAll('button,a')].some(b=>/[×✕xX]|閉じる|close|キャンセル|cancel/i.test((b.innerText||'')+(b.getAttribute('aria-label')||''))); if(!closer) add('H3',3,'モーダルを閉じる手段が見当たらない','ダイアログ内に「閉じる」「×」「キャンセル」が見つからない。','×ボタン・キャンセル・Escキーのいずれでも閉じられるようにする。',[d]); });
+  const autoplay=[...D.doc.body.querySelectorAll('video[autoplay],marquee')].filter(isVis);
+  if(autoplay.length) add('H3',2,'自動再生・自動スクロールがある','動画の自動再生やmarqueeは、ユーザーが制御できない動きになる。','自動再生をやめるか、一時停止・停止の手段を提供する。',autoplay);
+  const car=[...D.doc.body.querySelectorAll('[class*=carousel i],[class*=slider i]')].filter(isVis);
+  if(car.length && !buttons.some(b=>/pause|停止|一時停止/i.test(b.bi.text+b.bi.ariaLabel))) add('H3',2,'カルーセルに一時停止の手段がない','自動で切り替わる可能性のある要素に、停止ボタンが見つからない。','一時停止ボタンを置き、手動操作を優先する。',car);
+  ofType('form').forEach(f=>{
+    const fields=f.el.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea').length;
+    if(fields>=4 && ![...f.el.querySelectorAll('button,a,input[type=button]')].some(b=>/キャンセル|戻る|取消|取り消し|cancel|back/i.test((b.innerText||'')+(b.value||''))))
+      add('H3',1,'フォームに「戻る／キャンセル」が見当たらない',`入力欄${fields}個のフォームに、取り消し・戻る導線の文言が見つからない。`,'途中離脱・戻る導線を明示する（保存して中断、など）。',[f]);
+  });
+
+  /* H4 */
+  const styled=buttons.filter(b=>b.bi.kind==='primary'||b.bi.kind==='secondary');
+  const sigMap=new Map(); styled.forEach(b=>{ (sigMap.get(b.bi.sig)||sigMap.set(b.bi.sig,[]).get(b.bi.sig)).push(b); });
+  S.btnStyles=[...sigMap.entries()].map(([sig,l])=>({sig, n:l.length, bi:l[0].bi, label:l[0].label}));
+  if(sigMap.size>3) add('H4', sigMap.size>=5?3:2, `ボタンの見た目が${sigMap.size}種類ある`, '塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。',
+    'ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。', styled, [...sigMap.keys()].slice(0,4).map(s=>s.replace(/\|/g,' / ')));
+  const radii=new Set(styled.map(b=>b.bi.radius>=20?'pill':b.bi.radius));
+  if(radii.size>=3 && sigMap.size<=3) add('H4',2,`ボタンの角丸が${radii.size}種類ある`,'同じ役割のボタンで角丸がばらついている。','角丸は1〜2種類に統一する。',styled);
+  const fams=new Set(); D.doc.body.querySelectorAll('*').forEach(el=>{ if([...el.childNodes].some(t=>t.nodeType===3&&t.textContent.trim()) && isVis(el)) fams.add(cs(el).fontFamily.split(',')[0].replace(/["']/g,'').trim().toLowerCase()); });
+  if(fams.size>3) add('H4',2,`フォントファミリーが${fams.size}種類使われている`,'書体が多く、画面全体の統一感が弱くなる。','見出し用・本文用の2種類程度に絞る。',[],[...fams].slice(0,4));
+  const hs={}; ofType('heading').forEach(h=>{ const fs=Math.round(parseFloat(cs(h.el).fontSize)); (hs[h.sub]||(hs[h.sub]=new Set())).add(fs); });
+  Object.entries(hs).forEach(([k,v])=>{ if(v.size>1) add('H4',2,`${k}の文字サイズが揃っていない`,`同じ階層の見出しで文字サイズが${[...v].join('/')}pxとばらついている。`,'見出し階層ごとに文字サイズを固定する。',ofType('heading').filter(h=>h.sub===k)); });
+
+  /* H5 */
+  const DESTR=/削除|delete|remove|取消|取り消|キャンセル|cancel|clear|空に|リセット|reset|破棄/i;
+  const gap=(a,b)=>{ const dx=Math.max(0,Math.max(a.x-(b.x+b.w), b.x-(a.x+a.w))), dy=Math.max(0,Math.max(a.y-(b.y+b.h), b.y-(a.y+a.h))); return Math.hypot(dx,dy); };
+  const near=[];
+  buttons.forEach(a=>{ if(!DESTR.test(a.bi.text)) return; buttons.forEach(b=>{ if(a===b||DESTR.test(b.bi.text)) return; if(b.bi.kind==='icon'||b.bi.kind==='text') return; const g=gap(a.rect,b.rect); if(g<16) near.push({a,b,g}); }); });
+  if(near.length){ const seen=new Set(); const els=[]; near.forEach(p=>{ [p.a,p.b].forEach(x=>{ if(!seen.has(x)){seen.add(x);els.push(x);} }); });
+    add('H5',3,'破壊的な操作が主要操作のすぐ隣にある','「削除」「空にする」などと「申請する」「注文へ進む」が16px未満の間隔で並んでおり、誤クリックしやすい。','破壊的操作は主要操作から離す（余白24px以上・位置を分ける）か、色を弱め、実行前に確認ダイアログを置く。',els,near.slice(0,2).map(p=>`“${p.a.bi.text}” ↔ “${p.b.bi.text}”（${p.g.toFixed(0)}px）`)); }
+  const typeMis=ofType('input').filter(c=>{ const t=(c.el.getAttribute('type')||'text').toLowerCase(); const hint=(c.el.name||'')+(c.el.id||'')+(c.el.getAttribute('placeholder')||''); return t==='text' && /mail|メール|tel|電話|zip|郵便|url|金額|数量/i.test(hint); });
+  if(typeMis.length) add('H5',2,'入力欄の種類(type)が内容に合っていない','メール・電話・数値などの入力欄が type="text" のため、入力補助や形式チェックが効かない。','type="email" / "tel" / inputmode="numeric" などを指定し、形式の制約で誤入力を防ぐ。',typeMis,typeMis.slice(0,3).map(c=>'“'+(c.el.getAttribute('placeholder')||c.el.name)+'”'));
+
+  /* H6 */
+  const iconNoLabel=buttons.filter(b=>b.bi.kind==='icon' && !b.bi.ariaLabel);
+  if(iconNoLabel.length) add('H6',2,`アイコンのみのボタン${iconNoLabel.length}個にラベルがない`,'アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。','アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。',iconNoLabel);
+  const phOnly=ofType('input').filter(c=>{ const e=c.el; return e.tagName!=='SELECT' && !(e.labels&&e.labels.length) && !e.getAttribute('aria-label') && !e.getAttribute('aria-labelledby') && e.getAttribute('placeholder'); });
+  if(phOnly.length) add('H6',3,`ラベルのない入力欄が${phOnly.length}個ある（プレースホルダのみ）`,'入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。','常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。',phOnly,phOnly.slice(0,3).map(c=>'“'+c.el.getAttribute('placeholder')+'”'));
+
+  /* H7 */
+  const hasSearch=ofType('search').length>0;
+  if(!hasSearch && S.stats.links>40) add('H7',2,'リンクが多いが検索がない',`表示リンクが${S.stats.links}件あるが、検索欄が見つからない。`,'ヘッダーに検索を置き、熟練者が近道できるようにする。',[]);
+  const acMiss=ofType('input').filter(c=>/mail|メール|tel|電話|name|氏名|address|住所|zip|郵便/i.test((c.el.name||'')+(c.el.id||'')+(c.el.getAttribute('placeholder')||'')) && !c.el.getAttribute('autocomplete'));
+  if(acMiss.length) add('H7',1,'個人情報の入力欄に autocomplete がない','ブラウザの自動入力が効きにくく、入力の手間が増える。','autocomplete="name" / "email" / "tel" など標準の値を指定する。',acMiss);
+
+  /* H8 */
+  const bFold=ofType('banner').filter(inFold);
+  if(bFold.length>=2) add('H8', bFold.length>=3?3:2, `ファーストビューにバナー・告知が${bFold.length}つある`,'広告や告知が複数あり、主目的の情報・操作との間で視線の優先順位が競合する。','ファーストビューの主役は1つに絞り、他は位置・サイズ・彩度で従属させる。',bFold,bFold.map(b=>b.sub));
+  const prim=buttons.filter(b=>b.bi.kind==='primary' && inFold(b));
+  if(prim.length>=3) add('H8', prim.length>=5?3:2, `ファーストビューに「主要ボタン」が${prim.length}つ競合している`,'塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。','最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。',prim,prim.slice(0,4).map(b=>'“'+b.label+'”'));
+  const inter=[...buttons,...ofType('input')].filter(inFold).length + S.stats.links;
+  if(inter>70) add('H8',3,`ファーストビューの操作要素が多い（約${inter}個）`,'リンク・ボタン・入力欄が非常に多く、視覚的に煩雑になりやすい。','優先度の低い項目は折りたたみ・階層化する。',[]);
+  else if(inter>45) add('H8',2,`ファーストビューの操作要素がやや多い（約${inter}個）`,'リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。','優先度の低い項目は折りたたみ・階層化する。',[]);
+
+  /* H9 */
+  ofType('form').forEach(f=>{
+    const hasInputs=f.el.querySelectorAll('input:not([type=hidden]),select,textarea').length>=3;
+    const hasErr=!!f.el.querySelector('[aria-live],[role=alert],[class*=error i],[class*=invalid i],[aria-describedby]') || !!f.el.parentElement.querySelector('[role=alert],[aria-live]');
+    if(hasInputs && !hasErr) add('H9',2,'エラーを伝える領域が見当たらない','入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。','エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。',[f]);
+  });
+
+  /* H10 */
+  const helpRe=/ヘルプ|help|faq|よくある|お問い合わせ|問い合わせ|サポート|support|contact|使い方|ガイド/i;
+  const hasHelp=anchors.some(a=>helpRe.test((a.innerText||'')+(a.getAttribute('aria-label')||''))) || buttons.some(b=>helpRe.test(b.bi.text+b.bi.ariaLabel));
+  if(!hasHelp) add('H10', ofType('form').length?2:1, 'ヘルプ・問い合わせの導線が見当たらない','ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。','ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。',[]);
+
+  /* SUP: 補助チェック */
+  const lowC=[], small=[], tiny=[];
+  D.doc.body.querySelectorAll('*').forEach(el=>{
+    if(!isVis(el)) return;
+    const direct=[...el.childNodes].some(t=>t.nodeType===3 && t.textContent.trim());
+    if(!direct) return;
+    const s=cs(el), fs=parseFloat(s.fontSize);
+    if(fs<12) small.push(el);
+    if(el.matches(':disabled')) return;
+    const bg=effBg(el); const c=parseColor(s.color); if(!bg||!c) return;
+    const ratio=contrast(over(c,bg),bg);
+    const large = fs>=24 || (fs>=18.66 && parseInt(s.fontWeight)>=700);
+    if(ratio < (large?3:4.5)) lowC.push({el,ratio});
+  });
+  if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`)); }
+  if(small.length) add('SUP', small.length>=5?2:1, `12px未満の小さな文字が${small.length}箇所ある`, '小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。', '本文は14〜16px以上を基本にする。', small.slice(0,12));
+  const tgt=buttons.filter(b=>Math.min(b.rect.w,b.rect.h)<24);
+  const tgtI=ofType('input').filter(c=>c.el.tagName!=='TEXTAREA' && Math.min(c.rect.w,c.rect.h)<24 && !['checkbox','radio'].includes((c.el.getAttribute('type')||'')));
+  if(tgt.length+tgtI.length) add('SUP',2,`操作領域が24px未満の要素が${tgt.length+tgtI.length}個`,'WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回る。（推奨は44px程度）','タップ領域は最低24px、可能なら44px以上にする。',[...tgt,...tgtI]);
+  const noAlt=D.doc.body.querySelectorAll('img:not([alt])'); const noAltV=[...noAlt].filter(i=>isVis(i)&&rect(i).w>=48);
+  if(noAltV.length) add('SUP',2,`alt属性のない画像が${noAltV.length}枚ある`,'画像の代替テキストがなく、スクリーンリーダーで内容が伝わらない。','意味のある画像には説明、装飾画像には alt="" を指定する。',noAltV);
+
+  /* 手動チェック項目 */
+  NIELSEN.forEach(h=>(MANUAL[h.id]||[]).forEach((q,i)=>issues.push({id:`m_${h.id}_${i}`, h:h.id, sev:0, title:q, detail:'', fix:'', rects:[], evidence:[], auto:false, state:'unreviewed', msev:2})));
+  S.issues=issues;
+}
+
+const isActive = is => (is.auto ? is.state!=='dismissed' : is.state==='ng') && is.sev>0;
+function hScore(hid){ let pen=0; S.issues.filter(i=>i.h===hid && isActive(i)).forEach(i=>{ pen+=SEV_WEIGHT[i.sev]; }); return Math.max(0, 100-pen); }
+
+/* ============================================================
+   視線シミュレーション
+   ============================================================ */
+const PERSONAS = {
+  hurry:{name:'急いでいる20代', wV:.5, wR:.35, wP:.15, n:9, dur:190, lam:420, ior:.1, text:.6, banner:1,
+    desc:['スマホ世代で、目的が決まっており素早く済ませたい','長い文章は読み飛ばし、大きく目立つ要素と行動ボタンに反応する','視線は少ない回数で長く飛ぶ（サッケードが長い）']},
+  senior:{name:'初めて使う高齢者', wV:.35, wR:.25, wP:.4, n:16, dur:330, lam:230, ior:.35, text:1, banner:1, smallPenalty:true,
+    desc:['初見のサイトで、ゆっくり左上から順に確認する','小さい文字・低コントラストの要素は見落としやすい','近くの要素から順に見る（視線の移動距離が短い）／同じ場所を見返しやすい']},
+  shopper:{name:'比較検討する30代', wV:.3, wR:.5, wP:.2, n:14, dur:260, lam:320, ior:.2, text:1, banner:1,
+    desc:['複数の商品・選択肢を見比べ、価格や特徴を探している','カード・価格・画像に注目し、行き来しながら比較する','目的が明確で、広告的な要素には引っ張られにくい']},
+  worker:{name:'業務に慣れた担当者', wV:.2, wR:.45, wP:.35, n:10, dur:220, lam:300, ior:.15, text:1, banner:.3,
+    desc:['同じ画面を何度も使っており、入力欄・ボタンの位置で操作する','広告・装飾的な要素はほぼ無視する（バナー盲目的な振る舞い）','左上から右下へ、定位置を確認しながら進む']},
+};
+const TASKS = {
+  browse:'ざっと眺める（第一印象）', cta:'主要な行動ボタンを探す', search:'検索・探索する', compare:'商品や情報を比較する', read:'内容を読む',
+};
+const CTA_RE=/購入|カート|かご|申し込|申込|登録|始め|無料|送信|申請|注文|submit|buy|sign|start|cart|order|apply|チェック/i;
+const PRICE_RE=/[¥￥$]\s?\d|\d+\s?円/;
+
+function buildTargets(){
+  const {cs,effBg,pageBg,labelOf,rect,isVis,doc} = D;
+  const T=[]; const compEls=new Set(S.comps.filter(c=>['card','banner','button','nav','form'].includes(c.type)).map(c=>c.el));
+  const feat = (id,type,el,r,o={}) => {
+    const s=cs(el); const fs=parseFloat(s.fontSize)||14;
+    let bg=effBg(el)||pageBg; const col=parseColor(s.color)||{r:0,g:0,b:0,a:1};
+    let contr;
+    if(['button','banner'].includes(type)) contr=clamp(colorDist(bg,pageBg)/220 + sat(bg)*.45, 0, 1);
+    else if(type==='image') contr=.55;
+    else if(type==='input'||type==='search') contr=.3;
+    else contr=clamp((contrast(over(col,bg),bg)-1)/20,0,1);
+    const ratio=contrast(over(col,bg),bg);
+    T.push({id,type,el,rect:r,cx:r.x+r.w/2,cy:r.y+r.h/2,label:labelOf(el,22),fs,contr,size:clamp(Math.sqrt(r.w*r.h)/380,0,1),lowC:ratio<4.5,...o});
+  };
+  S.comps.forEach(c=>{
+    const t=c.type; if(['form','footer','media'].includes(t)) return;
+    const o={};
+    if(t==='button'){ o.kind=c.bi.kind; o.isCTA=c.bi.kind==='primary' || CTA_RE.test(c.bi.text); }
+    if(t==='nav'){ if(c.sub==='ステップ表示'||c.sub==='パンくず'){ feat('t'+c.id,'nav',c.el,c.rect,{label:c.sub}); } return; }
+    if(t==='heading') o.h=c.sub;
+    if(t==='card') o.price=PRICE_RE.test(c.el.innerText||'');
+    feat('t'+c.id, t==='search'?'search':t, c.el, c.rect, o);
+  });
+  D.doc.body.querySelectorAll('nav a,[role=navigation] a').forEach((a,i)=>{ if(isVis(a)) feat('na'+i,'navlink',a,rect(a)); });
+  D.doc.body.querySelectorAll('p,li,blockquote,label,small,span').forEach((el,i)=>{
+    if(!isVis(el)) return;
+    const txt=(el.innerText||'').trim(); if(txt.length<12) return;
+    let skip=false, n=el.parentElement; while(n&&n!==doc.body){ if(compEls.has(n)) {skip=true;break;} n=n.parentElement; } if(skip) return;
+    if(el.querySelector('p,li,div')) return;
+    const r=rect(el); if(r.w*r.h<1500) return;
+    feat('tx'+i,'text',el,r,{price:PRICE_RE.test(txt), textLen:txt.length});
+  });
+  S.targets=T;
+}
+
+function relevance(t, task){
+  switch(task){
+    case 'cta': return t.type==='button' ? (t.kind==='primary'?1 : t.isCTA?.9 : t.kind==='icon'?.2 : .4) : t.type==='banner'?.3 : .1;
+    case 'search': return t.type==='search'?1 : t.type==='input'?.6 : t.type==='navlink'?.45 : t.type==='heading'?.25 : .1;
+    case 'compare': return t.type==='card'?1 : (t.price?.9:(t.type==='image'?.5 : t.type==='button'?.3 : .15));
+    case 'read': return t.type==='heading'?(t.h==='H1'?1:.8) : t.type==='text'?.85 : t.type==='image'?.3 : .15;
+    default: return (t.type==='heading'||t.type==='image')?.5 : .3;
+  }
+}
+const TYPE_BASE = {heading:.7, image:.6, banner:.65, button:.6, input:.5, search:.6, navlink:.35, text:.25, card:.55, nav:.4};
+
+function runSim(seed, persona, task, w, foldH){
+  const P=PERSONAS[persona]; const rnd=mulberry32(seed);
+  const T=S.targets.filter(t=>t.cy<=foldH);
+  if(!T.length) return [];
+  const feats=T.map(t=>{
+    let sal = .35*t.size + .35*t.contr + .3*(t.type==='button'?(t.kind==='primary'?.85:t.kind==='icon'?.35:.55):(TYPE_BASE[t.type]||.3));
+    if(t.type==='heading') sal=clamp(sal+Math.min(.25,t.fs/160),0,1);
+    if(P.smallPenalty){ if(t.fs<14) sal*=.5; if(t.lowC) sal*=.6; if(t.fs>=20) sal=Math.min(1,sal*1.2); }
+    let rel=relevance(t,task);
+    if(t.type==='text') sal*=P.text;
+    if(t.type==='banner'){ sal*=P.banner; rel*=P.banner; }
+    const pos=.55*Math.exp(-(t.cx/PAGE_W)*1.6)+.45*Math.exp(-(t.cy/foldH)*1.8);
+    return {t,sal,rel,pos};
+  });
+  const visits=new Map(); let cur={x:PAGE_W*.5, y:Math.min(foldH*.25,220)}; let time=0; const out=[];
+  for(let k=0;k<P.n;k++){
+    const lam = k===0 ? P.lam*3 : P.lam;
+    const sc=feats.map(f=>{
+      const d=Math.hypot(f.t.cx-cur.x, f.t.cy-cur.y);
+      const base=w.wV*f.sal + w.wR*f.rel + w.wP*f.pos;
+      return Math.pow(Math.max(1e-6, base*Math.exp(-d/lam)*Math.pow(P.ior, visits.get(f.t.id)||0)),1.6);
+    });
+    const sum=sc.reduce((a,b)=>a+b,0); let r=rnd()*sum, idx=0; for(;idx<sc.length;idx++){ r-=sc[idx]; if(r<=0) break; } idx=Math.min(idx,sc.length-1);
+    const f=feats[idx], t=f.t; visits.set(t.id,(visits.get(t.id)||0)+1);
+    const isText=['text','heading','navlink'].includes(t.type);
+    const mx = isText ? t.rect.x+Math.min(t.rect.w*.3,140) : t.cx;
+    const x=clamp(mx+gauss(rnd)*Math.min(t.rect.w,160)*.12, t.rect.x+2, t.rect.x+t.rect.w-2);
+    const y=clamp(t.cy+gauss(rnd)*Math.min(t.rect.h,80)*.15, t.rect.y+2, t.rect.y+t.rect.h-2);
+    const rank=sc[idx]/Math.max(...sc);
+    const dur=Math.round(P.dur*(.75+.7*rank)*Math.exp(gauss(rnd)*.22) + (isText?Math.min((t.textLen||t.label.length)*3,200):0));
+    const amp = Math.hypot(x-cur.x,y-cur.y);
+    out.push({x,y,dur,t0:time,amp,target:t}); time+=dur+30; cur={x,y};
+  }
+  return out;
+}
+
+function gazeWeights(){ const P=PERSONAS[S.gaze.persona]; const g=S.gaze; return {wV:g.wV??P.wV, wR:g.wR??P.wR, wP:g.wP??P.wP}; }
+function foldOf(){ return S.gaze.range==='fold' ? FOLD_H : Math.min(S.frameH, 2400); }
+function simulate(){
+  const g=S.gaze, w=gazeWeights(), foldH=foldOf();
+  const base=hashStr(S.sourceName+'|'+g.persona+'|'+g.task);
+  g.fix=runSim(base+g.trial*104729, g.persona, g.task, w, foldH);
+  // 集計(30試行): 到達率とヒートマップ
+  const N=30, reach=new Map(), pts=[];
+  for(let i=0;i<N;i++){
+    const run=runSim(base+977+i*7919, g.persona, g.task, w, foldH); const seen=new Set();
+    run.forEach(f=>{ pts.push({x:f.x,y:f.y,dur:f.dur}); seen.add(f.target.id); });
+    seen.forEach(id=>reach.set(id,(reach.get(id)||0)+1));
+  }
+  g.agg={N, reach, pts};
+  g.upTo=g.fix.length;
+  drawHeat(pts);
+}
+
+function drawHeat(pts){
+  const cv=$('#heat'), sc=.5; cv.width=Math.round(PAGE_W*sc); cv.height=Math.round(S.frameH*sc);
+  const g=cv.getContext('2d'); g.clearRect(0,0,cv.width,cv.height);
+  const off=document.createElement('canvas'); off.width=cv.width; off.height=cv.height; const og=off.getContext('2d');
+  pts.forEach(p=>{ const r=(50+p.dur/10)*sc; const gr=og.createRadialGradient(p.x*sc,p.y*sc,0,p.x*sc,p.y*sc,r); const a=Math.min(.3,p.dur/2500); gr.addColorStop(0,`rgba(0,0,0,${a})`); gr.addColorStop(1,'rgba(0,0,0,0)'); og.fillStyle=gr; og.fillRect(p.x*sc-r,p.y*sc-r,r*2,r*2); });
+  const img=og.getImageData(0,0,off.width,off.height), out=g.createImageData(off.width,off.height);
+  let mx=1; for(let i=3;i<img.data.length;i+=4) if(img.data[i]>mx) mx=img.data[i];
+  for(let i=0;i<img.data.length;i+=4){
+    const t=img.data[i+3]/mx; if(t<.06) continue;
+    const h=(1-t)*240, c=hsl2rgb(h/360,1,.5);
+    out.data[i]=c[0]; out.data[i+1]=c[1]; out.data[i+2]=c[2]; out.data[i+3]=Math.min(255,Math.round(255*Math.min(1,t*1.4)*.85));
+  }
+  g.putImageData(out,0,0);
+}
+function hsl2rgb(h,s,l){ const f=(n,k=(n+h*12)%12)=>l-s*Math.min(l,1-l)*Math.max(-1,Math.min(k-3,9-k,1)); return [f(0)*255,f(8)*255,f(4)*255].map(Math.round); }
+
+function stopPlay(){ clearInterval(S.gaze.timer); clearTimeout(S.gaze.timer); S.gaze.timer=null; const b=$('#playBtn'); if(b) b.textContent='▶ 再生'; }
+function startPlay(){
+  const g=S.gaze; stopPlay(); g.upTo=0; $('#playBtn') && ($('#playBtn').textContent='⏸ 停止');
+  const step=()=>{ if(g.upTo>=g.fix.length){ stopPlay(); renderGazePanelLite(); return; } g.upTo++; renderOverlay(); renderGazePanelLite(); g.timer=setTimeout(step, Math.max(160, g.fix[g.upTo-1].dur*.9)); };
+  step();
+}
+
+/* ============================================================
+   パネル描画
+   ============================================================ */
+function renderAll(){ renderTabs(); renderPanel(); renderOverlay(); }
+function renderTabs(){ $$('.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===S.tab)); }
+function renderPanel(){
+  const el=$('#panelBody');
+  if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
+  el.innerHTML = S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : panelGaze();
+}
+
+function panelComps(){
+  const by={}; S.comps.forEach(c=>{ (by[c.type]||(by[c.type]=[])).push(c); });
+  const btn=by.button||[]; const kinds={}; btn.forEach(b=>{ kinds[b.bi.kind]=(kinds[b.bi.kind]||0)+1; });
+  const tiles=[['要素の総数',S.comps.length],['ボタン',btn.length],['バナー',(by.banner||[]).length],['入力欄',(by.input||[]).length+(by.search||[]).length],['リンク',S.stats.links],['見出し',(by.heading||[]).length]];
+  let h=`<div class="sec"><div class="tiles">${tiles.map(([k,v])=>`<div class="tile"><b>${v}</b><span>${k}</span></div>`).join('')}</div></div>`;
+  h+=`<div class="sec"><h3>種類ごとの内訳（チェックで枠の表示切替）</h3>`;
+  Object.keys(TYPES).forEach(t=>{ const n=(by[t]||[]).length; if(!n) return; h+=`<label class="type-row"><input type="checkbox" data-type="${t}" ${S.hiddenTypes.has(t)?'':'checked'}><i class="sw" style="background:${TYPES[t].c}"></i>${TYPES[t].ja}<span class="n">${n}</span></label>`; });
+  h+=`</div>`;
+  if(btn.length){
+    h+=`<div class="sec"><h3>ボタンの内訳</h3><div class="row" style="gap:6px">${Object.entries(kinds).map(([k,v])=>`<span class="sev s0" style="background:var(--primary-light);color:var(--primary-strong)">${BTN_KIND_JA[k]} ${v}</span>`).join('')}</div>`;
+    if(S.btnStyles.length){ h+=`<h3 style="margin-top:12px">塗り／枠線ボタンの見た目バリエーション（${S.btnStyles.length}種類）</h3><div>`; S.btnStyles.forEach(s=>{ const b=s.bi; h+=`<span class="style-chip" title="${esc(s.sig)}" style="background:${b.filled?hex(b.bg):'transparent'};color:${hex(b.col)};border-color:${b.outlined?hex(b.bcol):'transparent'};border-radius:${b.radius>=20?999:b.radius}px">${esc(s.label)}<small style="opacity:.7;margin-left:6px">×${s.n}</small></span>`; }); h+=`</div>`; }
+    h+=`</div>`;
+  }
+  h+=`<div class="sec"><h3>要素リスト（ホバーでステージ上を強調）</h3>`;
+  Object.keys(TYPES).forEach(t=>{ const l=by[t]||[]; if(!l.length) return;
+    h+=`<details class="grp"><summary><i class="sw" style="background:${TYPES[t].c}"></i>${TYPES[t].ja}（${l.length}）</summary><div class="inner">${l.slice(0,60).map(c=>`<div class="item" data-comp="${c.id}"><span class="t">${esc(c.sub||TYPES[t].ja)}</span><span class="l">${esc(c.label)}</span><span class="p">${c.rect.w}×${c.rect.h} @${c.rect.x},${c.rect.y}</span></div>`).join('')}</div></details>`; });
+  h+=`</div><p class="hint">抽出は DOM と computed style に基づく推定です。JavaScript で描画されるサイトや、画像だけで構成された要素は拾えない場合があります。</p>`;
+  return h;
+}
+
+function panelHeur(){
+  const sevCnt=[0,0,0,0,0]; S.issues.filter(isActive).forEach(i=>{ sevCnt[i.sev]++; });
+  const unrev=S.issues.filter(i=>!i.auto && i.state==='unreviewed').length;
+  let h=`<div class="sec" style="display:grid;grid-template-columns:230px 1fr;gap:12px;align-items:center">${radar()}<div>
+    <div class="legend" style="flex-direction:column;gap:4px;margin-bottom:8px">${[4,3,2,1].map(s=>`<span><span class="sev s${s}">重大度${s}</span> ${SEV_LABEL[s]} ${sevCnt[s]}件</span>`).join('')}</div>
+    <div class="hint" style="margin:0">スコアは 100 − Σ(重大度の重み)。自動判定の指摘と、あなたが「問題あり」にした項目のみ集計。未確認の手動項目: <b>${unrev}</b>件</div></div></div>
+    <div class="row" style="margin-bottom:10px"><button class="btn" id="copyReport">レポートをコピー(Markdown)</button><button class="btn ghost" id="dlReport">.md を保存</button></div>`;
+  [...NIELSEN, SUP].forEach(hh=>{
+    const list=S.issues.filter(i=>i.h===hh.id);
+    const act=list.filter(isActive); const sc=hh.id==='SUP'?null:hScore(hh.id);
+    const worst=Math.max(0,...act.map(i=>i.sev));
+    const open=S.openH.has(hh.id) ? 'open':'';
+    h+=`<details class="h-card" data-h="${hh.id}" ${open}><summary><span class="h-code">${hh.id==='SUP'?'補助':hh.id}</span><span class="h-name">${hh.ja}<small>${hh.en}</small></span>${act.length?`<span class="sev s${worst}">${act.length}件</span>`:`<span class="sev s0">指摘なし</span>`}${sc!==null?`<span class="score">${sc}</span>`:''}</summary><div class="h-body">`;
+    list.forEach(is=>{ h+=issueHTML(is); });
+    h+=`</div></details>`;
+  });
+  return h;
+}
+function issueHTML(is){
+  const sel=S.selIssue===is.id?' sel':'';
+  if(is.auto){
+    const dim=is.state==='dismissed'?' dim':'';
+    return `<div class="issue${sel}${dim}" data-issue="${is.id}"><div class="ttl"><span class="sev s${is.sev}">重大度${is.sev}</span><span>${esc(is.title)}</span></div>
+      <div class="ev">${esc(is.detail)}${is.evidence.length?`<br>根拠：${is.evidence.map(e=>`<code>${esc(e)}</code>`).join(' ')}`:''}</div>
+      <div class="fix">改善案：${esc(is.fix)}</div>
+      <div class="row">${is.rects.length?`<button class="mini" data-act="show" data-issue="${is.id}">ステージで見る (${is.rects.length})</button>`:''}<button class="mini" data-act="dismiss" data-issue="${is.id}" aria-pressed="${is.state==='dismissed'}">${is.state==='dismissed'?'却下済み（戻す）':'却下する'}</button></div></div>`;
+  }
+  return `<div class="issue${sel}" data-issue="${is.id}"><div class="ttl"><span class="badge-manual">要確認</span><span>${esc(is.title)}</span></div>
+    <div class="row" style="margin-top:6px"><button class="mini" data-act="ng" data-issue="${is.id}" aria-pressed="${is.state==='ng'}">問題あり</button><button class="mini" data-act="ok" data-issue="${is.id}" aria-pressed="${is.state==='ok'}">問題なし</button>
+    ${is.state==='ng'?`<label style="font-size:12px">重大度 <select data-act="msev" data-issue="${is.id}">${[1,2,3,4].map(s=>`<option value="${s}" ${is.sev===s?'selected':''}>${s}: ${SEV_LABEL[s]}</option>`).join('')}</select></label>`:''}</div></div>`;
+}
+function radar(){
+  const cx=115, cy=105, R=70, n=10;
+  const pt=(i,v)=>{ const a=-Math.PI/2+i*2*Math.PI/n; return [cx+Math.cos(a)*R*v, cy+Math.sin(a)*R*v]; };
+  let s=`<svg viewBox="0 0 230 210" width="230" height="210" role="img" aria-label="10原則のスコアレーダー">`;
+  [.25,.5,.75,1].forEach(r=>{ s+=`<polygon points="${NIELSEN.map((_,i)=>pt(i,r).join(',')).join(' ')}" fill="none" stroke="var(--border)"/>`; });
+  NIELSEN.forEach((h,i)=>{ const [x,y]=pt(i,1), [lx,ly]=pt(i,1.28); s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--border)"/><text x="${lx}" y="${ly+3}" font-size="10" text-anchor="middle" fill="var(--muted)" font-weight="700">${h.id}</text>`; });
+  const poly=NIELSEN.map((h,i)=>pt(i,hScore(h.id)/100).join(',')).join(' ');
+  s+=`<polygon points="${poly}" fill="var(--primary)" fill-opacity=".25" stroke="var(--primary)" stroke-width="2"/>`;
+  NIELSEN.forEach((h,i)=>{ const [x,y]=pt(i,hScore(h.id)/100); s+=`<circle cx="${x}" cy="${y}" r="3" fill="var(--primary)"/>`; });
+  return s+'</svg>';
+}
+
+function panelGaze(){
+  const g=S.gaze, P=PERSONAS[g.persona], w=gazeWeights();
+  let h=`<div class="sec"><span class="sim-badge">仮想シミュレーション（実測ではありません）</span>
+  <div class="form-grid" style="margin-top:10px">
+    <label>ペルソナ<select id="gPersona">${Object.entries(PERSONAS).map(([k,v])=>`<option value="${k}" ${g.persona===k?'selected':''}>${v.name}</option>`).join('')}</select></label>
+    <label>タスク<select id="gTask">${Object.entries(TASKS).map(([k,v])=>`<option value="${k}" ${g.task===k?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label>範囲<select id="gRange"><option value="fold" ${g.range==='fold'?'selected':''}>ファーストビュー(800px)</option><option value="full" ${g.range==='full'?'selected':''}>ページ全体(〜2400px)</option></select></label>
+    <label>試行<div class="row"><button class="mini" id="gRetry">別の試行 (#${g.trial+1})</button><button class="mini" id="playBtn">▶ 再生</button></div></label>
+  </div></div>`;
+  h+=`<div class="sec"><h3>視線モデルの重み（スライダーで仮説を変えられます）</h3>
+   ${[['wV','視覚的な目立ち',w.wV],['wR','タスクとの関連',w.wR],['wP','位置の事前傾向(左上→)',w.wP]].map(([k,l,v])=>`<div class="slider-row"><span>${l}</span><input type="range" min="0" max="1" step="0.05" value="${v}" data-w="${k}" aria-label="${l}"><b id="v_${k}">${v.toFixed(2)}</b></div>`).join('')}
+   <div class="row" style="margin-top:6px"><button class="mini" id="wReset">ペルソナの既定値に戻す</button></div></div>`;
+  h+=`<div id="gazeResult">${gazeResult()}</div>`;
+  h+=`<div class="sec"><h3>このペルソナの仮定</h3><div class="note"><ul>${P.desc.map(d=>`<li>${d}</li>`).join('')}</ul><div style="margin-top:6px">モデル：各要素の「目立ち×タスク関連×位置傾向」に、現在地からの距離減衰と再訪抑制をかけて次の注視先を確率的に選びます。乱数はシード固定（同じ設定なら同じ結果）。</div></div></div>`;
+  return h;
+}
+function renderGazePanelLite(){ const r=$('#gazeResult'); if(r) r.innerHTML=gazeResult(); }
+function gazeResult(){
+  const g=S.gaze; if(!g.fix.length) return '<p class="hint">視線の対象となる要素が見つかりませんでした。</p>';
+  const f=g.fix, shown=g.fix.slice(0,g.upTo);
+  const total=f.reduce((a,b)=>a+b.dur,0);
+  const firstCTA=f.findIndex(x=>x.target.type==='button' && x.target.isCTA);
+  const ctaT = firstCTA<0?'—': (f.slice(0,firstCTA).reduce((a,b)=>a+b.dur+30,0)/1000).toFixed(1)+'秒 (#'+(firstCTA+1)+')';
+  const meanAmp=(f.slice(1).reduce((a,b)=>a+b.amp,0)/Math.max(1,f.length-1));
+  const tiles=[['総注視時間',(total/1000).toFixed(1)+'s'],['注視回数',f.length],['主要CTAに到達',ctaT],['平均サッケード',Math.round(meanAmp)+'px']];
+  let h=`<div class="sec"><div class="tiles">${tiles.map(([k,v])=>`<div class="tile"><b style="font-size:16px">${v}</b><span>${k}</span></div>`).join('')}</div></div>`;
+  // 種類別滞留
+  const dw={}; f.forEach(x=>{ const k=x.target.type; dw[k]=(dw[k]||0)+x.dur; });
+  const dj={heading:'見出し',image:'画像',banner:'バナー',button:'ボタン',input:'入力欄',search:'検索',navlink:'ナビ',text:'本文',card:'カード',nav:'ステップ/パンくず'};
+  h+=`<div class="sec"><h3>要素の種類別・滞留時間（この試行）</h3>${Object.entries(dw).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="bar-row"><span class="nm">${dj[k]||k}</span><div class="bar"><i style="width:${(v/total*100).toFixed(0)}%"></i></div><span class="v">${(v/total*100).toFixed(0)}%</span></div>`).join('')}</div>`;
+  // 到達率(30試行)
+  const keyT=S.targets.filter(t=>t.cy<=foldOf()).filter(t=>['banner','search'].includes(t.type) || (t.type==='button'&&(t.kind==='primary'||t.isCTA)) || (t.type==='heading'&&t.h==='H1') || (t.type==='nav'));
+  const rows=keyT.map(t=>({t, p:(g.agg.reach.get(t.id)||0)/g.agg.N})).sort((a,b)=>a.p-b.p).slice(0,10);
+  if(rows.length) h+=`<div class="sec"><h3>主要要素の到達率（${g.agg.N}試行中、1回でも注視された割合）</h3>${rows.map(({t,p})=>`<div class="bar-row"><span class="nm" title="${esc(t.label)}">${dj[t.type]||t.type}：${esc(t.label)}</span><div class="bar"><i style="width:${(p*100).toFixed(0)}%;background:${p<.3?'var(--sev3)':p<.6?'var(--sev2)':'var(--primary)'}"></i></div><span class="v">${(p*100).toFixed(0)}%</span></div>`).join('')}<p class="hint">到達率が低い主要要素は、このペルソナ・タスクでは「見落とされやすい」と推定される要素です（昇順表示）。</p></div>`;
+  // 注視順
+  h+=`<div class="sec"><h3>注視の順序</h3><table><tr><th>#</th><th>対象</th><th>滞留</th><th>累計</th></tr>${shown.map((x,i)=>`<tr><td>${i+1}</td><td>${esc((dj[x.target.type]||x.target.type)+'：'+x.target.label)}</td><td>${x.dur}ms</td><td>${((x.t0+x.dur)/1000).toFixed(1)}s</td></tr>`).join('')}</table></div>`;
+  return h;
+}
+
+/* ============================================================
+   レポート出力
+   ============================================================ */
+function buildReport(){
+  const d=new Date().toISOString().slice(0,10);
+  let m=`# UI分析レポート：${S.sourceName}\n\n- 日付: ${d}\n- 生成: UI Anatomy Scanner（プロトタイプ）\n- 注意: ルールベースの推定であり、実ユーザーテストの代替ではありません。視線は実測ではなく仮想です。\n\n## 構成要素\n\n`;
+  const by={}; S.comps.forEach(c=>{ by[c.type]=(by[c.type]||0)+1; });
+  m+=Object.keys(TYPES).filter(t=>by[t]).map(t=>`- ${TYPES[t].ja}: ${by[t]}`).join('\n')+'\n\n## ニールセン10原則\n\n| 原則 | スコア |\n|---|---|\n'+NIELSEN.map(h=>`| ${h.id} ${h.ja} | ${hScore(h.id)} |`).join('\n')+'\n';
+  [...NIELSEN,SUP].forEach(h=>{ const l=S.issues.filter(i=>i.h===h.id && isActive(i)); if(!l.length) return;
+    m+=`\n### ${h.id==='SUP'?'補助':h.id} ${h.ja}\n\n`;
+    l.forEach(i=>{ m+=`- **[重大度${i.sev}] ${i.title}**${i.auto?'':'（手動判定）'}\n`; if(i.detail) m+=`  - 内容: ${i.detail}\n`; if(i.evidence.length) m+=`  - 根拠: ${i.evidence.join(' / ')}\n`; if(i.fix) m+=`  - 改善案: ${i.fix}\n`; });
+  });
+  const g=S.gaze; if(g.fix.length){ m+=`\n## 仮想視線（${PERSONAS[g.persona].name} / ${TASKS[g.task]}）\n\n- 総注視時間: ${(g.fix.reduce((a,b)=>a+b.dur,0)/1000).toFixed(1)}s、注視${g.fix.length}回\n- 注視順: ${g.fix.map((x,i)=>`${i+1}.${x.target.label}`).join(' → ')}\n`; }
+  return m;
+}
+
+/* ============================================================
+   入力UI
+   ============================================================ */
+function renderSrc(){
+  const b=$('#srcBody');
+  if(S.srcMode==='sample'){
+    b.innerHTML=`<div class="sample-grid">${SAMPLES.map(s=>`<button class="sample" data-sample="${s.key}" aria-pressed="${S.sampleKey===s.key}"><b>${s.name}</b><span>${s.desc}</span></button>`).join('')}</div><p class="hint">サンプルは架空のサイトです。ヒューリスティクスの弱点を意図的に仕込んでいます。</p>`;
+  } else if(S.srcMode==='url'){
+    b.innerHTML=`<div class="row"><input type="url" id="urlIn" placeholder="https://example.com/" aria-label="解析するURL"><button class="btn" id="urlGo">解析する</button></div>
+    <details style="margin-top:8px"><summary class="hint" style="cursor:pointer">中継(プロキシ)URLを設定する（任意）</summary><div class="row" style="margin-top:6px"><input type="url" id="proxyIn" placeholder="https://your-worker.example.workers.dev/?url={url}" aria-label="中継URL"></div></details>
+    <p class="hint">他サイトのHTMLはブラウザからは直接取得できないことが多い（CORS）ため、自分で用意した中継を指定するか、「HTML貼り付け」をご利用ください。スクリプトは実行せず、HTMLとCSSのみで描画します。</p>`;
+  } else {
+    b.innerHTML=`<textarea id="htmlIn" placeholder="<!doctype html> … ページのHTMLを貼り付け（ブラウザの「ページのソースを表示」からコピー）" aria-label="HTML"></textarea><div class="row" style="margin-top:8px"><button class="btn" id="htmlGo">解析する</button><span class="hint" style="margin:0">外部CSSは絶対URLなら読み込まれます</span></div>`;
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+document.addEventListener('click', e=>{
+  const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
+  if(t.matches('.seg button')){ S.srcMode=t.dataset.src; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b===t)); renderSrc(); return; }
+  if(t.matches('.tabs button')){ S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze'}); syncToggles(); renderTabs(); renderPanel(); renderOverlay(); return; }
+  if(t.dataset.sample){ const s=SAMPLES.find(x=>x.key===t.dataset.sample); S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); return; }
+  if(t.id==='urlGo'){ loadURL($('#urlIn').value.trim(), $('#proxyIn')?.value.trim()); return; }
+  if(t.id==='htmlGo'){ const v=$('#htmlIn').value; if(v.trim().length<20){ setStatus('HTMLを貼り付けてください', true); return; } loadHTML(v, '貼り付けたHTML'); return; }
+  if(t.id==='themeBtn'){ toggleTheme(); return; }
+  if(t.id==='copyReport'){ navigator.clipboard.writeText(buildReport()).then(()=>toast('レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
+  if(t.id==='dlReport'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildReport()],{type:'text/markdown'})); a.download='ui-analysis-report.md'; a.click(); return; }
+  if(t.id==='gRetry'){ S.gaze.trial++; simulate(); renderPanel(); renderOverlay(); return; }
+  if(t.id==='playBtn'){ if(S.gaze.timer) stopPlay(); else startPlay(); return; }
+  if(t.id==='wReset'){ S.gaze.wV=S.gaze.wR=S.gaze.wP=null; simulate(); renderPanel(); renderOverlay(); return; }
+  const act=t.dataset.act, id=t.dataset.issue;
+  if(act && id){
+    const is=S.issues.find(i=>i.id===id);
+    if(act==='show'){ S.selIssue=id; S.show.pins=true; $('#tgPins').checked=true; scrollToRect(is.rects[0]); renderPanel(); renderOverlay(); }
+    else if(act==='dismiss'){ is.state=is.state==='dismissed'?'open':'dismissed'; renderPanel(); renderOverlay(); }
+    else if(act==='ng'){ is.state=is.state==='ng'?'unreviewed':'ng'; is.sev=is.state==='ng'?(is.msev||2):0; renderPanel(); renderOverlay(); }
+    else if(act==='ok'){ is.state=is.state==='ok'?'unreviewed':'ok'; is.sev=0; renderPanel(); renderOverlay(); }
+    return;
+  }
+});
+document.addEventListener('click', e=>{
+  const pin=e.target.closest('.pin'); if(pin){ const id=pin.dataset.issue; S.selIssue=id; S.tab='heur'; const is=S.issues.find(i=>i.id===id); S.openH.add(is.h); renderAll(); const el=$(`.issue[data-issue="${id}"]`); if(el) el.scrollIntoView({block:'center'}); }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.dataset.type){ t.checked?S.hiddenTypes.delete(t.dataset.type):S.hiddenTypes.add(t.dataset.type); renderOverlay(); }
+  else if(t.dataset.act==='msev'){ const is=S.issues.find(i=>i.id===t.dataset.issue); is.msev=+t.value; is.sev=+t.value; renderPanel(); renderOverlay(); }
+  else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
+  else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
+  else if(t.id==='gRange'){ S.gaze.range=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
+  else if(t.id==='tgComps'){ S.show.comps=t.checked; renderOverlay(); }
+  else if(t.id==='tgPins'){ S.show.pins=t.checked; renderOverlay(); }
+  else if(t.id==='tgPath'){ S.show.path=t.checked; renderOverlay(); }
+  else if(t.id==='tgHeat'){ S.show.heat=t.checked; renderOverlay(); }
+});
+document.addEventListener('input', e=>{
+  const t=e.target; if(t.dataset.w){ S.gaze[t.dataset.w]=+t.value; const v=$('#v_'+t.dataset.w); if(v) v.textContent=(+t.value).toFixed(2);
+    clearTimeout(S._wt); S._wt=setTimeout(()=>{ simulate(); renderGazePanelLite(); renderOverlay(); },120); }
+});
+document.addEventListener('toggle', e=>{ const d=e.target; if(d.classList&&d.classList.contains('h-card')){ d.open?S.openH.add(d.dataset.h):S.openH.delete(d.dataset.h); } }, true);
+document.addEventListener('mouseover', e=>{ const it=e.target.closest('.item[data-comp]'); const id=it?it.dataset.comp:null; if(id!==S.hlComp){ S.hlComp=id; renderOverlay(); } });
+
+function syncToggles(){ $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; }
+function scrollToRect(r){ if(!r) return; const sc=$('#stageScroll'); sc.scrollTo({top:Math.max(0, r.y*S.scale-90), behavior:'smooth'}); }
+
+/* テーマ */
+function toggleTheme(){ const d=document.documentElement; const next=d.dataset.theme==='dark'?'light':'dark'; d.dataset.theme=next; $('#themeBtn').textContent=next==='dark'?'☀️':'🌙'; try{ localStorage.setItem('uas-theme',next); }catch(e){} }
+(function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').textContent=t==='dark'?'☀️':'🌙'; })();
+
+/* 起動 */
+renderSrc();
+renderPanel();
+(function boot(){ const s=SAMPLES[0]; S.sampleKey=s.key; renderSrc(); loadHTML(s.build(), s.name); })();
+</script>
+</body>
+</html>
