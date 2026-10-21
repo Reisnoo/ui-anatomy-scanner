@@ -92,6 +92,10 @@
     "scrolling-nav": {
       "url": "https://github.com/StartBootstrap/startbootstrap-scrolling-nav",
       "commit": "45ee8f6a5503ec6d4b41ec86cf5be2c930b606df"
+    },
+    "dads": {
+      "url": "https://github.com/digital-go-jp/design-system-example-components-html",
+      "commit": "af8b6656c8d864a22ef444d088e5568f3416f6aa"
     }
   },
   "pages": [
@@ -467,6 +471,190 @@
       "kind": "対照",
       "local": "fixtures/animated-reveal.html",
       "set": "control"
+    },
+    {
+      "id": "dads-button-all-buttons-us",
+      "label": "デジタル庁DS：ボタン一覧",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/button/all-buttons-using-button.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-checkbox-all-checkboxes",
+      "label": "デジタル庁DS：チェックボックス一覧",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/checkbox/all-checkboxes.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-radio-all-radios",
+      "label": "デジタル庁DS：ラジオボタン一覧",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/radio/all-radios.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-form-control-label-multiple",
+      "label": "デジタル庁DS：フォームのラベル（複数）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/form-control-label/multiple.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-input-text-with-form-cont",
+      "label": "デジタル庁DS：テキスト入力＋ラベル",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/input-text/with-form-control-label.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-select-with-form-cont",
+      "label": "デジタル庁DS：セレクト＋ラベル",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/select/with-form-control-label.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-textarea-with-counter",
+      "label": "デジタル庁DS：テキストエリア（文字数表示）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/textarea/with-counter.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-table-first-row-and",
+      "label": "デジタル庁DS：テーブル（見出し行・列）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/table/first-row-and-column-as-header-cell.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-notification-banner-info-1",
+      "label": "デジタル庁DS：お知らせバナー（情報）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/notification-banner/info-1.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-notification-banner-warning",
+      "label": "デジタル庁DS：お知らせバナー（警告）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/notification-banner/warning.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-notification-banner-error",
+      "label": "デジタル庁DS：お知らせバナー（エラー）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/notification-banner/error.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-card-example-1",
+      "label": "デジタル庁DS：カード1",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/card/example-1.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-card-example-3",
+      "label": "デジタル庁DS：カード3",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/card/example-3.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-list-all-lists",
+      "label": "デジタル庁DS：リスト一覧",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/list/all-lists.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-tab-playground",
+      "label": "デジタル庁DS：タブ",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/tab/playground.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-accordion-stacked",
+      "label": "デジタル庁DS：アコーディオン",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/accordion/stacked.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-step-navigation-playground-ful",
+      "label": "デジタル庁DS：ステップナビゲーション",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/step-navigation/playground-full.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-search-box-with-detail",
+      "label": "デジタル庁DS：検索ボックス（詳細）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/search-box/with-detail.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-resource-list-with-control",
+      "label": "デジタル庁DS：リソースリスト（操作つき）",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/resource-list/with-control.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-menu-list-has-children",
+      "label": "デジタル庁DS：メニューリスト",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/menu-list/has-children.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-hamburger-menu-button-desktop-and-mo",
+      "label": "デジタル庁DS：ハンバーガーメニュー",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/hamburger-menu-button/desktop-and-mobile.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-emergency-banner-playground",
+      "label": "デジタル庁DS：緊急情報バナー",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/emergency-banner/playground.html",
+      "set": "ja-real"
+    },
+    {
+      "id": "dads-horizontal-menu-playground",
+      "label": "デジタル庁DS：水平メニュー",
+      "kind": "日本語UI部品",
+      "repo": "dads",
+      "path": "src/components/horizontal-menu/playground.html",
+      "set": "ja-real"
     }
   ]
 }

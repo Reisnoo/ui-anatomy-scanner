@@ -2671,12 +2671,14 @@ function ocrSegment(srcCanvas, dpr, p){
   let bs=boxes.filter(b=>b.h<=p.maxH*2 && b.w<W*.9 && b.n>=3 && !(b.fr>.5 && b.n<600));   // 枠線の断片（角など）は除く
   bs.sort((u,v)=>u.x-v.x);
   const par=bs.map((_,i)=>i), find=i=>{ while(par[i]!==i){ par[i]=par[par[i]]; i=par[i]; } return i; };
+  // 中が空いた四角・円（チェックボックス・ラジオボタン）は、文字と結ばない
+  const ring=b=>b.w>=12&&b.w<=40&&b.h>=12&&b.h<=40&&Math.abs(b.w-b.h)<=Math.max(3,b.h*.2)&&b.n<b.w*b.h*.55;
   for(let i=0;i<bs.length;i++){ const A=bs[i];
-    for(let j=i+1;j<bs.length;j++){ const B=bs[j]; if(B.x>A.x+A.w+Math.max(A.h,B.h)*.8+2) { if(B.x>A.x+A.w+p.maxH) break; continue; }
+    for(let j=i+1;j<bs.length;j++){ const B=bs[j]; if(ring(A)||ring(B)) continue; if(B.x>A.x+A.w+Math.max(A.h,B.h)*.8+2) { if(B.x>A.x+A.w+p.maxH) break; continue; }
       const ov=Math.min(A.y+A.h,B.y+B.h)-Math.max(A.y,B.y), mh=Math.min(A.h,B.h), Mh=Math.max(A.h,B.h);
       const gap=B.x-(A.x+A.w), near=gap<=Math.max(A.h,B.h)*.8+2;
       // 背の低い文字（ー、・など）は、隣の文字の高さの範囲に収まっていれば結ぶ
-      if(near && ((ov>=mh*.5 && Mh<=mh*2.6) || (ov>=mh*.9 && Mh<=mh*9))) par[find(j)]=find(i); } }
+      if(near && ((ov>=mh*.5 && Mh<=mh*2.6) || (ov>=mh*.9 && mh<=10 && Mh<=44))) par[find(j)]=find(i); } }
   const grp=new Map(); bs.forEach((b,i)=>{ const r=find(i), e=grp.get(r); if(!e) grp.set(r,{x:b.x,y:b.y,x1:b.x+b.w,y1:b.y+b.h,n:b.n}); else { e.x=Math.min(e.x,b.x); e.y=Math.min(e.y,b.y); e.x1=Math.max(e.x1,b.x+b.w); e.y1=Math.max(e.y1,b.y+b.h); e.n+=b.n; } });
   const out=[]; grp.forEach(e=>{ const w=e.x1-e.x, h=e.y1-e.y; if(h<p.minH||h>p.maxH||w<p.minW) return; if(w*h>W*H*.35) return; out.push({x:e.x,y:e.y,w,h,n:e.n}); });
   return {boxes:out, containers, W, H};

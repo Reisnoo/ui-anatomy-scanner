@@ -41,6 +41,7 @@ function truthInPage() {
   while (W.nextNode()) {
     const n = W.currentNode, t0 = n.textContent; if (!t0.trim()) continue; const el = n.parentElement; if (!el || el.closest('script,style,noscript,textarea,option')) continue;
     if (!el.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
+    { let hidden = false; for (let a = el; a && a !== document.body; a = a.parentElement) { const q = getComputedStyle(a), r0 = a.getBoundingClientRect(); if (/(hidden|clip)/.test(q.overflow + q.overflowX + q.overflowY) && (r0.width <= 2 || r0.height <= 2)) { hidden = true; break; } if (q.clip && q.clip !== 'auto' && /rect\(0(px)?,? 0(px)?,? 0(px)?,? 0(px)?\)/.test(q.clip)) { hidden = true; break; } } if (hidden) continue; }   // 視覚的に隠した文字（スクリーンリーダー用）は、正解に含めない
     const s = getComputedStyle(el); let op = 1; for (let a = el; a; a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity);
     const tt = s.textTransform, t = tt === 'uppercase' ? t0.toUpperCase() : tt === 'lowercase' ? t0.toLowerCase() : t0;
     const fg = parse(s.color), bg = effBg(el), r = document.createRange(); let cur = null;
@@ -148,7 +149,7 @@ function summarize(rs) {
   for (const g of GRID) {
     const rs = [], per = [];
     for (const p of pages) {
-      const sh = await shot(p), isJa = p.set === 'ja';
+      const sh = await shot(p), isJa = /^ja/.test(p.set || '');
       if (flag('--truthdump')) sh.truth.lines.filter(l => new RegExp(flag('--truthdump')).test(l.text)).slice(0, 6).forEach(l => console.log(' TRUTH', p.id, JSON.stringify({ t: l.text.slice(0, 20), x: Math.round(l.x), y: Math.round(l.y), w: Math.round(l.w), h: Math.round(l.h) })), '| H', sh.truth.H, 'img', sh.H);
       const opts = { langs: isJa ? 'jpn+eng' : 'eng', ...g };
       const r = await tool.evaluate(evalInTool, { b64: sh.png, truth: sh.truth, dpr: DPR, opts, maxH: sh.H });

@@ -1,0 +1,496 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "ja-real",
+  "summary": {
+   "buttons": "再現 21/30 (70.0%)／検出した枠 22 のうちDOMのボタンと一致 21 (95.5%)",
+   "pages": 23,
+   "lines": 243,
+   "lineRecall": 0.7777777777777778,
+   "CER": 0.1468673718470301,
+   "extraRate": 0.011920529801324504,
+   "fsN": 189,
+   "fsMedRatio": 1.000891265597148,
+   "fsMedAbsErr": 0.03125,
+   "fsWithin15": 0.9470899470899471,
+   "fsWithin25": 0.9947089947089947,
+   "byKind": {
+    "cjk14-19": {
+     "n": 164,
+     "med": 0.998,
+     "w15": 0.96
+    },
+    "cap14-19": {
+     "n": 18,
+     "med": 1.024,
+     "w15": 0.83
+    },
+    "cjk20+": {
+     "n": 7,
+     "med": 1.016,
+     "w15": 1
+    }
+   },
+   "conN": 187,
+   "conMedRelErr": 0.002557773137549394,
+   "conWithin20": 1,
+   "small": "P — R — (tp0/fp0/fn0)",
+   "low": "P 100.0% R 100.0% (tp3/fp0/fn0) ／基準ぎりぎり(±4%)で除外 8件",
+   "msPerPage": 1284.791304347753
+  },
+  "pages": [
+   {
+    "id": "dads-button-all-buttons-us",
+    "lines": 20,
+    "recall": 0.75,
+    "CER": 0.183,
+    "ms": 1789,
+    "bad": [
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0.75,
+      "hyp": "十ボタン"
+     },
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0.75,
+      "hyp": "十ボタン"
+     }
+    ]
+   },
+   {
+    "id": "dads-checkbox-all-checkboxes",
+    "lines": 18,
+    "recall": 0.78,
+    "CER": 0.148,
+    "ms": 1215,
+    "bad": [
+     {
+      "text": "ラベル",
+      "sim": 0.33,
+      "hyp": "メル"
+     },
+     {
+      "text": "ラベル",
+      "sim": 0.33,
+      "hyp": ">ル"
+     },
+     {
+      "text": "ラベル",
+      "sim": 0,
+      "hyp": ">"
+     },
+     {
+      "text": "ラベル",
+      "sim": 0.75,
+      "hyp": "ラベペル"
+     }
+    ]
+   },
+   {
+    "id": "dads-radio-all-radios",
+    "lines": 18,
+    "recall": 0.83,
+    "CER": 0.074,
+    "ms": 1115,
+    "bad": [
+     {
+      "text": "ラベル",
+      "sim": 0.67,
+      "hyp": "ラペル"
+     },
+     {
+      "text": "ラベル",
+      "sim": 0.33,
+      "hyp": "ジル"
+     },
+     {
+      "text": "ラベル",
+      "sim": 0.67,
+      "hyp": "ラペル"
+     }
+    ]
+   },
+   {
+    "id": "dads-form-control-label-multiple",
+    "lines": 8,
+    "recall": 0.38,
+    "CER": 0.259,
+    "ms": 945,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "足立区",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "荒川区",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "板橋区",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "江戸川区",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-input-text-with-form-cont",
+    "lines": 4,
+    "recall": 0.75,
+    "CER": 0.036,
+    "ms": 302,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-select-with-form-cont",
+    "lines": 4,
+    "recall": 0.75,
+    "CER": 0.027,
+    "ms": 440,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-textarea-with-counter",
+    "lines": 8,
+    "recall": 0.63,
+    "CER": 0.074,
+    "ms": 656,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "0 / 20",
+      "sim": 0.75,
+      "hyp": "0720"
+     },
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-table-first-row-and",
+    "lines": 23,
+    "recall": 1,
+    "CER": 0,
+    "ms": 863,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-info-1",
+    "lines": 6,
+    "recall": 0.83,
+    "CER": 0.171,
+    "ms": 913,
+    "bad": [
+     {
+      "text": "登録期間が延長されました",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-notification-banner-warning",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.013,
+    "ms": 765,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-error",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.014,
+    "ms": 701,
+    "bad": []
+   },
+   {
+    "id": "dads-card-example-1",
+    "lines": 9,
+    "recall": 0.89,
+    "CER": 0.118,
+    "ms": 1319,
+    "bad": [
+     {
+      "text": "機内持ち込み手荷物検査",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-card-example-3",
+    "lines": 16,
+    "recall": 0.63,
+    "CER": 0.287,
+    "ms": 1725,
+    "bad": [
+     {
+      "text": "郵送する際のポイント",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "お役立ち情報",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "オンライン申請の手順",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "手続きガイド",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "よくある質問と回答",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "FAQ",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-list-all-lists",
+    "lines": 36,
+    "recall": 0.89,
+    "CER": 0.029,
+    "ms": 5476,
+    "bad": [
+     {
+      "text": "サブリストA",
+      "sim": 0.75,
+      "hyp": "サブプブリストA"
+     },
+     {
+      "text": "①",
+      "sim": 0.5,
+      "hyp": "(1"
+     },
+     {
+      "text": "②",
+      "sim": 0,
+      "hyp": "@"
+     },
+     {
+      "text": "サブリストC",
+      "sim": 0.75,
+      "hyp": "サブプブリストC"
+     }
+    ]
+   },
+   {
+    "id": "dads-tab-playground",
+    "lines": 9,
+    "recall": 0.89,
+    "CER": 0.051,
+    "ms": 1459,
+    "bad": [
+     {
+      "text": "タブラベル",
+      "sim": 0,
+      "hyp": "Loremipsum"
+     }
+    ]
+   },
+   {
+    "id": "dads-accordion-stacked",
+    "lines": 8,
+    "recall": 1,
+    "CER": 0.009,
+    "ms": 5498,
+    "bad": []
+   },
+   {
+    "id": "dads-step-navigation-playground-ful",
+    "lines": 20,
+    "recall": 0.2,
+    "CER": 0.828,
+    "ms": 816,
+    "bad": [
+     {
+      "text": "全{total}ステップ中、{reached}ス",
+      "sim": 0,
+      "hyp": "\\U"
+     },
+     {
+      "text": "ステップ",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": "\\U"
+     },
+     {
+      "text": "全{total}ステップ中、{reached}ス",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ステップ",
+      "sim": 0,
+      "hyp": "{1)"
+     },
+     {
+      "text": "1",
+      "sim": 0.33,
+      "hyp": "{1)"
+     },
+     {
+      "text": "全{total}ステップ中、{reached}ス",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ステップ",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ステップのタイトル",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ステップの説明が入ります。",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "全{total}ステップ中、{reached}ス",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-search-box-with-detail",
+    "lines": 4,
+    "recall": 0.5,
+    "CER": 0.333,
+    "ms": 233,
+    "bad": [
+     {
+      "text": "検索",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "詳細検索",
+      "sim": 0.5,
+      "hyp": "ii検索"
+     }
+    ]
+   },
+   {
+    "id": "dads-resource-list-with-control",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0,
+    "ms": 367,
+    "bad": []
+   },
+   {
+    "id": "dads-menu-list-has-children",
+    "lines": 9,
+    "recall": 1,
+    "CER": 0,
+    "ms": 991,
+    "bad": []
+   },
+   {
+    "id": "dads-hamburger-menu-button-desktop-and-mo",
+    "lines": 2,
+    "recall": 1,
+    "CER": 0,
+    "ms": 195,
+    "bad": []
+   },
+   {
+    "id": "dads-emergency-banner-playground",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0.07,
+    "ms": 1572,
+    "bad": []
+   },
+   {
+    "id": "dads-horizontal-menu-playground",
+    "lines": 1,
+    "recall": 0,
+    "CER": 1,
+    "ms": 197,
+    "bad": [
+     {
+      "text": "メニュー1",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   }
+  ]
+ }
+]
