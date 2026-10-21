@@ -2674,11 +2674,11 @@ function ocrSegment(srcCanvas, dpr, p){
   // 中が空いた四角・円（チェックボックス・ラジオボタン）は、文字と結ばない
   const ring=b=>b.w>=12&&b.w<=40&&b.h>=12&&b.h<=40&&Math.abs(b.w-b.h)<=Math.max(3,b.h*.2)&&b.n<b.w*b.h*.55;
   for(let i=0;i<bs.length;i++){ const A=bs[i];
-    for(let j=i+1;j<bs.length;j++){ const B=bs[j]; if(ring(A)||ring(B)) continue; if(B.x>A.x+A.w+Math.max(A.h,B.h)*.8+2) { if(B.x>A.x+A.w+p.maxH) break; continue; }
+    for(let j=i+1;j<bs.length;j++){ const B=bs[j]; if((ring(A)||ring(B)) && B.x-(A.x+A.w)>=Math.max(A.h,B.h)*.3) continue;   // 四角・円は、隣との間が空いているときだけ別にする（「口」「日」などの漢字は、文字の間が詰まっている） if(B.x>A.x+A.w+Math.max(A.h,B.h)*.8+2) { if(B.x>A.x+A.w+p.maxH) break; continue; }
       const ov=Math.min(A.y+A.h,B.y+B.h)-Math.max(A.y,B.y), mh=Math.min(A.h,B.h), Mh=Math.max(A.h,B.h);
       const gap=B.x-(A.x+A.w), near=gap<=Math.max(A.h,B.h)*.8+2;
       // 背の低い文字（ー、・など）は、隣の文字の高さの範囲に収まっていれば結ぶ
-      if(near && ((ov>=mh*.5 && Mh<=mh*2.6) || (ov>=mh*.9 && mh<=10 && Mh<=44))) par[find(j)]=find(i); } }
+      if(near && ((ov>=mh*.5 && Mh<=mh*2.6) || (ov>=mh*.9 && mh<=10 && Mh<=60))) par[find(j)]=find(i); } }
   const grp=new Map(); bs.forEach((b,i)=>{ const r=find(i), e=grp.get(r); if(!e) grp.set(r,{x:b.x,y:b.y,x1:b.x+b.w,y1:b.y+b.h,n:b.n}); else { e.x=Math.min(e.x,b.x); e.y=Math.min(e.y,b.y); e.x1=Math.max(e.x1,b.x+b.w); e.y1=Math.max(e.y1,b.y+b.h); e.n+=b.n; } });
   const out=[]; grp.forEach(e=>{ const w=e.x1-e.x, h=e.y1-e.y; if(h<p.minH||h>p.maxH||w<p.minW) return; if(w*h>W*H*.35) return; out.push({x:e.x,y:e.y,w,h,n:e.n}); });
   return {boxes:out, containers, W, H};
@@ -2783,27 +2783,34 @@ function ocrModeColor(ctx, dpr, r){
 /* 枠（ボタン・入力欄の候補）と文字の行を結び付ける。
    ボタン：文字が枠の中ほどにある（左右の余白がほぼ同じ）。入力欄：枠が横長で、文字が左に寄っている。段落を囲む箱・表の行・カードの見出し帯などは除く。
    高さ24px未満の小さな枠（バッジ・タグなど）は、ボタンと区別できないため、ボタンとして扱わない */
-function ocrControls(lines, containers, ctx, dpr, W, H){
+function ocrControls(lines, containers, ctx, dpr, W, H, dbg){
+  const why=(c,r)=>{ if(dbg) dbg.push({x:c.x,y:c.y,w:c.w,h:c.h,r}); };
   const inside=(l,c)=>{ const cx=l.box.x+l.box.w/2, cy=l.box.y+l.box.h/2; return cx>=c.x-2 && cx<=c.x+c.w+2 && cy>=c.y-2 && cy<=c.y+c.h+2; };
   const used=new Set(), controls=[];
   // 同じ大きさの枠が隣り合って並ぶもの（表のセル・行）は、ボタンではない
-  const touch=(a,b)=>Math.abs(a.w-b.w)<=4 && Math.abs(a.h-b.h)<=4 && ((Math.abs(a.y-b.y)<=4 && (Math.abs(a.x-(b.x+b.w))<=5 || Math.abs(b.x-(a.x+a.w))<=5)) || (Math.abs(a.x-b.x)<=4 && (Math.abs(a.y-(b.y+b.h))<=5 || Math.abs(b.y-(a.y+a.h))<=5)));
+  const adj=(a0,a1,b0,b1)=>{ const g=Math.max(b0-a1,a0-b1); return g>=-6 && g<=2; };   // 枠どうしが接している（隙間が2px以内か、重なっている）
+  const touch=(a,b)=>Math.abs(a.w-b.w)<=4 && Math.abs(a.h-b.h)<=4 && ((Math.abs(a.y-b.y)<=4 && adj(a.x,a.x+a.w,b.x,b.x+b.w)) || (Math.abs(a.x-b.x)<=4 && adj(a.y,a.y+a.h,b.y,b.y+b.h)));
   const cells=new Set(containers.filter(c=>containers.some(d=>d!==c && touch(c,d))));
-  [...containers].filter(c=>!cells.has(c)&&c.w>=28&&c.w<=520&&c.h>=24&&c.h<=90).sort((a,b)=>a.w*a.h-b.w*b.h).forEach(c=>{
-    const ls=lines.filter(l=>!used.has(l) && inside(l,c)); if(!ls.length) return;
-    const text=ls.map(l=>l.text).join(' ').trim(); if(text.length>40) return;
-    const tx0=Math.min(...ls.map(l=>l.box.x)), tx1=Math.max(...ls.map(l=>l.box.x+l.box.w)), ty0=Math.min(...ls.map(l=>l.box.y)), ty1=Math.max(...ls.map(l=>l.box.y+l.box.h));
-    const tw=tx1-tx0, th=ty1-ty0, padL=tx0-c.x, padR=c.x+c.w-tx1, padT=ty0-c.y, padB=c.y+c.h-ty1;
-    if(padL<2||padR<2||padT<2||padB<2) return;                         // 文字が枠にはみ出している（枠ではない）
-    if(c.h>th*5.2) return;                                              // 文字に対して枠が縦に大きすぎる（カード・段落の箱）
-    const centered=Math.abs(padL-padR)<=Math.max(10,c.w*.18), leftAligned=padL<=Math.max(26,c.h*.8) && padR>padL*1.8;
+  [...containers].filter(c=>{ const ok=!cells.has(c)&&c.w>=28&&c.w<=520&&c.h>=24&&c.h<=90; if(!ok) why(c, cells.has(c)?'表のセル':'大きさ'); return ok; }).sort((a,b)=>a.w*a.h-b.w*b.h).forEach(c=>{
+    const ls=lines.filter(l=>!used.has(l) && inside(l,c));
     const inC=ocrModeColor(ctx,dpr,{x:c.x+3,y:c.y+3,w:Math.max(1,c.w-6),h:Math.max(1,c.h-6)});
     const ox=Math.max(0,c.x-6), oy=Math.max(0,c.y-6), outC=ocrModeColor(ctx,dpr,{x:ox,y:oy,w:Math.min(W-ox,c.w+12),h:Math.min(H-oy,5)});
-    const filled=Math.hypot(inC.r-outC.r,inC.g-outC.g,inC.b-outC.b)>45, first=ls[0];
+    const filled=Math.hypot(inC.r-outC.r,inC.g-outC.g,inC.b-outC.b)>45;
+    if(!ls.length){   // 文字のない枠：横長で、塗りのない小さな枠は、入力欄（プレースホルダーが薄くて読めなかったもの）とみなす
+      if(!filled && lum(inC)>.5 && c.w>=120 && c.h>=28 && c.h<=56 && c.w/c.h>=3.5){ controls.push({rect:c, lines:[], text:'', kind:'input', filled:false, fill:inC}); } else why(c,'文字なし');
+      return; }
+    const text=ls.map(l=>l.text).join(' ').trim(); if(text.length>40){ why(c,'文字が長い'); return; }
+    const tx0=Math.min(...ls.map(l=>l.box.x)), tx1=Math.max(...ls.map(l=>l.box.x+l.box.w)), ty0=Math.min(...ls.map(l=>l.box.y)), ty1=Math.max(...ls.map(l=>l.box.y+l.box.h));
+    const tw=tx1-tx0, th=ty1-ty0, padL=tx0-c.x, padR=c.x+c.w-tx1, padT=ty0-c.y, padB=c.y+c.h-ty1;
+    if(padL<2||padR<2||padT<2||padB<2){ why(c,'文字が枠にはみ出す'); return; }
+    if(c.h>th*5.2){ why(c,'枠が縦に大きい'); return; }                                   // 文字に対して枠が縦に大きすぎる（カード・段落の箱）
+    const centered=Math.abs(padL-padR)<=Math.max(10,c.w*.18);
+    const tight=Math.max(padL,padR)<=Math.max(44,th*2.8);                                // 文字（とアイコン）が枠にぴったり収まっている
+    const leftAligned=padL<=Math.max(26,c.h*.8) && padR>padL*1.8 && padR>40;
     let kind=null;
-    if(centered && c.w<=tw+Math.max(16,th*14)) kind='button';
-    else if(leftAligned && c.w>=90 && c.h>=28 && c.h<=64 && !filled) kind='input';
-    if(!kind) return;
+    if((centered && (c.w<=tw+Math.max(16,th*14) || filled)) || tight) kind='button';
+    else if(leftAligned && c.w>=90 && c.h>=28 && c.h<=72 && !filled && lum(inC)>.5) kind='input';   // 入力欄は、明るい背景の枠（暗いサイドバーの項目などを除く）
+    if(!kind){ why(c,'形が合わない'); return; }
     ls.forEach(l=>used.add(l)); controls.push({rect:c, lines:ls, text, kind, filled, fill:inC});
   });
   return {controls, rest:lines.filter(l=>!used.has(l))};

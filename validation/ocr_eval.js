@@ -1,13 +1,14 @@
 // スクリーンショットのOCR（文字・大きさ・色の推定）の精度を、DOMを正解にして測る
 //   node ocr_eval.js --set dev            … 開発セット（.corpus の実在テンプレート。先に node fetch_corpus.js）
 //   node ocr_eval.js --set ja             … 日本語の自作ページ（fixtures/ja-*.html）
+//   node ocr_eval.js --live urls.txt     … 実サイトのURL一覧(1行1URL、空白のあとにラベル可)で測る（ネットワーク必須。自分のPC用）
 //   node ocr_eval.js --only shop-home --dpr 2
 //   node ocr_eval.js --grid '[{"psm":11,"scale":2},{"psm":12,"scale":2}]'   … 設定を総当たりで比べる
 // 環境変数: PLAYWRIGHT_MODULE, CHROMIUM_PATH。OCRエンジンと言語データは node_modules（npm install）から配る
 const fs = require('fs'), path = require('path'), http = require('http');
 const offline = require('./lib/offline');
 const args = process.argv.slice(2), flag = n => { const i = args.indexOf(n); return i < 0 ? null : (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true); };
-const SET = flag('--set') || 'dev', ONLY = flag('--only') && String(flag('--only')).split(','), DPR = +(flag('--dpr') || 1), MAXH = +(flag('--maxh') || 3000);
+const LIVE = flag('--live'), SET = flag('--set') || 'dev', ONLY = flag('--only') && String(flag('--only')).split(','), DPR = +(flag('--dpr') || 1), MAXH = +(flag('--maxh') || 3000);
 const GRID = flag('--grid') ? JSON.parse(flag('--grid')) : [{}];
 const OUT = path.resolve(flag('--out') || path.join(__dirname, 'results'));
 const TOOL_DIR = path.resolve(__dirname, '..'), CORPUS = path.join(__dirname, '.corpus'), NM = path.join(__dirname, 'node_modules');
@@ -59,7 +60,7 @@ function truthInPage() {
   const vis = e => e.checkVisibility({ opacityProperty: true, visibilityProperty: true });
   const boxed = e => { const s = getComputedStyle(e), bg = parse(s.backgroundColor), bw = parseFloat(s.borderTopWidth) || 0, bc = parse(s.borderTopColor); return (bg && bg.a >= .3) || (bw >= 1 && bc && bc.a >= .3); };
   const btns = [...document.querySelectorAll('button,[role=button],input[type=submit],input[type=button],a.btn,a[class*="btn-"],input[type=text],input[type=email],input[type=password],input[type=search],textarea,select')].filter(e => vis(e) && boxed(e)).map(e => { const b = e.getBoundingClientRect(); return { x: b.left + sx, y: b.top + sy, w: b.width, h: b.height, text: (e.innerText || e.value || e.getAttribute('placeholder') || '').trim().slice(0, 30), tag: e.tagName }; }).filter(b => b.w >= 20 && b.h >= 16 && b.w <= 520 && b.h <= 90 && (b.text || b.tag === 'INPUT' || b.tag === 'SELECT' || b.tag === 'TEXTAREA'));
-  return { lines, btns, H };
+  return { lines, btns, H, lang: document.documentElement.lang || '' };
 }
 
 // ツールのページ内：OCRして、正解と突き合わせる
@@ -94,12 +95,12 @@ async function evalInTool({ b64, truth, dpr, opts, maxH }) {
   const extra = words.filter(w => !used.has(w) && w.y < maxH && w.text.replace(/\s/g, '').length >= 2);
   const lenX = extra.reduce((a, w) => a + norm(w.text).length, 0);
   // ボタン・入力欄の候補（枠）を、DOMのボタンと照合する
-  const cleaned = lines.map(l => ({ ...l, text: ocrCleanText(l.text) })).filter(l => ocrMeaningful(l.text) && l.box), ctl = ocrControls(cleaned, lines.containers || [], ctx, dpr, c.width / dpr, c.height / dpr).controls;
+  const cleaned = lines.map(l => ({ ...l, text: ocrCleanText(l.text) })).filter(l => ocrMeaningful(l.text) && l.box), dbg = [], ctl = ocrControls(cleaned, lines.containers || [], ctx, dpr, c.width / dpr, c.height / dpr, dbg).controls;
   const iou = (a, b) => { const ix = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), iy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y); if (ix <= 0 || iy <= 0) return 0; const i = ix * iy; return i / (a.w * a.h + b.w * b.h - i); };
   const tb = truth.btns.filter(b => b.y + b.h < maxH && b.w >= 20 && b.h >= 16), pb = ctl.map(c => c.rect);
   const btn = { truth: tb.length, matched: tb.filter(b => pb.some(r => iou(b, r) >= .5)).length, pred: ctl.length, predOk: ctl.filter(c => tb.some(b => iou(b, c.rect) >= .5)).length, predButton: ctl.filter(c => c.kind === 'button').length, predButtonOk: ctl.filter(c => c.kind === 'button' && tb.some(b => iou(b, c.rect) >= .5)).length };
   const conts = lines.containers || [];
-  const missed = tb.filter(b => !pb.some(r => iou(b, r) >= .5)).slice(0, 40).map(b => ({ near: conts.filter(c => iou(b, c) > .25).slice(0, 2).map(c => [c.x, c.y, c.w, c.h].join(',')), inl: cleaned.filter(l => { const cx = l.box.x + l.box.w / 2, cy = l.box.y + l.box.h / 2; return cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h; }).map(l => l.text.slice(0, 14) + '@' + Math.round(l.conf)).join('|'), t: b.text, tag: b.tag, x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.w), h: Math.round(b.h) }));
+  const missed = tb.filter(b => !pb.some(r => iou(b, r) >= .5)).slice(0, 40).map(b => ({ near: conts.filter(c => iou(b, c) > .25).slice(0, 2).map(c => [c.x, c.y, c.w, c.h].join(',') + ':' + (dbg.filter(d => d.x === c.x && d.y === c.y).map(d => d.r).join('/') || '?')), inl: cleaned.filter(l => { const cx = l.box.x + l.box.w / 2, cy = l.box.y + l.box.h / 2; return cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h; }).map(l => l.text.slice(0, 14) + '@' + Math.round(l.conf)).join('|'), t: b.text, tag: b.tag, x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.w), h: Math.round(b.h) }));
   const fpc = ctl.filter(c => !tb.some(b => iou(b, c.rect) >= .5)).slice(0, 40).map(c => ({ t: c.text.slice(0, 18), k: c.kind, x: Math.round(c.rect.x), y: Math.round(c.rect.y), w: Math.round(c.rect.w), h: Math.round(c.rect.h) }));
   return { missed, fpc, btn, ms, nLines: inScope.length, nMatch, lenT, lenE, lenX, lenHyp: words.reduce((a, w) => a + norm(w.text).length, 0), fsR, con, small, low, nOcrLines: lines.length, dump, sheetOut, bad: per.filter(p => p.sim < .8).slice(0, 12) };
 }
@@ -121,7 +122,7 @@ function summarize(rs) {
 
 (async () => {
   prepLang();
-  const pages = T.pages.concat(fs.readdirSync(path.join(__dirname, 'fixtures')).filter(f => /^ja-.*\.html$/.test(f)).map(f => ({ id: f.replace(/\.html$/, ''), label: f, set: 'ja', local: 'fixtures/' + f }))).filter(p => (SET === 'all' || (p.set || '') === SET) && (!ONLY || ONLY.includes(p.id)) && p.set !== 'control')
+  const pages = (LIVE && LIVE !== true) ? fs.readFileSync(LIVE, 'utf8').split('\n').map(x => x.trim()).filter(x => x && !x.startsWith('#')).map((l, i) => { const [url, ...rest] = l.split(/\s+/); return { id: 'live' + (i + 1), label: rest.join(' ') || new URL(url).host, set: 'live', url }; }).filter(p => (!ONLY || ONLY.includes(p.id))) : T.pages.concat(fs.readdirSync(path.join(__dirname, 'fixtures')).filter(f => /^ja-.*\.html$/.test(f)).map(f => ({ id: f.replace(/\.html$/, ''), label: f, set: 'ja', local: 'fixtures/' + f }))).filter(p => (SET === 'all' || (p.set || '') === SET) && (!ONLY || ONLY.includes(p.id)) && p.set !== 'control')
     .map(p => ({ ...p, file: p.local ? path.join(__dirname, p.local) : path.join(CORPUS, p.repo, p.path) })).filter(p => fs.existsSync(p.file));
   if (!pages.length) throw new Error('対象ページがありません（先に node fetch_corpus.js、または --set ja）');
   const { s: server, port } = await serve(), origin = `http://127.0.0.1:${port}`;
@@ -129,8 +130,8 @@ function summarize(rs) {
   const cache = new Map();
   async function shot(p) {          // ページを描画して、スクリーンショットと正解を取る
     if (cache.has(p.id)) return cache.get(p.id);
-    const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: DPR }); offline.install(ctx, () => {});
-    const pg = await ctx.newPage(); const url = p.local ? `${origin}/fixtures/${path.basename(p.local)}` : `${origin}/corpus/${p.repo}/${p.path}`;
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: DPR }); if (!LIVE) offline.install(ctx, () => {});
+    const pg = await ctx.newPage(); const url = p.url ? p.url : p.local ? `${origin}/fixtures/${path.basename(p.local)}` : `${origin}/corpus/${p.repo}/${p.path}`;
     try { await pg.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { await pg.waitForTimeout(1500); }
     await pg.waitForTimeout(500); await pg.evaluate(() => { document.getAnimations().forEach(a => { try { a.finish(); } catch (e) { try { a.cancel(); } catch (_) {} } }); window.scrollTo(0, 0); });
     // 正解の取得と撮影を、同じ状態（ページ全体が入る高さのウィンドウ）で行う。フルページ撮影では、レイアウトが変わって位置がずれるページがあるため
@@ -149,7 +150,7 @@ function summarize(rs) {
   for (const g of GRID) {
     const rs = [], per = [];
     for (const p of pages) {
-      const sh = await shot(p), isJa = /^ja/.test(p.set || '');
+      const sh = await shot(p), isJa = /^ja/.test(p.set || '') || /^ja/i.test(sh.truth.lang || '');
       if (flag('--truthdump')) sh.truth.lines.filter(l => new RegExp(flag('--truthdump')).test(l.text)).slice(0, 6).forEach(l => console.log(' TRUTH', p.id, JSON.stringify({ t: l.text.slice(0, 20), x: Math.round(l.x), y: Math.round(l.y), w: Math.round(l.w), h: Math.round(l.h) })), '| H', sh.truth.H, 'img', sh.H);
       const opts = { langs: isJa ? 'jpn+eng' : 'eng', ...g };
       const r = await tool.evaluate(evalInTool, { b64: sh.png, truth: sh.truth, dpr: DPR, opts, maxH: sh.H });

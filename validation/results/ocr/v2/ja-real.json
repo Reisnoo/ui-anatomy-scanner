@@ -1,0 +1,369 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "ja-real",
+  "summary": {
+   "buttons": "再現 19/30 (63.3%)／検出した枠 20 のうちDOMのボタンと一致 19 (95.0%)",
+   "pages": 23,
+   "lines": 233,
+   "lineRecall": 0.9012875536480687,
+   "CER": 0.07264027838190518,
+   "extraRate": 0.0070744902205576365,
+   "fsN": 210,
+   "fsMedRatio": 1.0046756628787876,
+   "fsMedAbsErr": 0.03125,
+   "fsWithin15": 0.9333333333333333,
+   "fsWithin25": 0.9666666666666667,
+   "byKind": {
+    "cjk14-19": {
+     "n": 179,
+     "med": 1.004,
+     "w15": 0.96
+    },
+    "cap14-19": {
+     "n": 20,
+     "med": 1.014,
+     "w15": 0.75
+    },
+    "cjk20+": {
+     "n": 9,
+     "med": 1.018,
+     "w15": 0.89
+    },
+    "line14-19": {
+     "n": 1,
+     "med": 1.398,
+     "w15": 0
+    },
+    "cap20+": {
+     "n": 1,
+     "med": 0.948,
+     "w15": 1
+    }
+   },
+   "conN": 205,
+   "conMedRelErr": 0.002656745953948354,
+   "conWithin20": 1,
+   "small": "P — R — (tp0/fp0/fn0)",
+   "low": "P 100.0% R 100.0% (tp4/fp0/fn0) ／基準ぎりぎり(±4%)で除外 8件",
+   "msPerPage": 1560.2695652173588
+  },
+  "pages": [
+   {
+    "id": "dads-button-all-buttons-us",
+    "lines": 20,
+    "recall": 0.9,
+    "CER": 0.1,
+    "ms": 1918,
+    "bad": [
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-checkbox-all-checkboxes",
+    "lines": 18,
+    "recall": 0.94,
+    "CER": 0.037,
+    "ms": 1223,
+    "bad": [
+     {
+      "text": "ラベル",
+      "sim": 0.6,
+      "hyp": "ラフラベル"
+     }
+    ]
+   },
+   {
+    "id": "dads-radio-all-radios",
+    "lines": 18,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1412,
+    "bad": []
+   },
+   {
+    "id": "dads-form-control-label-multiple",
+    "lines": 8,
+    "recall": 0.75,
+    "CER": 0.167,
+    "ms": 900,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "該当するすべての区を選択してください。",
+      "sim": 0.69,
+      "hyp": "該当する)・す'・べての区を選択し・'てください"
+     }
+    ]
+   },
+   {
+    "id": "dads-input-text-with-form-cont",
+    "lines": 4,
+    "recall": 0.5,
+    "CER": 0.25,
+    "ms": 539,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "サポートテキスト",
+      "sim": 0.64,
+      "hyp": "サポボートテキ・.ズト"
+     }
+    ]
+   },
+   {
+    "id": "dads-select-with-form-cont",
+    "lines": 4,
+    "recall": 0.75,
+    "CER": 0.162,
+    "ms": 760,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-textarea-with-counter",
+    "lines": 8,
+    "recall": 0.63,
+    "CER": 0.13,
+    "ms": 705,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "0 / 20",
+      "sim": 0.75,
+      "hyp": "0720"
+     },
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-table-first-row-and",
+    "lines": 23,
+    "recall": 1,
+    "CER": 0,
+    "ms": 761,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-info-1",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.043,
+    "ms": 874,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-warning",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.053,
+    "ms": 756,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-error",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.042,
+    "ms": 1003,
+    "bad": []
+   },
+   {
+    "id": "dads-card-example-1",
+    "lines": 9,
+    "recall": 0.89,
+    "CER": 0.118,
+    "ms": 2128,
+    "bad": [
+     {
+      "text": "機内持ち込み手荷物検査",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-card-example-3",
+    "lines": 16,
+    "recall": 0.88,
+    "CER": 0.146,
+    "ms": 2578,
+    "bad": [
+     {
+      "text": "郵送する際のポイント",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "よくある質問と回答",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-list-all-lists",
+    "lines": 36,
+    "recall": 0.92,
+    "CER": 0.043,
+    "ms": 6926,
+    "bad": [
+     {
+      "text": "番号付きサブアイテム1",
+      "sim": 0.63,
+      "hyp": "番号付きサブアァ.イイrs-ム1"
+     },
+     {
+      "text": "②",
+      "sim": 0.5,
+      "hyp": "(2"
+     },
+     {
+      "text": "番号付きサブアイテム2",
+      "sim": 0.65,
+      "hyp": "番号付きサブアァ'.イテ・-.ム2"
+     }
+    ]
+   },
+   {
+    "id": "dads-tab-playground",
+    "lines": 8,
+    "recall": 1,
+    "CER": 0.005,
+    "ms": 1619,
+    "bad": []
+   },
+   {
+    "id": "dads-accordion-stacked",
+    "lines": 8,
+    "recall": 1,
+    "CER": 0.038,
+    "ms": 6050,
+    "bad": []
+   },
+   {
+    "id": "dads-step-navigation-playground-ful",
+    "lines": 12,
+    "recall": 0.75,
+    "CER": 0.163,
+    "ms": 1569,
+    "bad": [
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ステップのタイトル",
+      "sim": 0.75,
+      "hyp": "ステップのタタ.'イトル"
+     },
+     {
+      "text": "1",
+      "sim": 0.25,
+      "hyp": "{1}》"
+     }
+    ]
+   },
+   {
+    "id": "dads-search-box-with-detail",
+    "lines": 3,
+    "recall": 1,
+    "CER": 0,
+    "ms": 321,
+    "bad": []
+   },
+   {
+    "id": "dads-resource-list-with-control",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0,
+    "ms": 379,
+    "bad": []
+   },
+   {
+    "id": "dads-menu-list-has-children",
+    "lines": 9,
+    "recall": 0.89,
+    "CER": 0.187,
+    "ms": 1302,
+    "bad": [
+     {
+      "text": "メニュー項目1",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-hamburger-menu-button-desktop-and-mo",
+    "lines": 2,
+    "recall": 0.5,
+    "CER": 0.286,
+    "ms": 188,
+    "bad": [
+     {
+      "text": "メニュー",
+      "sim": 0.67,
+      "hyp": "メグニューー"
+     }
+    ]
+   },
+   {
+    "id": "dads-emergency-banner-playground",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0.096,
+    "ms": 1793,
+    "bad": []
+   },
+   {
+    "id": "dads-horizontal-menu-playground",
+    "lines": 1,
+    "recall": 0,
+    "CER": 1,
+    "ms": 183,
+    "bad": [
+     {
+      "text": "メニュー1",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   }
+  ]
+ }
+]
