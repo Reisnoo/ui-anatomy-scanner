@@ -1,13 +1,13 @@
 {
  "meta": {
-  "date": "2026-10-21T05:37:24.975Z",
+  "date": "2026-10-21T07:00:25.427Z",
   "axeCore": "4.14.0",
   "playwright": "1.56.1",
-  "toolCommit": "e9a87ff52a41e1d09bcbed59e02240b0e61dcba7",
+  "toolCommit": "3c68b49d1ef056d5d20b1dc61c609b1bd72025bf",
   "mode": "corpus (offline stubs)",
   "stubs": {
    "npm": 151,
-   "css": 135,
+   "css": 204,
    "js": 87,
    "images": 47,
    "blockedHosts": [
@@ -37,7 +37,8 @@
    "coming-soon": "5c42810",
    "new-age": "5f61977",
    "simple-sidebar": "72f0de1",
-   "scrolling-nav": "45ee8f6"
+   "scrolling-nav": "45ee8f6",
+   "dads": "af8b665"
   }
  },
  "results": [
@@ -137,7 +138,7 @@
      "footer": 1
     },
     "pageH": 1405,
-    "ms": 147,
+    "ms": 210,
     "issues": [
      {
       "h": "H10",
@@ -316,7 +317,7 @@
      "footer": 1
     },
     "pageH": 1549,
-    "ms": 156,
+    "ms": 168,
     "issues": [
      {
       "h": "H10",
@@ -476,7 +477,7 @@
      "footer": 1
     },
     "pageH": 3252,
-    "ms": 175,
+    "ms": 184,
     "issues": [
      {
       "h": "H1",
@@ -626,7 +627,7 @@
      "footer": 1
     },
     "pageH": 1665,
-    "ms": 233,
+    "ms": 249,
     "issues": [
      {
       "h": "H6",
@@ -803,7 +804,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 127,
+    "ms": 132,
     "issues": [
      {
       "h": "H6",
@@ -981,7 +982,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 134,
+    "ms": 111,
     "issues": [
      {
       "h": "H6",
@@ -1199,7 +1200,7 @@
      "footer": 1
     },
     "pageH": 1089,
-    "ms": 220,
+    "ms": 236,
     "issues": [
      {
       "h": "H6",
@@ -1420,7 +1421,7 @@
      "footer": 1
     },
     "pageH": 1111,
-    "ms": 194,
+    "ms": 230,
     "issues": [
      {
       "h": "H4",
@@ -1928,7 +1929,7 @@
      "footer": 1
     },
     "pageH": 6140,
-    "ms": 236,
+    "ms": 286,
     "issues": [
      {
       "h": "H1",
@@ -2178,7 +2179,7 @@
      "footer": 1
     },
     "pageH": 3386,
-    "ms": 178,
+    "ms": 205,
     "issues": [
      {
       "h": "H1",
@@ -2367,7 +2368,7 @@
      "footer": 1
     },
     "pageH": 1906,
-    "ms": 127,
+    "ms": 120,
     "issues": [
      {
       "h": "H1",
@@ -2515,7 +2516,7 @@
      "footer": 1
     },
     "pageH": 1455,
-    "ms": 111,
+    "ms": 92,
     "issues": [
      {
       "h": "H1",
@@ -2670,7 +2671,7 @@
      "footer": 1
     },
     "pageH": 2365,
-    "ms": 117,
+    "ms": 141,
     "issues": [
      {
       "h": "H1",
@@ -2829,7 +2830,7 @@
      "heading": 6
     },
     "pageH": 1194,
-    "ms": 125,
+    "ms": 108,
     "issues": [
      {
       "h": "H5",
@@ -3032,7 +3033,7 @@
      "footer": 1
     },
     "pageH": 966,
-    "ms": 137,
+    "ms": 140,
     "issues": [
      {
       "h": "H1",
@@ -3189,7 +3190,7 @@
      "footer": 1
     },
     "pageH": 1276,
-    "ms": 120,
+    "ms": 182,
     "issues": [
      {
       "h": "H1",
@@ -3343,7 +3344,7 @@
      "footer": 1
     },
     "pageH": 1285,
-    "ms": 125,
+    "ms": 144,
     "issues": [
      {
       "h": "H1",
@@ -3485,7 +3486,7 @@
      "footer": 1
     },
     "pageH": 1596,
-    "ms": 92,
+    "ms": 100,
     "issues": [
      {
       "h": "H1",
@@ -3622,7 +3623,7 @@
      "footer": 1
     },
     "pageH": 1918,
-    "ms": 123,
+    "ms": 176,
     "issues": [
      {
       "h": "H1",
@@ -3855,7 +3856,7 @@
      "footer": 1
     },
     "pageH": 2105,
-    "ms": 160,
+    "ms": 170,
     "issues": [
      {
       "h": "H1",
@@ -4033,7 +4034,7 @@
      "footer": 1
     },
     "pageH": 1992,
-    "ms": 156,
+    "ms": 137,
     "issues": [
      {
       "h": "H1",
@@ -4210,7 +4211,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 82,
+    "ms": 99,
     "issues": [
      {
       "h": "H7",
@@ -4374,7 +4375,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 75,
+    "ms": 95,
     "issues": [
      {
       "h": "H7",
@@ -4618,7 +4619,7 @@
      "footer": 1
     },
     "pageH": 800,
-    "ms": 105,
+    "ms": 94,
     "issues": [
      {
       "h": "H1",
@@ -4799,7 +4800,7 @@
      "footer": 1
     },
     "pageH": 6896,
-    "ms": 177,
+    "ms": 203,
     "issues": [
      {
       "h": "H1",
@@ -4988,7 +4989,7 @@
      "footer": 1
     },
     "pageH": 7290,
-    "ms": 168,
+    "ms": 195,
     "issues": [
      {
       "h": "H1",
@@ -5161,7 +5162,7 @@
      "heading": 12
     },
     "pageH": 12000,
-    "ms": 169,
+    "ms": 215,
     "issues": [
      {
       "h": "H10",
@@ -5315,7 +5316,7 @@
      "footer": 1
     },
     "pageH": 2298,
-    "ms": 99,
+    "ms": 133,
     "issues": [
      {
       "h": "H1",
@@ -5479,7 +5480,7 @@
      "footer": 1
     },
     "pageH": 1024,
-    "ms": 87,
+    "ms": 92,
     "issues": [],
     "scores": [
      100,
@@ -5651,7 +5652,7 @@
      "footer": 1
     },
     "pageH": 8826,
-    "ms": 223,
+    "ms": 298,
     "issues": [
      {
       "h": "H4",
@@ -6137,7 +6138,7 @@
      "footer": 1
     },
     "pageH": 1576,
-    "ms": 396,
+    "ms": 452,
     "issues": [
      {
       "h": "H4",
@@ -6397,7 +6398,7 @@
      "input": 2
     },
     "pageH": 800,
-    "ms": 170,
+    "ms": 206,
     "issues": [
      {
       "h": "H6",
@@ -6592,7 +6593,7 @@
      "input": 4
     },
     "pageH": 800,
-    "ms": 135,
+    "ms": 138,
     "issues": [
      {
       "h": "H6",
@@ -6811,7 +6812,7 @@
      "footer": 1
     },
     "pageH": 2543,
-    "ms": 327,
+    "ms": 356,
     "issues": [
      {
       "h": "H3",
@@ -7099,7 +7100,7 @@
      "footer": 1
     },
     "pageH": 1724,
-    "ms": 341,
+    "ms": 445,
     "issues": [
      {
       "h": "H4",
@@ -7356,7 +7357,7 @@
      "footer": 1
     },
     "pageH": 1718,
-    "ms": 309,
+    "ms": 322,
     "issues": [
      {
       "h": "H5",
@@ -7696,7 +7697,7 @@
      "footer": 1
     },
     "pageH": 1718,
-    "ms": 221,
+    "ms": 295,
     "issues": [
      {
       "h": "H6",
@@ -7887,7 +7888,7 @@
      "footer": 1
     },
     "pageH": 1429,
-    "ms": 242,
+    "ms": 241,
     "issues": [
      {
       "h": "H6",
@@ -8054,7 +8055,7 @@
      "footer": 1
     },
     "pageH": 1460,
-    "ms": 108,
+    "ms": 116,
     "issues": [],
     "scores": [
      100,
@@ -8403,7 +8404,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 258,
+    "ms": 287,
     "issues": [
      {
       "h": "H3",
@@ -8592,7 +8593,7 @@
      "footer": 1
     },
     "pageH": 3393,
-    "ms": 172,
+    "ms": 195,
     "issues": [
      {
       "h": "H1",
@@ -8758,7 +8759,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 77,
+    "ms": 95,
     "issues": [
      {
       "h": "H10",
@@ -8904,7 +8905,7 @@
      "footer": 1
     },
     "pageH": 1975,
-    "ms": 76,
+    "ms": 84,
     "issues": [],
     "scores": [
      100,
@@ -9027,7 +9028,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 48,
+    "ms": 63,
     "issues": [
      {
       "h": "H10",
@@ -9181,7 +9182,7 @@
      "heading": 1
     },
     "pageH": 800,
-    "ms": 45,
+    "ms": 61,
     "issues": [
      {
       "h": "H10",
@@ -9236,6 +9237,3761 @@
      "oracle": 0,
      "tool": 0,
      "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-button-all-buttons-us",
+   "label": "デジタル庁DS：ボタン一覧",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/button/all-buttons-using-button.html",
+   "sha256": "5201a8fc0be75553",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 20,
+    "types": {
+     "button": 20
+    },
+    "pageH": 800,
+    "ms": 95,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 3,
+      "title": "ボタンの見た目が8種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#0017c1 / #ffffff / 8 / 16 / -",
+       "#b3b3b3 / #f2f2f2 / 8 / 16 / -",
+       "#0017c1 / #ffffff / 6 / 16 / -",
+       "#0017c1 / #ffffff / 4 / 14 / -"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H8",
+      "sev": 3,
+      "title": "ファーストビューに「主要ボタン」が8つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“ボタン”",
+       "“ボタン”",
+       "“ボタン”",
+       "“ボタン”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     78,
+     100,
+     100,
+     100,
+     78,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 20,
+     "tool": 20,
+     "tp": 20,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-checkbox-all-checkboxes",
+   "label": "デジタル庁DS：チェックボックス一覧",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/checkbox/all-checkboxes.html",
+   "sha256": "1afd0b00c7c3c5ad",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 18,
+    "types": {
+     "input": 18
+    },
+    "pageH": 800,
+    "ms": 78,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-radio-all-radios",
+   "label": "デジタル庁DS：ラジオボタン一覧",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/radio/all-radios.html",
+   "sha256": "b3772936c48114bc",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 18,
+    "types": {
+     "input": 18
+    },
+    "pageH": 800,
+    "ms": 94,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-form-control-label-multiple",
+   "label": "デジタル庁DS：フォームのラベル（複数）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/form-control-label/multiple.html",
+   "sha256": "e9bc2ee06c2ea4d3",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 4,
+    "types": {
+     "input": 4
+    },
+    "pageH": 800,
+    "ms": 69,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-input-text-with-form-cont",
+   "label": "デジタル庁DS：テキスト入力＋ラベル",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/input-text/with-form-control-label.html",
+   "sha256": "728fef7588aa0b0f",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 1,
+    "types": {
+     "input": 1
+    },
+    "pageH": 800,
+    "ms": 69,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-select-with-form-cont",
+   "label": "デジタル庁DS：セレクト＋ラベル",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/select/with-form-control-label.html",
+   "sha256": "e0ded1f4c7f0bf77",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 1,
+    "types": {
+     "input": 1
+    },
+    "pageH": 800,
+    "ms": 83,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-textarea-with-counter",
+   "label": "デジタル庁DS：テキストエリア（文字数表示）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/textarea/with-counter.html",
+   "sha256": "b6ad537dec696cb2",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 2,
+    "types": {
+     "input": 2
+    },
+    "pageH": 800,
+    "ms": 55,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-table-first-row-and",
+   "label": "デジタル庁DS：テーブル（見出し行・列）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/table/first-row-and-column-as-header-cell.html",
+   "sha256": "d036c8289c4c7b1e",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 0,
+    "types": {},
+    "pageH": 800,
+    "ms": 36,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-notification-banner-info-1",
+   "label": "デジタル庁DS：お知らせバナー（情報）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/notification-banner/info-1.html",
+   "sha256": "848434edcd352f6c",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 6,
+    "types": {
+     "button": 3,
+     "banner": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 77,
+    "issues": [
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューにバナー・告知が2つある",
+      "detail": "広告や告知が複数あり、主目的の情報・操作との間で視線の優先順位が競合する。",
+      "evidence": [
+       "お知らせバー",
+       "帯バナー"
+      ],
+      "fix": "ファーストビューの主役は1つに絞り、他は位置・サイズ・彩度で従属させる。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-notification-banner-warning",
+   "label": "デジタル庁DS：お知らせバナー（警告）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/notification-banner/warning.html",
+   "sha256": "dfb4a9c3e11df7b1",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 6,
+    "types": {
+     "button": 3,
+     "banner": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 77,
+    "issues": [
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューにバナー・告知が2つある",
+      "detail": "広告や告知が複数あり、主目的の情報・操作との間で視線の優先順位が競合する。",
+      "evidence": [
+       "お知らせバー",
+       "帯バナー"
+      ],
+      "fix": "ファーストビューの主役は1つに絞り、他は位置・サイズ・彩度で従属させる。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-notification-banner-error",
+   "label": "デジタル庁DS：お知らせバナー（エラー）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/notification-banner/error.html",
+   "sha256": "1ab21cf2a60e4621",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 6,
+    "types": {
+     "button": 3,
+     "banner": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 84,
+    "issues": [
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューにバナー・告知が2つある",
+      "detail": "広告や告知が複数あり、主目的の情報・操作との間で視線の優先順位が競合する。",
+      "evidence": [
+       "お知らせバー",
+       "帯バナー"
+      ],
+      "fix": "ファーストビューの主役は1つに絞り、他は位置・サイズ・彩度で従属させる。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-card-example-1",
+   "label": "デジタル庁DS：カード1",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/card/example-1.html",
+   "sha256": "ba7c612008a7a7b0",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 3,
+    "types": {
+     "heading": 3
+    },
+    "pageH": 800,
+    "ms": 83,
+    "issues": [],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-card-example-3",
+   "label": "デジタル庁DS：カード3",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"dads-link\" href=\"#\">よくある質問と回答</a>",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/card/example-3.html",
+   "sha256": "f4771af85fe88018",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 12,
+    "types": {
+     "button": 3,
+     "image": 6,
+     "heading": 3
+    },
+    "pageH": 800,
+    "ms": 88,
+    "issues": [],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-list-all-lists",
+   "label": "デジタル庁DS：リスト一覧",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/list/all-lists.html",
+   "sha256": "262273aa6b532424",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 2,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 0,
+    "types": {},
+    "pageH": 800,
+    "ms": 89,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "本文の1行が長すぎる段落が2つ（1280px幅）",
+      "detail": "1行が約45em（日本語で約45字）を超えると、行の終わりから次の行の頭へ視線を戻しにくくなる。広い画面では特に起きやすい。",
+      "evidence": [
+       "li 約78em",
+       "li 約74em"
+      ],
+      "fix": "本文の幅に max-width を指定する（40em前後）。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-tab-playground",
+   "label": "デジタル庁DS：タブ",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/tab/playground.html",
+   "sha256": "62480a8c1cf867ee",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 1,
+    "types": {
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 86,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "本文の1行が長すぎる段落が1つ（1280px幅）",
+      "detail": "1行が約45em（日本語で約45字）を超えると、行の終わりから次の行の頭へ視線を戻しにくくなる。広い画面では特に起きやすい。",
+      "evidence": [
+       "p 約71em"
+      ],
+      "fix": "本文の幅に max-width を指定する（40em前後）。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-accordion-stacked",
+   "label": "デジタル庁DS：アコーディオン",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/accordion/stacked.html",
+   "sha256": "dca7513ddc6db3c9",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 3,
+    "types": {
+     "heading": 3
+    },
+    "pageH": 800,
+    "ms": 62,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-step-navigation-playground-ful",
+   "label": "デジタル庁DS：ステップナビゲーション",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/step-navigation/playground-full.html",
+   "sha256": "d6b713107ccdcc51",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 0,
+    "types": {},
+    "pageH": 800,
+    "ms": 62,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-search-box-with-detail",
+   "label": "デジタル庁DS：検索ボックス（詳細）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/search-box/with-detail.html",
+   "sha256": "d49dbe49824280a1",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 13,
+    "types": {
+     "button": 1,
+     "input": 9,
+     "search": 3
+    },
+    "pageH": 800,
+    "ms": 102,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-resource-list-with-control",
+   "label": "デジタル庁DS：リソースリスト（操作つき）",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/resource-list/with-control.html",
+   "sha256": "b87f6e82f78284ef",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 3,
+    "types": {
+     "button": 1,
+     "input": 2
+    },
+    "pageH": 800,
+    "ms": 73,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-menu-list-has-children",
+   "label": "デジタル庁DS：メニューリスト",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/menu-list/has-children.html",
+   "sha256": "f353a042bdee24ec",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 9,
+    "types": {
+     "button": 9
+    },
+    "pageH": 800,
+    "ms": 81,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 9,
+     "tool": 9,
+     "tp": 9,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-hamburger-menu-button-desktop-and-mo",
+   "label": "デジタル庁DS：ハンバーガーメニュー",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/hamburger-menu-button/desktop-and-mobile.html",
+   "sha256": "53c04c9b7f3217bd",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 2,
+    "types": {
+     "button": 2
+    },
+    "pageH": 800,
+    "ms": 51,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 2,
+     "tool": 2,
+     "tp": 2,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-emergency-banner-playground",
+   "label": "デジタル庁DS：緊急情報バナー",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/emergency-banner/playground.html",
+   "sha256": "6db9b15c6ed79dfa",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 3,
+    "types": {
+     "banner": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 71,
+    "issues": [
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューにバナー・告知が2つある",
+      "detail": "広告や告知が複数あり、主目的の情報・操作との間で視線の優先順位が競合する。",
+      "evidence": [
+       "帯バナー",
+       "お知らせバー"
+      ],
+      "fix": "ファーストビューの主役は1つに絞り、他は位置・サイズ・彩度で従属させる。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "dads-horizontal-menu-playground",
+   "label": "デジタル庁DS：水平メニュー",
+   "kind": "日本語UI部品",
+   "set": "ja-real",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "dads/src/components/horizontal-menu/playground.html",
+   "sha256": "3e347db1f7555aff",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 0,
+    "types": {},
+    "pageH": 800,
+    "ms": 44,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "ja-ec",
+   "label": "日本語 ECサイト（自作）",
+   "kind": "EC",
+   "set": "ja",
+   "audit": {
+    "navCandidates": 1,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 836,
+   "url": "undefined/undefined",
+   "sha256": "2806e8fb7499f9cc",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 15,
+    "types": {
+     "button": 5,
+     "banner": 1,
+     "nav": 1,
+     "search": 1,
+     "card": 4,
+     "heading": 2,
+     "footer": 1
+    },
+    "pageH": 836,
+    "ms": 181,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“※ 表示価格は税込です。在…” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 5,
+     "tool": 5,
+     "tp": 5,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "ja-form",
+   "label": "日本語 申請フォーム（自作）",
+   "kind": "業務システム",
+   "set": "ja",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 888,
+   "url": "undefined/undefined",
+   "sha256": "686684eb0bfe5e39",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 3,
+    "toolPlaceholderOnly": 2,
+    "toolPlaceholderOnlyAxePass": 2
+   },
+   "tool": {
+    "comps": 10,
+    "types": {
+     "button": 3,
+     "nav": 1,
+     "input": 5,
+     "heading": 1
+    },
+    "pageH": 888,
+    "ms": 236,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 3,
+      "title": "現在のステップが示されていない",
+      "detail": "ステップ表示はあるが、現在地を示す状態（aria-current / active）が見つからない。",
+      "evidence": [],
+      "fix": "現在のステップを塗り・太字・アイコンなどで明確に区別し、aria-current=\"step\" を付ける。"
+     },
+     {
+      "h": "H5",
+      "sev": 3,
+      "title": "破壊的な操作が主要操作のすぐ隣にある",
+      "detail": "「削除」「空にする」などと「申請する」「注文へ進む」が16px未満の間隔で並んでおり、誤クリックしやすい。",
+      "evidence": [
+       "“申請を削除” ／ “一時保存”（12px）"
+      ],
+      "fix": "破壊的操作は主要操作から離す（余白24px以上・位置を分ける）か、色を弱め、実行前に確認ダイアログを置く。"
+     },
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が2個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“2026年10月21日”",
+       "“例：顧客訪問のための交通費”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“お困りの場合は、総務部（内…” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "viewport メタタグがない（スマホで縮小表示される）",
+      "detail": "スマホのブラウザは、viewport の指定がないページを約980px幅で描いて縮小表示する。ここでの解析幅にかかわらず、実機では文字が小さく表示される。",
+      "evidence": [],
+      "fix": "<head> に viewport メタタグを入れる。"
+     }
+    ],
+    "scores": [
+     78,
+     100,
+     100,
+     100,
+     78,
+     78,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "ja-article",
+   "label": "日本語 記事（自作）",
+   "kind": "ブログ",
+   "set": "ja",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "undefined/undefined",
+   "sha256": "0301fbf838e457eb",
+   "checks": {
+    "contrast": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 5,
+    "types": {
+     "heading": 5
+    },
+    "pageH": 800,
+    "ms": 183,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が3件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“図1：文字と背景のコントラ…” 2.5:1",
+       "“メールマガジンの配信を停止…” 2.8:1",
+       "“2026年10月21日 編…” 3.5:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が1箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [
+       "“図1：文字と背景のコントラ…” 11px"
+      ],
+      "fix": "本文は14〜16px以上を基本にする。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "viewport メタタグがない（スマホで縮小表示される）",
+      "detail": "スマホのブラウザは、viewport の指定がないページを約980px幅で描いて縮小表示する。ここでの解析幅にかかわらず、実機では文字が小さく表示される。",
+      "evidence": [],
+      "fix": "<head> に viewport メタタグを入れる。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "ja-dash",
+   "label": "日本語 管理画面（自作）",
+   "kind": "業務システム",
+   "set": "ja",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 800,
+   "url": "undefined/undefined",
+   "sha256": "da1c6d539c47103c",
+   "checks": {
+    "contrast": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 3,
+    "types": {
+     "button": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 208,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が3件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“コメントなし” 2.6:1",
+       "“メニュー” 3.8:1",
+       "“設定” 3.8:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [
+       "“メニュー” 11px",
+       "“設定” 11px"
+      ],
+      "fix": "本文は14〜16px以上を基本にする。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "viewport メタタグがない（スマホで縮小表示される）",
+      "detail": "スマホのブラウザは、viewport の指定がないページを約980px幅で描いて縮小表示する。ここでの解析幅にかかわらず、実機では文字が小さく表示される。",
+      "evidence": [],
+      "fix": "<head> に viewport メタタグを入れる。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 2,
+     "tool": 2,
+     "tp": 2,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [],
+    "diag": null
+   }
+  },
+  {
+   "id": "ja-lp",
+   "label": "日本語 ランディング（自作）",
+   "kind": "ランディング",
+   "set": "ja",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "liveH": 893,
+   "url": "undefined/undefined",
+   "sha256": "10c242cda3662a17",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fpIncomplete": 0,
+     "fpNone": 0,
+     "fpNoneExamples": [],
+     "fnExamples": [],
+     "fnRects": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 12,
+    "types": {
+     "button": 3,
+     "banner": 1,
+     "card": 3,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 893,
+    "ms": 166,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“© 2026 Notely…” 2.6:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
      "fn": [],
      "fnCount": 0,
      "fp": [],

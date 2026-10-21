@@ -896,6 +896,14 @@ function runAnalysis(){
     t=g('title'); if(t) return t;
     const img=el.querySelector('img[alt]'); if(img && img.getAttribute('alt').trim()) return img.getAttribute('alt').trim();
     const st=el.querySelector('svg title'); if(st && st.textContent.trim()) return st.textContent.trim();
+    // 中のアイコン（svg role="img" aria-label など）が名前を持つ場合。aria-hidden の中のものは、名前にならない
+    for(const n of el.querySelectorAll('[aria-label],[title],[aria-labelledby]')){
+      if(n.closest('[aria-hidden="true"]')) continue;
+      let v=(n.getAttribute('aria-label')||'').trim();
+      if(!v){ const ids=(n.getAttribute('aria-labelledby')||'').trim(); if(ids) v=ids.split(/\s+/).map(id=>{ const t=el.ownerDocument.getElementById(id); return t?(t.textContent||'').trim():''; }).join(' ').trim(); }
+      if(!v) v=(n.getAttribute('title')||'').trim();
+      if(v) return v;
+    }
     return g('value');
   };
   const labelOf = (el,max=26) => {

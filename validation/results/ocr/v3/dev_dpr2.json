@@ -1,0 +1,441 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 2,
+  "set": "dev",
+  "summary": {
+   "buttons": "再現 40/49 (81.6%)／検出した枠 49 のうちDOMのボタンと一致 40 (81.6%)",
+   "pages": 14,
+   "lines": 534,
+   "lineRecall": 0.9026217228464419,
+   "CER": 0.03506842619745845,
+   "extraRate": 0.06353974121996303,
+   "fsN": 482,
+   "fsMedRatio": 0.9577414772727273,
+   "fsMedAbsErr": 0.04225852272727271,
+   "fsWithin15": 0.995850622406639,
+   "fsWithin25": 0.995850622406639,
+   "byKind": {
+    "cap20+": {
+     "n": 126,
+     "med": 0.95,
+     "w15": 1
+    },
+    "cap14-19": {
+     "n": 274,
+     "med": 0.958,
+     "w15": 0.99
+    },
+    "cap<14": {
+     "n": 77,
+     "med": 0.959,
+     "w15": 1
+    },
+    "xh14-19": {
+     "n": 1,
+     "med": 1.109,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 4,
+     "med": 1.091,
+     "w15": 1
+    }
+   },
+   "conN": 411,
+   "conMedRelErr": 0.001475563297163425,
+   "conWithin20": 0.9829683698296837,
+   "small": "P 100.0% R 100.0% (tp11/fp0/fn0)",
+   "low": "P 100.0% R 97.3% (tp183/fp0/fn5) ／基準ぎりぎり(±4%)で除外 16件",
+   "msPerPage": 4924.314285714179
+  },
+  "pages": [
+   {
+    "id": "shop-home",
+    "lines": 41,
+    "recall": 0.76,
+    "CER": 0.053,
+    "ms": 3365,
+    "bad": [
+     {
+      "text": "Cart",
+      "sim": 0.75,
+      "hyp": "cart"
+     },
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "@"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.5,
+      "hyp": "$26:60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.5,
+      "hyp": "$26:60"
+     }
+    ]
+   },
+   {
+    "id": "shop-item",
+    "lines": 34,
+    "recall": 0.79,
+    "CER": 0.043,
+    "ms": 2450,
+    "bad": [
+     {
+      "text": "Cart",
+      "sim": 0.75,
+      "hyp": "cart"
+     },
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "@"
+     },
+     {
+      "text": "$45.00",
+      "sim": 0.67,
+      "hyp": "$45-08"
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.5,
+      "hyp": "$26:60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     }
+    ]
+   },
+   {
+    "id": "bc-products",
+    "lines": 21,
+    "recall": 0.9,
+    "CER": 0.036,
+    "ms": 12650,
+    "bad": [
+     {
+      "text": "BUSINESS CASUAL",
+      "sim": 0.79,
+      "hyp": "BSINESS\\CASUA"
+     },
+     {
+      "text": "BULK SPECIALITY BLENDS",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-dash",
+    "lines": 77,
+    "recall": 0.96,
+    "CER": 0.021,
+    "ms": 5725,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Illustrations",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-login",
+    "lines": 7,
+    "recall": 1,
+    "CER": 0,
+    "ms": 995,
+    "bad": []
+   },
+   {
+    "id": "admin-register",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 940,
+    "bad": []
+   },
+   {
+    "id": "admin-tables",
+    "lines": 104,
+    "recall": 0.89,
+    "CER": 0.035,
+    "ms": 7137,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0.5,
+      "hyp": "4"
+     },
+     {
+      "text": "Previous",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "5",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Next",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-buttons",
+    "lines": 57,
+    "recall": 0.91,
+    "CER": 0.028,
+    "ms": 5046,
+    "bad": [
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Split Button Primary",
+      "sim": 0.72,
+      "hyp": "ButtonPrimary"
+     },
+     {
+      "text": "Split Button Small",
+      "sim": 0.69,
+      "hyp": "ButtonSmall"
+     }
+    ]
+   },
+   {
+    "id": "landing",
+    "lines": 34,
+    "recall": 0.97,
+    "CER": 0.04,
+    "ms": 7274,
+    "bad": [
+     {
+      "text": "your new landing page wi",
+      "sim": 0.06,
+      "hyp": "Fat|"
+     }
+    ]
+   },
+   {
+    "id": "agency",
+    "lines": 40,
+    "recall": 0.95,
+    "CER": 0.017,
+    "ms": 5274,
+    "bad": [
+     {
+      "text": "Welcome To Our Studio!",
+      "sim": 0.68,
+      "hyp": "1eToOurStudio!"
+     },
+     {
+      "text": "ABOUT",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "freelancer",
+    "lines": 24,
+    "recall": 0.96,
+    "CER": 0.026,
+    "ms": 3269,
+    "bad": [
+     {
+      "text": "Email address",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-home",
+    "lines": 37,
+    "recall": 0.86,
+    "CER": 0.063,
+    "ms": 3609,
+    "bad": [
+     {
+      "text": "HOME",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ABOUT",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "SAMPLE POST",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "CONTACT",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "OLDER POSTS →",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-contact",
+    "lines": 15,
+    "recall": 0.73,
+    "CER": 0.197,
+    "ms": 2891,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "SAMPLE POST",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact Me",
+      "sim": 0.44,
+      "hyp": "onMe"
+     },
+     {
+      "text": "Have questions? I have a",
+      "sim": 0.44,
+      "hyp": "haveanswers."
+     }
+    ]
+   },
+   {
+    "id": "bc-store",
+    "lines": 37,
+    "recall": 0.97,
+    "CER": 0.004,
+    "ms": 8316,
+    "bad": [
+     {
+      "text": "lust",
+      "sim": 0.75,
+      "hyp": "Just"
+     }
+    ]
+   }
+  ]
+ }
+]

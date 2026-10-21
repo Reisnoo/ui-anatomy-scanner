@@ -122,7 +122,7 @@ function summarize(rs) {
 
 (async () => {
   prepLang();
-  const pages = (LIVE && LIVE !== true) ? fs.readFileSync(LIVE, 'utf8').split('\n').map(x => x.trim()).filter(x => x && !x.startsWith('#')).map((l, i) => { const [url, ...rest] = l.split(/\s+/); return { id: 'live' + (i + 1), label: rest.join(' ') || new URL(url).host, set: 'live', url }; }).filter(p => (!ONLY || ONLY.includes(p.id))) : T.pages.concat(fs.readdirSync(path.join(__dirname, 'fixtures')).filter(f => /^ja-.*\.html$/.test(f)).map(f => ({ id: f.replace(/\.html$/, ''), label: f, set: 'ja', local: 'fixtures/' + f }))).filter(p => (SET === 'all' || (p.set || '') === SET) && (!ONLY || ONLY.includes(p.id)) && p.set !== 'control')
+  const pages = (LIVE && LIVE !== true) ? fs.readFileSync(LIVE, 'utf8').split('\n').map(x => x.trim()).filter(x => x && !x.startsWith('#')).map((l, i) => { const [url, ...rest] = l.split(/\s+/); return { id: 'live' + (i + 1), label: rest.join(' ') || new URL(url).host, set: 'live', url }; }).filter(p => (!ONLY || ONLY.includes(p.id))) : T.pages.filter(p => (SET === 'all' || (p.set || '') === SET) && (!ONLY || ONLY.includes(p.id)) && p.set !== 'control')
     .map(p => ({ ...p, file: p.local ? path.join(__dirname, p.local) : path.join(CORPUS, p.repo, p.path) })).filter(p => fs.existsSync(p.file));
   if (!pages.length) throw new Error('対象ページがありません（先に node fetch_corpus.js、または --set ja）');
   const { s: server, port } = await serve(), origin = `http://127.0.0.1:${port}`;

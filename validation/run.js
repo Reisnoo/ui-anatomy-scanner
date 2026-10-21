@@ -17,7 +17,7 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': '
 function serve() {
   return new Promise(res => { const s = http.createServer((req, r) => {
     const u = decodeURIComponent(new URL(req.url, 'http://x').pathname); let root, rel;
-    if (u.startsWith('/tool/')) { root = TOOL_DIR; rel = u.slice(6) || 'index.html'; } else if (u.startsWith('/corpus/')) { root = CORPUS; rel = u.slice(8); } else if (u.startsWith('/fixtures/')) { root = path.join(__dirname, 'fixtures'); rel = u.slice(10); } else { r.writeHead(404); return r.end(); }
+    if (u.startsWith('/tool/')) { root = TOOL_DIR; rel = u.slice(6) || 'index.html'; } else if (u.startsWith('/corpus/')) { root = CORPUS; rel = u.slice(8); } else if (u.startsWith('/fixtures/')) { root = path.join(__dirname, 'fixtures'); rel = u.slice(10); } else if (u.startsWith('/vendor/')) { root = path.join(__dirname, 'node_modules'); rel = u.slice(8); } else { r.writeHead(404); return r.end(); }
     const f = path.resolve(root, rel); if (!f.startsWith(root + path.sep) && f !== root) { r.writeHead(403); return r.end(); }
     fs.readFile(f, (e, b) => { if (e) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'Content-Type': MIME[path.extname(f).toLowerCase()] || 'application/octet-stream' }); r.end(b); });
   }).listen(0, '127.0.0.1', () => res({ s, port: s.address().port })); });

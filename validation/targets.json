@@ -655,6 +655,41 @@
       "repo": "dads",
       "path": "src/components/horizontal-menu/playground.html",
       "set": "ja-real"
+    },
+    {
+      "id": "ja-ec",
+      "label": "日本語 ECサイト（自作）",
+      "kind": "EC",
+      "local": "fixtures/ja-ec.html",
+      "set": "ja"
+    },
+    {
+      "id": "ja-form",
+      "label": "日本語 申請フォーム（自作）",
+      "kind": "業務システム",
+      "local": "fixtures/ja-form.html",
+      "set": "ja"
+    },
+    {
+      "id": "ja-article",
+      "label": "日本語 記事（自作）",
+      "kind": "ブログ",
+      "local": "fixtures/ja-article.html",
+      "set": "ja"
+    },
+    {
+      "id": "ja-dash",
+      "label": "日本語 管理画面（自作）",
+      "kind": "業務システム",
+      "local": "fixtures/ja-dash.html",
+      "set": "ja"
+    },
+    {
+      "id": "ja-lp",
+      "label": "日本語 ランディング（自作）",
+      "kind": "ランディング",
+      "local": "fixtures/ja-lp.html",
+      "set": "ja"
     }
   ]
 }
