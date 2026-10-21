@@ -2644,10 +2644,10 @@ function ocrSegment(srcCanvas, dpr, p){
   merged.forEach((A,i)=>{ let best=null; for(let j=0;j<merged.length;j++){ const B=merged[j]; if(j===i||usedB.has(j)) continue; const dy=B.y0-A.y1; if(dy<14||dy>90) continue; if(Math.abs(A.x0-B.x0)>12||Math.abs(A.x1-B.x1)>12) continue; if(!best||dy<best.dy) best={j,dy,B}; }
     if(best){ usedB.add(best.j); const B=best.B, x0=Math.min(A.x0,B.x0), x1=Math.max(A.x1,B.x1), y0=A.y0, y1=B.y1; containers.push({x:x0,y:y0,w:x1-x0,h:y1-y0+1});
       for(let yy=Math.max(0,y0-4);yy<Math.min(H,y1+5);yy++){ for(let dx=-4;dx<=4;dx++){ for(const xx of [x0+dx,x1+dx]){ if(xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } } } }
-      for(let yy=y0;yy<y0+9;yy++) for(let xx=x0;xx<x0+9;xx++){ if(yy<H&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
-      for(let yy=y0;yy<y0+9;yy++) for(let xx=x1-9;xx<x1;xx++){ if(yy<H&&xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
-      for(let yy=y1-8;yy<=y1;yy++) for(let xx=x0;xx<x0+9;xx++){ if(yy<H&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
-      for(let yy=y1-8;yy<=y1;yy++) for(let xx=x1-9;xx<x1;xx++){ if(yy<H&&xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } } } });
+      // 角の丸み（断片）を消す：角の四角の中で、丸みの円弧（半径Rt）の外側と、円弧の近く（3.5画素）。丸みが分からないので、半径は枠の高さの半分（最大26）とみなす。枠の内側の文字は残る
+      const Rt=Math.max(5,Math.min(26,Math.floor((y1-y0)/2)));
+      const clr=(xa,ya,cx,cy)=>{ for(let yy=ya;yy<ya+Rt;yy++) for(let xx=xa;xx<xa+Rt;xx++){ if(yy<0||yy>=H||xx<0||xx>=W) continue; if(Math.hypot(xx+.5-cx,yy+.5-cy)>=Rt-3.5){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } } };
+      clr(x0,y0,x0+Rt,y0+Rt); clr(x1-Rt,y0,x1-Rt,y0+Rt); clr(x0,y1-Rt+1,x0+Rt,y1-Rt+1); clr(x1-Rt,y1-Rt+1,x1-Rt,y1-Rt+1); } });
   const RD=new Uint8Array(W*H);   // 除いた直線の周り（3画素）
   for(let y=0;y<H;y++) for(let x=0;x<W;x++){ if(!RM[y*W+x]) continue; for(let dy=-3;dy<=3;dy++){ const yy=y+dy; if(yy<0||yy>=H) continue; for(let dx=-3;dx<=3;dx++){ const xx=x+dx; if(xx>=0&&xx<W) RD[yy*W+xx]=1; } } }
   // 横方向の隙間（文字どうしの間）をつなぐ
@@ -2757,6 +2757,7 @@ async function ocrExtract(srcCanvas, opts={}, onProgress){
 }
 
 /* OCRの文字の後処理：日本語の文字の間の余分な空白を除く。円記号の誤読（\ → ¥）を直す */
+const ocrMeaningful = t => /[\p{L}\p{N}¥$€]/u.test(t);   // 文字・数字を含まない行（枠の角の断片「(」「)」など）は捨てる
 function ocrCleanText(t){
   let x=t.replace(/(?<=[　-鿿＀-￯])\s+(?=[　-鿿＀-￯])/g,'');
   x=x.replace(/\\(?=\d)/g,'¥').replace(/\s+/g,' ').trim();
@@ -2775,13 +2776,16 @@ function ocrModeColor(ctx, dpr, r){
 function ocrControls(lines, containers, ctx, dpr, W, H){
   const inside=(l,c)=>{ const cx=l.box.x+l.box.w/2, cy=l.box.y+l.box.h/2; return cx>=c.x-2 && cx<=c.x+c.w+2 && cy>=c.y-2 && cy<=c.y+c.h+2; };
   const used=new Set(), controls=[];
-  [...containers].filter(c=>c.w>=28&&c.w<=520&&c.h>=24&&c.h<=90).sort((a,b)=>a.w*a.h-b.w*b.h).forEach(c=>{
+  // 同じ大きさの枠が隣り合って並ぶもの（表のセル・行）は、ボタンではない
+  const touch=(a,b)=>Math.abs(a.w-b.w)<=4 && Math.abs(a.h-b.h)<=4 && ((Math.abs(a.y-b.y)<=4 && (Math.abs(a.x-(b.x+b.w))<=5 || Math.abs(b.x-(a.x+a.w))<=5)) || (Math.abs(a.x-b.x)<=4 && (Math.abs(a.y-(b.y+b.h))<=5 || Math.abs(b.y-(a.y+a.h))<=5)));
+  const cells=new Set(containers.filter(c=>containers.some(d=>d!==c && touch(c,d))));
+  [...containers].filter(c=>!cells.has(c)&&c.w>=28&&c.w<=520&&c.h>=24&&c.h<=90).sort((a,b)=>a.w*a.h-b.w*b.h).forEach(c=>{
     const ls=lines.filter(l=>!used.has(l) && inside(l,c)); if(!ls.length) return;
     const text=ls.map(l=>l.text).join(' ').trim(); if(text.length>40) return;
     const tx0=Math.min(...ls.map(l=>l.box.x)), tx1=Math.max(...ls.map(l=>l.box.x+l.box.w)), ty0=Math.min(...ls.map(l=>l.box.y)), ty1=Math.max(...ls.map(l=>l.box.y+l.box.h));
     const tw=tx1-tx0, th=ty1-ty0, padL=tx0-c.x, padR=c.x+c.w-tx1, padT=ty0-c.y, padB=c.y+c.h-ty1;
     if(padL<2||padR<2||padT<2||padB<2) return;                         // 文字が枠にはみ出している（枠ではない）
-    if(c.h>th*3.4) return;                                              // 文字に対して枠が縦に大きすぎる（カード・段落の箱）
+    if(c.h>th*5.2) return;                                              // 文字に対して枠が縦に大きすぎる（カード・段落の箱）
     const centered=Math.abs(padL-padR)<=Math.max(10,c.w*.18), leftAligned=padL<=Math.max(26,c.h*.8) && padR>padL*1.8;
     const inC=ocrModeColor(ctx,dpr,{x:c.x+3,y:c.y+3,w:Math.max(1,c.w-6),h:Math.max(1,c.h-6)});
     const ox=Math.max(0,c.x-6), oy=Math.max(0,c.y-6), outC=ocrModeColor(ctx,dpr,{x:ox,y:oy,w:Math.min(W-ox,c.w+12),h:Math.min(H-oy,5)});
@@ -2797,7 +2801,7 @@ function ocrControls(lines, containers, ctx, dpr, W, H){
 /* OCRの結果から、アプリが解析できるHTMLを作る（文字の行・ボタン・入力欄・見出しを、画像と同じ位置に置く）。画像の中身そのものではなく、推定による再構成 */
 function ocrBuildHTML(lines, meta, ctx, dpr, W, H, o){
   o=o||{};
-  const clean=lines.map(l=>({...l, text:ocrCleanText(l.text)})).filter(l=>l.text.length>=1 && l.box);
+  const clean=lines.map(l=>({...l, text:ocrCleanText(l.text)})).filter(l=>ocrMeaningful(l.text) && l.box);
   const {controls, rest}=ocrControls(clean, meta.containers||[], ctx, dpr, W, H);
   const pageBg=ocrModeColor(ctx,dpr,{x:0,y:0,w:W,h:Math.min(H,3000)});
   const ja=clean.some(l=>FWC_RE.test(l.text));

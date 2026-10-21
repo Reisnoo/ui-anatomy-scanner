@@ -93,12 +93,13 @@ async function evalInTool({ b64, truth, dpr, opts, maxH }) {
   const extra = words.filter(w => !used.has(w) && w.y < maxH && w.text.replace(/\s/g, '').length >= 2);
   const lenX = extra.reduce((a, w) => a + norm(w.text).length, 0);
   // ボタン・入力欄の候補（枠）を、DOMのボタンと照合する
-  const cleaned = lines.map(l => ({ ...l, text: ocrCleanText(l.text) })).filter(l => l.text.length && l.box), ctl = ocrControls(cleaned, lines.containers || [], ctx, dpr, c.width / dpr, c.height / dpr).controls;
+  const cleaned = lines.map(l => ({ ...l, text: ocrCleanText(l.text) })).filter(l => ocrMeaningful(l.text) && l.box), ctl = ocrControls(cleaned, lines.containers || [], ctx, dpr, c.width / dpr, c.height / dpr).controls;
   const iou = (a, b) => { const ix = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), iy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y); if (ix <= 0 || iy <= 0) return 0; const i = ix * iy; return i / (a.w * a.h + b.w * b.h - i); };
   const tb = truth.btns.filter(b => b.y + b.h < maxH && b.w >= 20 && b.h >= 16), pb = ctl.map(c => c.rect);
   const btn = { truth: tb.length, matched: tb.filter(b => pb.some(r => iou(b, r) >= .5)).length, pred: ctl.length, predOk: ctl.filter(c => tb.some(b => iou(b, c.rect) >= .5)).length, predButton: ctl.filter(c => c.kind === 'button').length, predButtonOk: ctl.filter(c => c.kind === 'button' && tb.some(b => iou(b, c.rect) >= .5)).length };
-  const missed = tb.filter(b => !pb.some(r => iou(b, r) >= .5)).slice(0, 10).map(b => ({ t: b.text, x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.w), h: Math.round(b.h) }));
-  const fpc = ctl.filter(c => !tb.some(b => iou(b, c.rect) >= .5)).slice(0, 8).map(c => ({ t: c.text.slice(0, 18), k: c.kind, x: Math.round(c.rect.x), y: Math.round(c.rect.y), w: Math.round(c.rect.w), h: Math.round(c.rect.h) }));
+  const conts = lines.containers || [];
+  const missed = tb.filter(b => !pb.some(r => iou(b, r) >= .5)).slice(0, 40).map(b => ({ near: conts.filter(c => iou(b, c) > .25).slice(0, 2).map(c => [c.x, c.y, c.w, c.h].join(',')), inl: cleaned.filter(l => { const cx = l.box.x + l.box.w / 2, cy = l.box.y + l.box.h / 2; return cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h; }).map(l => l.text.slice(0, 14) + '@' + Math.round(l.conf)).join('|'), t: b.text, tag: b.tag, x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.w), h: Math.round(b.h) }));
+  const fpc = ctl.filter(c => !tb.some(b => iou(b, c.rect) >= .5)).slice(0, 40).map(c => ({ t: c.text.slice(0, 18), k: c.kind, x: Math.round(c.rect.x), y: Math.round(c.rect.y), w: Math.round(c.rect.w), h: Math.round(c.rect.h) }));
   return { missed, fpc, btn, ms, nLines: inScope.length, nMatch, lenT, lenE, lenX, lenHyp: words.reduce((a, w) => a + norm(w.text).length, 0), fsR, con, small, low, nOcrLines: lines.length, dump, sheetOut, bad: per.filter(p => p.sim < .8).slice(0, 12) };
 }
 
