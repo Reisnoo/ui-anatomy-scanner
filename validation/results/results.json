@@ -1,0 +1,2597 @@
+{
+ "meta": {
+  "date": "2026-10-21T02:35:04.896Z",
+  "axeCore": "4.14.0",
+  "playwright": "1.56.1",
+  "toolCommit": "b2421a846025f667b48799a84db50e7d466dfc93",
+  "mode": "corpus (offline stubs)",
+  "stubs": {
+   "npm": 42,
+   "css": 54,
+   "js": 24,
+   "images": 22,
+   "blockedHosts": []
+  },
+  "corpus": {
+   "shop-homepage": "fb3a490",
+   "shop-item": "7eee616",
+   "sb-admin-2": "f030988",
+   "landing-page": "247a46a",
+   "agency": "b2d5d5c",
+   "freelancer": "5bc65b4",
+   "clean-blog": "1ebc4f8",
+   "business-casual": "b6f9289"
+  }
+ },
+ "results": [
+  {
+   "id": "shop-home",
+   "label": "ECストア トップ",
+   "kind": "EC",
+   "audit": {
+    "navCandidates": 3,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "shop-homepage/dist/index.html",
+   "sha256": "ca174c480414ceca",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 30,
+    "types": {
+     "button": 10,
+     "nav": 1,
+     "form": 1,
+     "card": 8,
+     "image": 8,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1405,
+    "ms": 141,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 10,
+     "tool": 10,
+     "tp": 10,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-outline-dark\" type=\"submit\"> <i class=\"bi-cart-fill me-1\"></i> Cart <span class=\"badge bg-dark text-white ms-1 rounded-pill\">0<"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">View options</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">View options</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "shop-item",
+   "label": "ECストア 商品詳細",
+   "kind": "EC",
+   "audit": {
+    "navCandidates": 3,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "shop-item/dist/index.html",
+   "sha256": "9a24b1c3c34bd2ce",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 1,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 22,
+    "types": {
+     "button": 7,
+     "nav": 1,
+     "form": 1,
+     "input": 1,
+     "card": 4,
+     "image": 5,
+     "heading": 2,
+     "footer": 1
+    },
+    "pageH": 1549,
+    "ms": 120,
+    "issues": [
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 7,
+     "tool": 7,
+     "tp": 7,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-outline-dark\" type=\"submit\"> <i class=\"bi-cart-fill me-1\"></i> Cart <span class=\"badge bg-dark text-white ms-1 rounded-pill\">0<"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<button class=\"btn btn-outline-dark flex-shrink-0\" type=\"button\"> <i class=\"bi-cart-fill me-1\"></i> Add to cart </button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">View options</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-outline-dark mt-auto\" href=\"#\">Add to cart</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "bc-products",
+   "label": "カフェ 商品一覧",
+   "kind": "EC",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "business-casual/dist/products.html",
+   "sha256": "963ed2259036a028",
+   "checks": {
+    "contrast": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 7,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 9,
+    "types": {
+     "nav": 1,
+     "image": 3,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 3252,
+    "ms": 123,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  },
+  {
+   "id": "admin-dash",
+   "label": "管理画面 ダッシュボード",
+   "kind": "業務システム",
+   "audit": {
+    "navCandidates": 3,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "sb-admin-2/index.html",
+   "sha256": "e647ac1f9750f2f7",
+   "checks": {
+    "contrast": {
+     "axeViolations": 47,
+     "toolDetections": 48,
+     "tp": 47,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 1,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1051,
+        "y": 24,
+        "w": 12,
+        "h": 13
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 13,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 17,
+    "types": {
+     "button": 9,
+     "nav": 2,
+     "form": 1,
+     "search": 1,
+     "image": 2,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1665,
+    "ms": 199,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン4個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が48件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“#f6c23e” 1.3:1",
+       "“#1cc88a” 1.4:1",
+       "“#36b9cc” 1.5:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "12px未満の小さな文字が6箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 9,
+     "tool": 9,
+     "tp": 9,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" type=\"button\"> <i class=\"fas fa-search fa-sm\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-success btn-sm\" href=\"https://startbootstrap.com/theme/sb-admin-pro\">Upgrade to Pro!</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm\"><i class=\"fas fa-download fa-sm text-white-50\"></i> Generate Report</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "admin-login",
+   "label": "管理画面 ログイン",
+   "kind": "業務システム",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "sb-admin-2/login.html",
+   "sha256": "b7791040c60317a1",
+   "checks": {
+    "contrast": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 2,
+    "toolPlaceholderOnlyAxePass": 2
+   },
+   "tool": {
+    "comps": 7,
+    "types": {
+     "button": 3,
+     "form": 1,
+     "input": 2,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 100,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が2個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Enter Email Address...”",
+       "“Password”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューに「主要ボタン」が3つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“Login”",
+       "“Login with Google”",
+       "“Login with Facebook”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が5件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Remember Me” 3.6:1",
+       "“Login with Go…” 3.9:1",
+       "“Login” 4.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     88,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"index.html\" class=\"btn btn-primary btn-user btn-block\"> Login </a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "admin-register",
+   "label": "管理画面 新規登録",
+   "kind": "業務システム",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "sb-admin-2/register.html",
+   "sha256": "10509538818870d8",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 5,
+    "toolPlaceholderOnlyAxePass": 5
+   },
+   "tool": {
+    "comps": 10,
+    "types": {
+     "button": 3,
+     "form": 1,
+     "input": 5,
+     "heading": 1
+    },
+    "pageH": 800,
+    "ms": 105,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が5個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“First Name”",
+       "“Last Name”",
+       "“Email Address”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューに「主要ボタン」が3つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“Register Account”",
+       "“Register with Google”",
+       "“Register with Facebook”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H9",
+      "sev": 2,
+      "title": "エラーを伝える領域が見当たらない",
+      "detail": "入力検証のエラー表示領域（role=alert / aria-live / error）が見つからない。",
+      "evidence": [],
+      "fix": "エラーは該当欄の近くに、原因と直し方を平易に表示し、aria-live で通知する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Register with…” 3.9:1",
+       "“Register Acco…” 4.3:1",
+       "“Forgot Passwo…” 4.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     88,
+     88,
+     88
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"login.html\" class=\"btn btn-primary btn-user btn-block\"> Register Account </a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "admin-tables",
+   "label": "管理画面 テーブル",
+   "kind": "業務システム",
+   "audit": {
+    "navCandidates": 3,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "sb-admin-2/tables.html",
+   "sha256": "2c55af8d44cf84d7",
+   "checks": {
+    "contrast": {
+     "axeViolations": 83,
+     "toolDetections": 90,
+     "tp": 83,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 7,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1051,
+        "y": 24,
+        "w": 12,
+        "h": 13
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 968,
+        "y": 927,
+        "w": 33,
+        "h": 38
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 999,
+        "y": 927,
+        "w": 36,
+        "h": 38
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 18,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 21,
+    "types": {
+     "button": 13,
+     "nav": 2,
+     "form": 1,
+     "search": 2,
+     "input": 1,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1089,
+    "ms": 191,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン2個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が90件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“DataTables is…” 3.4:1",
+       "“Douglas McGee” 3.6:1",
+       "“Show 10 25 50…” 3.6:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が2箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     88,
+     100,
+     100,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 5,
+     "tool": 13,
+     "tp": 5,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"0\" tabindex=\"0\" class=\"page-link\">Previous</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"1\" tabindex=\"0\" class=\"page-link\">1</a>",
+       "kind": "primary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"2\" tabindex=\"0\" class=\"page-link\">2</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"3\" tabindex=\"0\" class=\"page-link\">3</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"4\" tabindex=\"0\" class=\"page-link\">4</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"5\" tabindex=\"0\" class=\"page-link\">5</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"6\" tabindex=\"0\" class=\"page-link\">6</a>",
+       "kind": "secondary"
+      },
+      {
+       "html": "<a href=\"#\" aria-controls=\"dataTable\" data-dt-idx=\"7\" tabindex=\"0\" class=\"page-link\">Next</a>",
+       "kind": "secondary"
+      }
+     ],
+     "fpCount": 8
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" type=\"button\"> <i class=\"fas fa-search fa-sm\"></i> </button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "admin-buttons",
+   "label": "管理画面 ボタン集",
+   "kind": "業務システム",
+   "audit": {
+    "navCandidates": 3,
+    "navActive": true,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "sb-admin-2/buttons.html",
+   "sha256": "1704a19ea4ea4d83",
+   "checks": {
+    "contrast": {
+     "axeViolations": 29,
+     "toolDetections": 30,
+     "tp": 29,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 1,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 1051,
+        "y": 24,
+        "w": 12,
+        "h": 13
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 17,
+     "toolDetections": 17,
+     "tp": 17,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 11,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 37,
+    "types": {
+     "button": 31,
+     "nav": 2,
+     "form": 1,
+     "search": 1,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1111,
+    "ms": 190,
+    "issues": [
+     {
+      "h": "H4",
+      "sev": 3,
+      "title": "ボタンの見た目が11種類ある",
+      "detail": "塗り・枠線・色・角丸・文字サイズの組み合わせが多く、役割（主/副）と見た目が対応していない可能性がある。",
+      "evidence": [
+       "#ea4335 / #ffffff / 6 / 16 / -",
+       "#3b5998 / #ffffff / 6 / 16 / -",
+       "#4e73df / #ffffff / 6 / 16 / -",
+       "#1cc88a / #ffffff / 6 / 16 / -"
+      ],
+      "fix": "ボタンは「主・副・テキスト」の3種類程度に絞り、色・角丸・文字サイズを共通のトークンで管理する。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン17個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H8",
+      "sev": 3,
+      "title": "ファーストビューに「主要ボタン」が7つ競合している",
+      "detail": "塗りで目立つボタンが複数あり、どれが最優先の行動か分かりにくい。",
+      "evidence": [
+       "“Split Button Primary”",
+       "“Split Button Success”",
+       "“Split Button Info”",
+       "“Split Button Warning”"
+      ],
+      "fix": "最優先のCTAを1つに決め、他は枠線・テキストボタンに落とす。"
+     },
+     {
+      "h": "H8",
+      "sev": 2,
+      "title": "ファーストビューの操作要素がやや多い（約67個）",
+      "detail": "リンク・ボタン・入力欄の数が多めで、情報の取捨選択が必要。",
+      "evidence": [],
+      "fix": "優先度の低い項目は折りたたみ・階層化する。"
+     },
+     {
+      "h": "H10",
+      "sev": 2,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が30件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Split Button …” 1.7:1",
+       "“CUSTOM COMPON…” 1.9:1",
+       "“Split Button …” 2.2:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 1,
+      "title": "12px未満の小さな文字が3箇所ある",
+      "detail": "小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。",
+      "evidence": [],
+      "fix": "本文は14〜16px以上を基本にする。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     78,
+     100,
+     88,
+     100,
+     66,
+     100,
+     88
+    ],
+    "buttons": {
+     "oracle": 31,
+     "tool": 31,
+     "tp": 31,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<button class=\"btn btn-primary\" type=\"button\"> <i class=\"fas fa-search fa-sm\"></i> </button>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-circle\"> <i class=\"fab fa-facebook-f\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-success btn-circle\"> <i class=\"fas fa-check\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-info btn-circle\"> <i class=\"fas fa-info-circle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-warning btn-circle\"> <i class=\"fas fa-exclamation-triangle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-danger btn-circle\"> <i class=\"fas fa-trash\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-circle btn-sm\"> <i class=\"fab fa-facebook-f\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-success btn-circle btn-sm\"> <i class=\"fas fa-check\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-info btn-circle btn-sm\"> <i class=\"fas fa-info-circle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-warning btn-circle btn-sm\"> <i class=\"fas fa-exclamation-triangle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-danger btn-circle btn-sm\"> <i class=\"fas fa-trash\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-circle btn-lg\"> <i class=\"fab fa-facebook-f\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-success btn-circle btn-lg\"> <i class=\"fas fa-check\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-info btn-circle btn-lg\"> <i class=\"fas fa-info-circle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-warning btn-circle btn-lg\"> <i class=\"fas fa-exclamation-triangle\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a href=\"#\" class=\"btn btn-danger btn-circle btn-lg\"> <i class=\"fas fa-trash\"></i> </a>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-flag\"></i> </span> <span class=\"text\">Split But"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-success btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-check\"></i> </span> <span class=\"text\">Split Bu"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-info btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-info-circle\"></i> </span> <span class=\"text\">Split"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-warning btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-exclamation-triangle\"></i> </span> <span class="
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-danger btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-trash\"></i> </span> <span class=\"text\">Split But"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a href=\"#\" class=\"btn btn-secondary btn-icon-split\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-arrow-right\"></i> </span> <span class=\"text\">"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a href=\"#\" class=\"btn btn-light btn-icon-split\"> <span class=\"icon text-gray-600\"> <i class=\"fas fa-arrow-right\"></i> </span> <span class=\"text\">Spli"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-icon-split btn-sm\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-flag\"></i> </span> <span class=\"text\">Sp"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a href=\"#\" class=\"btn btn-primary btn-icon-split btn-lg\"> <span class=\"icon text-white-50\"> <i class=\"fas fa-flag\"></i> </span> <span class=\"text\">Sp"
+     }
+    ]
+   }
+  },
+  {
+   "id": "landing",
+   "label": "ランディングページ",
+   "kind": "ランディング",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a href=\"#!\">Contact</a>",
+    "longForms": 0
+   },
+   "url": "landing-page/dist/index.html",
+   "sha256": "2f12af4876e4371d",
+   "checks": {
+    "contrast": {
+     "axeViolations": 5,
+     "toolDetections": 5,
+     "tp": 5,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 9,
+    "axeLinkNameViolations": 3,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 2,
+    "toolPlaceholderOnlyAxePass": 2
+   },
+   "tool": {
+    "comps": 28,
+    "types": {
+     "button": 3,
+     "banner": 1,
+     "nav": 1,
+     "form": 2,
+     "input": 2,
+     "card": 6,
+     "image": 3,
+     "heading": 9,
+     "footer": 1
+    },
+    "pageH": 3812,
+    "ms": 151,
+    "issues": [
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が2個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Email Address”",
+       "“Email Address”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が5件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“About” 4.3:1",
+       "“Contact” 4.3:1",
+       "“Terms of Use” 4.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 3,
+     "tool": 3,
+     "tp": 3,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-lg disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-lg disabled\" id=\"submitButton\" type=\"submit\">Submit</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary\" href=\"#signup\">Sign Up</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "agency",
+   "label": "代理店サイト",
+   "kind": "ランディング",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link\" href=\"#contact\">Contact</a>",
+    "longForms": 0
+   },
+   "url": "agency/dist/index.html",
+   "sha256": "b4194a4fb0bb2131",
+   "checks": {
+    "contrast": {
+     "axeViolations": 7,
+     "toolDetections": 9,
+     "tp": 7,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 2,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": [
+      {
+       "rect": {
+        "x": 562,
+        "y": 4123,
+        "w": 156,
+        "h": 78
+       },
+       "label": ""
+      },
+      {
+       "rect": {
+        "x": 528,
+        "y": 5887,
+        "w": 224,
+        "h": 69
+       },
+       "label": ""
+      }
+     ]
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 23,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 4,
+    "toolPlaceholderOnlyAxePass": 4
+   },
+   "tool": {
+    "comps": 53,
+    "types": {
+     "button": 14,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "card": 9,
+     "image": 13,
+     "heading": 10,
+     "footer": 1
+    },
+    "pageH": 6140,
+    "ms": 200,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が4個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“Your Name *”",
+       "“Your Email *”",
+       "“Your Phone *”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が9件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“TELL ME MORE” 1.6:1",
+       "“Be Part Of Ou…” 1.6:1",
+       "“SEND MESSAGE” 1.6:1",
+       "背景が重なっていて判定できない文字5件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     78,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 14,
+     "tool": 14,
+     "tp": 14,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-xl text-uppercase disabled\" id=\"submitButton\" type=\"submit\">Send Message</button>"
+     },
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary btn-xl text-uppercase\" href=\"#services\">Tell Me More</a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Parveen Anand Twitter Profile\"><i class=\"fab fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Parveen Anand Facebook Profile\"><i class=\"fab fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Parveen Anand LinkedIn Profile\"><i class=\"fab fa-linkedin-in\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Diana Petersen Twitter Profile\"><i class=\"fab fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Diana Petersen Facebook Profile\"><i class=\"fab fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Diana Petersen LinkedIn Profile\"><i class=\"fab fa-linkedin-in\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Larry Parker Twitter Profile\"><i class=\"fab fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Larry Parker Facebook Profile\"><i class=\"fab fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Larry Parker LinkedIn Profile\"><i class=\"fab fa-linkedin-in\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Twitter\"><i class=\"fab fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"Facebook\"><i class=\"fab fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "primary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-dark btn-social mx-2\" href=\"#!\" aria-label=\"LinkedIn\"><i class=\"fab fa-linkedin-in\"></i></a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "freelancer",
+   "label": "ポートフォリオ",
+   "kind": "ランディング",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link py-3 px-0 px-lg-3 rounded\" href=\"#contact\">Contact</a>",
+    "longForms": 0
+   },
+   "url": "freelancer/dist/index.html",
+   "sha256": "8eb2187e2c9fd5ca",
+   "checks": {
+    "contrast": {
+     "axeViolations": 7,
+     "toolDetections": 7,
+     "tp": 7,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 4,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 28,
+    "types": {
+     "button": 6,
+     "banner": 1,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "card": 3,
+     "image": 7,
+     "heading": 4,
+     "footer": 1
+    },
+    "pageH": 3386,
+    "ms": 182,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン4個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 3,
+      "title": "文字のコントラスト比が基準未満の箇所が7件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Free Download!” 2.3:1",
+       "“START BOOTSTR…” 2.4:1",
+       "“Graphic Artis…” 2.4:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     88,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 6,
+     "tool": 6,
+     "tp": 6,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary btn-xl disabled\" id=\"submitButton\" type=\"submit\">Send</button>"
+     },
+     {
+      "exp": "secondary",
+      "got": "secondary",
+      "html": "<a class=\"btn btn-xl btn-outline-light\" href=\"https://startbootstrap.com/theme/freelancer/\"> <i class=\"fas fa-download me-2\"></i> Free Download! </a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-outline-light btn-social mx-1\" href=\"#!\"><i class=\"fab fa-fw fa-facebook-f\"></i></a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-outline-light btn-social mx-1\" href=\"#!\"><i class=\"fab fa-fw fa-twitter\"></i></a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-outline-light btn-social mx-1\" href=\"#!\"><i class=\"fab fa-fw fa-linkedin-in\"></i></a>"
+     },
+     {
+      "exp": "secondary",
+      "got": "icon",
+      "html": "<a class=\"btn btn-outline-light btn-social mx-1\" href=\"#!\"><i class=\"fab fa-fw fa-dribbble\"></i></a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "blog-home",
+   "label": "ブログ トップ",
+   "kind": "ブログ",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link px-lg-3 py-3 py-lg-4\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "url": "clean-blog/dist/index.html",
+   "sha256": "5f114104f2369f5e",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 7,
+    "axeLinkNameViolations": 3,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 15,
+    "types": {
+     "button": 1,
+     "nav": 1,
+     "card": 4,
+     "heading": 8,
+     "footer": 1
+    },
+    "pageH": 1906,
+    "ms": 108,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“OLDER POSTS →” 4.3:1",
+       "背景が重なっていて判定できない文字5件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<a class=\"btn btn-primary text-uppercase\" href=\"#!\">Older Posts →</a>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "blog-contact",
+   "label": "ブログ 問い合わせ",
+   "kind": "ブログ",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": true,
+    "helpMatch": "<a class=\"nav-link px-lg-3 py-3 py-lg-4\" href=\"contact.html\">Contact</a>",
+    "longForms": 0
+   },
+   "url": "clean-blog/dist/contact.html",
+   "sha256": "fc374319b3d36f42",
+   "checks": {
+    "contrast": {
+     "axeViolations": 1,
+     "toolDetections": 1,
+     "tp": 1,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 11,
+    "axeLinkNameViolations": 3,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 9,
+    "types": {
+     "button": 1,
+     "nav": 1,
+     "form": 1,
+     "input": 4,
+     "heading": 1,
+     "footer": 1
+    },
+    "pageH": 1455,
+    "ms": 99,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が1件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“SEND” 4.3:1",
+       "背景が重なっていて判定できない文字5件は除外"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95,
+     100,
+     100,
+     100
+    ],
+    "buttons": {
+     "oracle": 1,
+     "tool": 1,
+     "tp": 1,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": [
+     {
+      "exp": "primary",
+      "got": "primary",
+      "html": "<button class=\"btn btn-primary text-uppercase disabled\" id=\"submitButton\" type=\"submit\">Send</button>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "bc-store",
+   "label": "カフェ 店舗情報",
+   "kind": "ブログ",
+   "audit": {
+    "navCandidates": 2,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "business-casual/dist/store.html",
+   "sha256": "e1e054908f3d9e44",
+   "checks": {
+    "contrast": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 0,
+     "toolDetections": 0,
+     "tp": 0,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 7,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 0,
+    "toolPlaceholderOnlyAxePass": 0
+   },
+   "tool": {
+    "comps": 7,
+    "types": {
+     "banner": 1,
+     "nav": 1,
+     "image": 1,
+     "heading": 3,
+     "footer": 1
+    },
+    "pageH": 2365,
+    "ms": 123,
+    "issues": [
+     {
+      "h": "H1",
+      "sev": 1,
+      "title": "ナビゲーションに現在地の表示がない",
+      "detail": "グローバルナビ内に aria-current や active 状態のリンクが見つからない。",
+      "evidence": [],
+      "fix": "現在のページに該当するリンクを強調し、aria-current=\"page\" を付ける。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が2件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“Wednesday 7:0…” 1.6:1",
+       "“7:00 AM to 8:…” 1.6:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     }
+    ],
+    "scores": [
+     95,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 0,
+     "tool": 0,
+     "tp": 0,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  },
+  {
+   "id": "control",
+   "label": "陽性対照（自作の違反例）",
+   "kind": "対照",
+   "audit": {
+    "navCandidates": 0,
+    "navActive": false,
+    "helpLink": false,
+    "helpMatch": "",
+    "longForms": 0
+   },
+   "url": "undefined/undefined",
+   "sha256": "cae142a0a11d1024",
+   "checks": {
+    "contrast": {
+     "axeViolations": 4,
+     "toolDetections": 4,
+     "tp": 4,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "imageAlt": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "buttonName": {
+     "axeViolations": 3,
+     "toolDetections": 3,
+     "tp": 3,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    },
+    "targetSize": {
+     "axeViolations": 2,
+     "toolDetections": 2,
+     "tp": 2,
+     "fn": 0,
+     "fpConfirmed": 0,
+     "fpUnverified": 0,
+     "fnExamples": [],
+     "fpExamples": [],
+     "fpUnverifiedExamples": []
+    }
+   },
+   "info": {
+    "axeContrastIncomplete": 0,
+    "axeLinkNameViolations": 0,
+    "axeLabelViolations": 0,
+    "toolPlaceholderOnly": 2,
+    "toolPlaceholderOnlyAxePass": 2
+   },
+   "tool": {
+    "comps": 25,
+    "types": {
+     "button": 12,
+     "input": 3,
+     "image": 4,
+     "heading": 6
+    },
+    "pageH": 1194,
+    "ms": 80,
+    "issues": [
+     {
+      "h": "H5",
+      "sev": 2,
+      "title": "入力欄の種類(type)が内容に合っていない",
+      "detail": "メール・電話・数値などの入力欄が type=\"text\" のため、入力補助や形式チェックが効かない。",
+      "evidence": [
+       "“メールアドレス”"
+      ],
+      "fix": "type=\"email\" / \"tel\" / inputmode=\"numeric\" などを指定し、形式の制約で誤入力を防ぐ。"
+     },
+     {
+      "h": "H6",
+      "sev": 2,
+      "title": "アイコンのみのボタン3個にラベルがない",
+      "detail": "アイコンだけでは意味を思い出す必要があり、補助技術にも伝わらない。",
+      "evidence": [],
+      "fix": "アイコンの近くに文言を併記するか、少なくとも aria-label とツールチップを付ける。"
+     },
+     {
+      "h": "H6",
+      "sev": 3,
+      "title": "ラベルのない入力欄が2個ある（プレースホルダのみ）",
+      "detail": "入力を始めるとプレースホルダが消え、何を入力する欄か思い出す必要がある。",
+      "evidence": [
+       "“氏名”",
+       "“メールアドレス”"
+      ],
+      "fix": "常時表示のラベルを入力欄の上に置く。プレースホルダは例示に限る。"
+     },
+     {
+      "h": "H7",
+      "sev": 1,
+      "title": "個人情報の入力欄に autocomplete がない",
+      "detail": "ブラウザの自動入力が効きにくく、入力の手間が増える。",
+      "evidence": [],
+      "fix": "autocomplete=\"name\" / \"email\" / \"tel\" など標準の値を指定する。"
+     },
+     {
+      "h": "H10",
+      "sev": 1,
+      "title": "ヘルプ・問い合わせの導線が見当たらない",
+      "detail": "ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。",
+      "evidence": [],
+      "fix": "ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "文字のコントラスト比が基準未満の箇所が4件",
+      "detail": "WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。",
+      "evidence": [
+       "“黄色に白い太字” 1.6:1",
+       "“淡いグレーの小さな文字（#…” 2.3:1",
+       "“もう一つの淡い文字です。” 2.3:1"
+      ],
+      "fix": "前景・背景の色を調整して基準を満たす。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "操作領域が24px未満の要素が2個",
+      "detail": "WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）",
+      "evidence": [],
+      "fix": "タップ領域は最低24px、可能なら44px以上にする。"
+     },
+     {
+      "h": "SUP",
+      "sev": 2,
+      "title": "alt属性のない画像が3枚ある",
+      "detail": "画像の代替テキストがなく、スクリーンリーダーで内容が伝わらない。",
+      "evidence": [],
+      "fix": "意味のある画像には説明、装飾画像には alt=\"\" を指定する。"
+     }
+    ],
+    "scores": [
+     100,
+     100,
+     100,
+     100,
+     88,
+     66,
+     95,
+     100,
+     100,
+     95
+    ],
+    "buttons": {
+     "oracle": 12,
+     "tool": 12,
+     "tp": 12,
+     "fn": [],
+     "fnCount": 0,
+     "fp": [],
+     "fpCount": 0
+    },
+    "kindPairs": []
+   }
+  }
+ ]
+}

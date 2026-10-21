@@ -1,0 +1,318 @@
+{
+  "note": "実在のオープンソース(MIT)テンプレートのページ。コミットを固定して取得する。ライブのWebサイトを直接取得できない環境でも再現できる。set=dev はツールの修正中に見たページ(調整済み)、set=holdout は修正後に初めて走らせた未見のページ。",
+  "repos": {
+    "shop-homepage": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-shop-homepage",
+      "commit": "fb3a49020b840cdbcb0a588fdbda8fc019710a6f"
+    },
+    "shop-item": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-shop-item",
+      "commit": "7eee6160f7960c64d91431deeec7cac2457e689f"
+    },
+    "sb-admin-2": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-sb-admin-2",
+      "commit": "f0309881ef82794a1bd6257cd321801bc38a0f3d"
+    },
+    "landing-page": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-landing-page",
+      "commit": "247a46a2503c91d1157179eab297953438ec498b"
+    },
+    "agency": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-agency",
+      "commit": "b2d5d5c6b1396bc5b0e8dd92c693b106cfb7cee1"
+    },
+    "freelancer": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-freelancer",
+      "commit": "5bc65b4bd01e4ab63186395d5f95c7fdaa26216d"
+    },
+    "clean-blog": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-clean-blog",
+      "commit": "1ebc4f8f3b6194335df237a2a7837955a5a4a9aa"
+    },
+    "business-casual": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-business-casual",
+      "commit": "b6f928934386a54e08c2e7f40ebd9e4d7510bba4"
+    },
+    "modern-business": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-modern-business",
+      "commit": "7d297106cbda2f04db4696752fcdb5b4dc9cd936"
+    },
+    "sb-admin": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-sb-admin",
+      "commit": "adde34b9616b9840c4da756323131f59ac445090"
+    },
+    "creative": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-creative",
+      "commit": "b1762d8c690a2379c078c776dc0830bdd81c6f55"
+    },
+    "grayscale": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-grayscale",
+      "commit": "d974402542d05abcbaa8d21d4dd78e53680f2edd"
+    },
+    "resume": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-resume",
+      "commit": "c6fbe5ef431642984d0f17960194632f20cf67bc"
+    },
+    "one-page-wonder": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-one-page-wonder",
+      "commit": "4a2712c4601d9f5209e97e2b4229d39d55beca84"
+    },
+    "small-business": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-small-business",
+      "commit": "9c5ef57a25c2c8e1223b274ef7312375925e281c"
+    },
+    "stylish-portfolio": {
+      "url": "https://github.com/StartBootstrap/startbootstrap-stylish-portfolio",
+      "commit": "a658eb7130db599f69572384ef2dd6221757f028"
+    }
+  },
+  "pages": [
+    {
+      "id": "shop-home",
+      "label": "ECストア トップ",
+      "kind": "EC",
+      "repo": "shop-homepage",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "shop-item",
+      "label": "ECストア 商品詳細",
+      "kind": "EC",
+      "repo": "shop-item",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "bc-products",
+      "label": "カフェ 商品一覧",
+      "kind": "EC",
+      "repo": "business-casual",
+      "path": "dist/products.html",
+      "set": "dev"
+    },
+    {
+      "id": "admin-dash",
+      "label": "管理画面 ダッシュボード",
+      "kind": "業務システム",
+      "repo": "sb-admin-2",
+      "path": "index.html",
+      "set": "dev"
+    },
+    {
+      "id": "admin-login",
+      "label": "管理画面 ログイン",
+      "kind": "業務システム",
+      "repo": "sb-admin-2",
+      "path": "login.html",
+      "set": "dev"
+    },
+    {
+      "id": "admin-register",
+      "label": "管理画面 新規登録",
+      "kind": "業務システム",
+      "repo": "sb-admin-2",
+      "path": "register.html",
+      "set": "dev"
+    },
+    {
+      "id": "admin-tables",
+      "label": "管理画面 テーブル",
+      "kind": "業務システム",
+      "repo": "sb-admin-2",
+      "path": "tables.html",
+      "set": "dev"
+    },
+    {
+      "id": "admin-buttons",
+      "label": "管理画面 ボタン集",
+      "kind": "業務システム",
+      "repo": "sb-admin-2",
+      "path": "buttons.html",
+      "set": "dev"
+    },
+    {
+      "id": "landing",
+      "label": "ランディングページ",
+      "kind": "ランディング",
+      "repo": "landing-page",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "agency",
+      "label": "代理店サイト",
+      "kind": "ランディング",
+      "repo": "agency",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "freelancer",
+      "label": "ポートフォリオ",
+      "kind": "ランディング",
+      "repo": "freelancer",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "blog-home",
+      "label": "ブログ トップ",
+      "kind": "ブログ",
+      "repo": "clean-blog",
+      "path": "dist/index.html",
+      "set": "dev"
+    },
+    {
+      "id": "blog-contact",
+      "label": "ブログ 問い合わせ",
+      "kind": "ブログ",
+      "repo": "clean-blog",
+      "path": "dist/contact.html",
+      "set": "dev"
+    },
+    {
+      "id": "bc-store",
+      "label": "カフェ 店舗情報",
+      "kind": "ブログ",
+      "repo": "business-casual",
+      "path": "dist/store.html",
+      "set": "dev"
+    },
+    {
+      "id": "control",
+      "label": "陽性対照（自作の違反例）",
+      "kind": "対照",
+      "local": "fixtures/positive-control.html",
+      "set": "dev"
+    },
+    {
+      "id": "mb-pricing",
+      "label": "料金ページ",
+      "kind": "ランディング",
+      "repo": "modern-business",
+      "path": "dist/pricing.html",
+      "set": "holdout"
+    },
+    {
+      "id": "mb-contact",
+      "label": "問い合わせ",
+      "kind": "ブログ",
+      "repo": "modern-business",
+      "path": "dist/contact.html",
+      "set": "holdout"
+    },
+    {
+      "id": "mb-faq",
+      "label": "FAQ",
+      "kind": "ブログ",
+      "repo": "modern-business",
+      "path": "dist/faq.html",
+      "set": "holdout"
+    },
+    {
+      "id": "mb-portfolio",
+      "label": "制作実績一覧",
+      "kind": "ランディング",
+      "repo": "modern-business",
+      "path": "dist/portfolio-overview.html",
+      "set": "holdout"
+    },
+    {
+      "id": "mb-blog",
+      "label": "ブログ一覧",
+      "kind": "ブログ",
+      "repo": "modern-business",
+      "path": "dist/blog-home.html",
+      "set": "holdout"
+    },
+    {
+      "id": "sba-dash",
+      "label": "管理画面v7 ダッシュボード",
+      "kind": "業務システム",
+      "repo": "sb-admin",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "sba-tables",
+      "label": "管理画面v7 テーブル",
+      "kind": "業務システム",
+      "repo": "sb-admin",
+      "path": "dist/tables.html",
+      "set": "holdout"
+    },
+    {
+      "id": "sba-login",
+      "label": "管理画面v7 ログイン",
+      "kind": "業務システム",
+      "repo": "sb-admin",
+      "path": "dist/login.html",
+      "set": "holdout"
+    },
+    {
+      "id": "sba-register",
+      "label": "管理画面v7 新規登録",
+      "kind": "業務システム",
+      "repo": "sb-admin",
+      "path": "dist/register.html",
+      "set": "holdout"
+    },
+    {
+      "id": "sba-charts",
+      "label": "管理画面v7 チャート",
+      "kind": "業務システム",
+      "repo": "sb-admin",
+      "path": "dist/charts.html",
+      "set": "holdout"
+    },
+    {
+      "id": "creative",
+      "label": "クリエイティブ",
+      "kind": "ランディング",
+      "repo": "creative",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "grayscale",
+      "label": "グレースケール",
+      "kind": "ランディング",
+      "repo": "grayscale",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "resume",
+      "label": "レジュメ",
+      "kind": "ランディング",
+      "repo": "resume",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "one-page",
+      "label": "ワンページ",
+      "kind": "ランディング",
+      "repo": "one-page-wonder",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "small-biz",
+      "label": "スモールビジネス",
+      "kind": "EC",
+      "repo": "small-business",
+      "path": "dist/index.html",
+      "set": "holdout"
+    },
+    {
+      "id": "stylish",
+      "label": "スタイリッシュ",
+      "kind": "ランディング",
+      "repo": "stylish-portfolio",
+      "path": "dist/index.html",
+      "set": "holdout"
+    }
+  ]
+}

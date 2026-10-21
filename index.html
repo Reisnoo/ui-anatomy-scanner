@@ -283,7 +283,7 @@ const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-const PAGE_W = 1280, FOLD_H = 800, MAX_H = 3000;
+const PAGE_W = 1280, FOLD_H = 800, MAX_H = 12000;
 /* 単色の線画アイコン（太さ1.75で統一。絵文字は使わない） */
 const ICON_PATHS = {
   moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
@@ -580,7 +580,8 @@ async function loadHTML(html, name, baseHref){
   S.gaze.trial=0;
   simulate();
   renderAll();
-  setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${name}）`);
+  const cut = doc.documentElement.scrollHeight > MAX_H;
+  setStatus(`解析完了：${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件（${name}）${cut?`。ページが長いため先頭${MAX_H}pxまでを解析`:''}`, false);
 }
 
 async function loadURL(url, proxy){
@@ -704,6 +705,15 @@ function runAnalysis(){
     for(let i=layers.length-1;i>=0;i--) base=over(layers[i], base);
     return base;
   };
+  // ボタン等のアクセシブルネーム（簡易）：aria-label → aria-labelledby → title → 子のimg alt → svgのtitle → value
+  const accName = el => {
+    const g=a=>(el.getAttribute(a)||'').trim(); let t=g('aria-label'); if(t) return t;
+    const lb=g('aria-labelledby'); if(lb){ t=lb.split(/\s+/).map(id=>{ const n=el.ownerDocument.getElementById(id); return n?(n.textContent||'').trim():''; }).join(' ').trim(); if(t) return t; }
+    t=g('title'); if(t) return t;
+    const img=el.querySelector('img[alt]'); if(img && img.getAttribute('alt').trim()) return img.getAttribute('alt').trim();
+    const st=el.querySelector('svg title'); if(st && st.textContent.trim()) return st.textContent.trim();
+    return g('value');
+  };
   const labelOf = (el,max=26) => {
     let t=(el.getAttribute('aria-label')||'').trim();
     if(!t) t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
@@ -749,7 +759,7 @@ function runAnalysis(){
     else kind='text';
     const radius=Math.round(parseFloat(s.borderTopLeftRadius)||0), fs=Math.round(parseFloat(s.fontSize)||14);
     const sig=[filled?hex(bg):'-', hex(col), radius>=20?'pill':radius, fs, outlined?'o':'-'].join('|');
-    return {kind, filled, outlined, sig, bg, col, radius, fs, text, bw, bcol, ariaLabel:(el.getAttribute('aria-label')||el.getAttribute('title')||'').trim()};
+    return {kind, filled, outlined, sig, bg, col, radius, fs, text, bw, bcol, ariaLabel:accName(el)};
   };
   btnSet.forEach(el=>{ const bi=btnInfo(el); add('button', el, {sub:BTN_KIND_JA[bi.kind].replace(/\(.*\)/,''), bi}); });
 
@@ -787,6 +797,10 @@ function runAnalysis(){
     const a=(el.getAttribute('aria-label')||'')+cls(el);
     const sub = /breadcrumb|パンくず/i.test(a)?'パンくず' : el.getAttribute('role')==='tablist'?'タブ' : el.closest('footer')?'フッター用' : 'グローバル';
     add('nav', el, {sub});
+  });
+  body.querySelectorAll('ul,ol').forEach(el=>{
+    if(!isVis(el) || el.closest('footer') || comps.some(c=>c.type==='nav' && (c.el===el || c.el.contains(el) || el.contains(c.el)))) return;
+    if(/nav|menu|sidebar/i.test(cls(el)) && !/pagination|breadcrumb|dropdown|step/i.test(cls(el)) && el.querySelectorAll('a').length>=3) add('nav', el, {sub:'グローバル'});
   });
   body.querySelectorAll('ol,ul,div').forEach(el=>{
     if(!isVis(el)) return;
@@ -864,11 +878,13 @@ function buildIssues(){
       }
     }
   }
-  comps.filter(c=>c.type==='nav' && c.sub==='グローバル').forEach(nv=>{
-    const links=[...nv.el.querySelectorAll('a')];
-    if(links.length>=3 && !links.some(a=>a.hasAttribute('aria-current')||/active|current|selected/i.test(cls(a)||'')))
-      add('H1',1,'ナビゲーションに現在地の表示がない','グローバルナビ内に aria-current や active 状態のリンクが見つからない。','現在のページに該当するリンクを強調し、aria-current="page" を付ける。',[nv]);
-  });
+  {
+    // 主ナビ（複数あり得る）のどれにも現在地の印がないときだけ指摘する。上部バーなど補助ナビに無いだけでは指摘しない
+    const gnavs=comps.filter(c=>c.type==='nav' && c.sub==='グローバル' && c.el.querySelectorAll('a').length>=3);
+    const isCur = (a,root) => { for(let n=a; n && n!==root.parentElement; n=n.parentElement){ if(n.hasAttribute('aria-current') || n.getAttribute('aria-selected')==='true' || /\b(active|current|selected)\b/i.test(cls(n))) return true; } return false; };
+    if(gnavs.length && !gnavs.some(nv=>[...nv.el.querySelectorAll('a')].some(a=>isCur(a,nv.el))))
+      add('H1',1,'ナビゲーションに現在地の表示がない','グローバルナビ内に aria-current や active 状態のリンクが見つからない。','現在のページに該当するリンクを強調し、aria-current="page" を付ける。',[gnavs[0]]);
+  }
 
   /* H2 */
   const vague=['こちら','詳細','もっと見る','more','click here','here','続きを読む','>>','read more'];
@@ -890,7 +906,7 @@ function buildIssues(){
   if(car.length && !buttons.some(b=>/pause|停止|一時停止/i.test(b.bi.text+b.bi.ariaLabel))) add('H3',2,'カルーセルに一時停止の手段がない','自動で切り替わる可能性のある要素に、停止ボタンが見つからない。','一時停止ボタンを置き、手動操作を優先する。',car);
   ofType('form').forEach(f=>{
     const fields=f.el.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea').length;
-    if(fields>=4 && ![...f.el.querySelectorAll('button,a,input[type=button]')].some(b=>/キャンセル|戻る|取消|取り消し|cancel|back/i.test((b.innerText||'')+(b.value||''))))
+    if(fields>=6 && ![...f.el.querySelectorAll('button,a,input[type=button]')].some(b=>/キャンセル|戻る|取消|取り消し|cancel|back/i.test((b.innerText||'')+(b.value||''))))
       add('H3',1,'フォームに「戻る／キャンセル」が見当たらない',`入力欄${fields}個のフォームに、取り消し・戻る導線の文言が見つからない。`,'途中離脱・戻る導線を明示する（保存して中断、など）。',[f]);
   });
 
@@ -951,7 +967,17 @@ function buildIssues(){
   if(!hasHelp) add('H10', ofType('form').length?2:1, 'ヘルプ・問い合わせの導線が見当たらない','ヘルプ、FAQ、お問い合わせなどのリンク/ボタンが検出できない。','ヘッダー/フッターに常設し、フォームでは項目の近くに補足説明を置く。',[]);
 
   /* SUP: 補助チェック */
-  const lowC=[], small=[], tiny=[];
+  const lowC=[], small=[], tiny=[], lowUnknown=[];
+  // 文字の下に、祖先ではない別要素（画像・背景色つき要素）が重なっていると、本当の背景は分からない
+  const bgUnderUnknown = el => {
+    const r=rect(el), doc=D.doc;
+    for(const [x,y] of [[r.x+r.w/2, r.y+r.h/2],[r.x+Math.min(4,r.w/2), r.y+r.h/2]]){
+      let stack; try{ stack=doc.elementsFromPoint(x,y); }catch(e){ continue; }
+      const i=stack.indexOf(el); if(i<0) continue;
+      if(stack.slice(i+1).some(b=>!b.contains(el) && (['IMG','VIDEO','CANVAS','PICTURE'].includes(b.tagName) || cs(b).backgroundImage!=='none' || (parseColor(cs(b).backgroundColor)||{a:0}).a>0))) return true;
+    }
+    return false;
+  };
   D.doc.body.querySelectorAll('*').forEach(el=>{
     if(!isVis(el)) return;
     const direct=[...el.childNodes].some(t=>t.nodeType===3 && t.textContent.trim());
@@ -962,18 +988,25 @@ function buildIssues(){
     const bg=effBg(el); const c=parseColor(s.color); if(!bg||!c) return;
     const ratio=contrast(over(c,bg),bg);
     const large = fs>=24 || (fs>=18.66 && parseInt(s.fontWeight)>=700);
-    if(ratio < (large?3:4.5)) lowC.push({el,ratio});
+    if(ratio < (large?3:4.5)){ if(bgUnderUnknown(el)){ lowUnknown.push(el); return; } lowC.push({el,ratio}); }
   });
-  if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`)); }
+  if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), [...lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`), ...(lowUnknown.length?[`背景が重なっていて判定できない文字${lowUnknown.length}件は除外`]:[])]); }
   if(small.length) add('SUP', small.length>=5?2:1, `12px未満の小さな文字が${small.length}箇所ある`, '小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。', '本文は14〜16px以上を基本にする。', small.slice(0,12));
-  const tgt=buttons.filter(b=>Math.min(b.rect.w,b.rect.h)<24);
-  const tgtI=ofType('input').filter(c=>c.el.tagName!=='TEXTAREA' && Math.min(c.rect.w,c.rect.h)<24 && !['checkbox','radio'].includes((c.el.getAttribute('type')||'')));
-  if(tgt.length+tgtI.length) add('SUP',2,`操作領域が24px未満の要素が${tgt.length+tgtI.length}個`,'WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回る。（推奨は44px程度）','タップ領域は最低24px、可能なら44px以上にする。',[...tgt,...tgtI]);
+  const nb=[...new Set([...D.doc.body.querySelectorAll('a[href],button,input:not([type=hidden]),select,[role=button]')].filter(isVis))].map(e=>({e,r:rect(e)}));
+  const spaced=(r,self)=>{ const cx=r.x+r.w/2, cy=r.y+r.h/2; return nb.every(o=>{ if(o.e===self || o.e.contains(self) || self.contains(o.e)) return true; const q=o.r;
+    if(Math.min(q.w,q.h)<24) return Math.hypot(cx-(q.x+q.w/2), cy-(q.y+q.h/2))>=24;
+    const dx=Math.max(q.x-cx,0,cx-(q.x+q.w)), dy=Math.max(q.y-cy,0,cy-(q.y+q.h)); return Math.hypot(dx,dy)>=12; }); };
+  const tgt=buttons.filter(b=>Math.min(b.rect.w,b.rect.h)<24 && !spaced(b.rect,b.el));
+  const tgtI=ofType('input').filter(c=>c.el.tagName!=='TEXTAREA' && Math.min(c.rect.w,c.rect.h)<24 && !['checkbox','radio'].includes((c.el.getAttribute('type')||'')) && !spaced(c.rect,c.el));
+  if(tgt.length+tgtI.length) add('SUP',2,`操作領域が24px未満の要素が${tgt.length+tgtI.length}個`,'WCAG 2.2「ターゲットのサイズ(最小)」の目安を下回り、周囲の操作要素との間隔も足りない。（推奨は44px程度）','タップ領域は最低24px、可能なら44px以上にする。',[...tgt,...tgtI]);
   const noAlt=D.doc.body.querySelectorAll('img:not([alt])'); const noAltV=[...noAlt].filter(i=>isVis(i)&&rect(i).w>=48);
   if(noAltV.length) add('SUP',2,`alt属性のない画像が${noAltV.length}枚ある`,'画像の代替テキストがなく、スクリーンリーダーで内容が伝わらない。','意味のある画像には説明、装飾画像には alt="" を指定する。',noAltV);
 
   /* 手動チェック項目 */
   NIELSEN.forEach(h=>(MANUAL[h.id]||[]).forEach((q,i)=>issues.push({id:`m_${h.id}_${i}`, h:h.id, sev:0, title:q, detail:'', fix:'', rects:[], evidence:[], auto:false, state:'unreviewed', msev:2})));
+  // 検証用：自動判定が拾った全要素（指摘の表示では上位のみ使うため、外部ツールとの突き合わせ用に全件を保持）
+  S.debug={ lowContrast:lowC.map(x=>({rect:rect(x.el), ratio:Math.round(x.ratio*100)/100})), smallText:small.map(e=>rect(e)), altMissing:noAltV.map(e=>rect(e)),
+    targetSmall:[...tgt,...tgtI].map(c=>({rect:c.rect,label:c.label})), allButtons:buttons.map(c=>({rect:c.rect})), iconNoLabel:iconNoLabel.map(c=>({rect:c.rect,label:c.label})), placeholderOnly:phOnly.map(c=>({rect:c.rect})) };
   S.issues=issues;
 }
 

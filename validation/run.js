@@ -1,0 +1,131 @@
+// UI Anatomy Scanner の自動判定を、外部ツール(axe-core)と突き合わせて精度を測る
+//   node run.js                 … .corpus/ の実在テンプレート(targets.json)で実行
+//   node run.js --live urls.txt … 実サイトのURL一覧(1行1URL、空白のあとにラベル可)で実行（ネットワーク必須）
+//   node run.js --only shop-home,landing
+// 環境変数: PLAYWRIGHT_MODULE(playwrightの場所), CHROMIUM_PATH(Chromiumの実行ファイル)
+const fs = require('fs'), path = require('path'), http = require('http'), crypto = require('crypto');
+const { execFileSync } = require('child_process');
+const offline = require('./lib/offline');
+const args = process.argv.slice(2), flag = n => { const i = args.indexOf(n); return i < 0 ? null : (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true); };
+const EVAL = flag('--eval'), LIVE = flag('--live'), ONLY = flag('--only') && String(flag('--only')).split(',');
+const OUT = path.resolve(flag('--out') || path.join(__dirname, 'results'));
+const TOOL_DIR = path.resolve(__dirname, '..'), CORPUS = path.join(__dirname, '.corpus');
+function loadPW() { for (const m of [process.env.PLAYWRIGHT_MODULE, 'playwright', 'playwright-core'].filter(Boolean)) { try { return require(m); } catch (e) {} } throw new Error('playwright が見つかりません（npm i playwright、または PLAYWRIGHT_MODULE を指定）'); }
+const { chromium } = loadPW(), axeSrc = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'), axeVersion = require('axe-core/package.json').version;
+const T = JSON.parse(fs.readFileSync(path.join(__dirname, 'targets.json'), 'utf8'));
+const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.ico': 'image/x-icon', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.eot': 'application/vnd.ms-fontobject', '.map': 'application/json' };
+function serve() {
+  return new Promise(res => { const s = http.createServer((req, r) => {
+    const u = decodeURIComponent(new URL(req.url, 'http://x').pathname); let root, rel;
+    if (u.startsWith('/tool/')) { root = TOOL_DIR; rel = u.slice(6) || 'index.html'; } else if (u.startsWith('/corpus/')) { root = CORPUS; rel = u.slice(8); } else if (u.startsWith('/fixtures/')) { root = path.join(__dirname, 'fixtures'); rel = u.slice(10); } else { r.writeHead(404); return r.end(); }
+    const f = path.resolve(root, rel); if (!f.startsWith(root + path.sep) && f !== root) { r.writeHead(403); return r.end(); }
+    fs.readFile(f, (e, b) => { if (e) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'Content-Type': MIME[path.extname(f).toLowerCase()] || 'application/octet-stream' }); r.end(b); });
+  }).listen(0, '127.0.0.1', () => res({ s, port: s.address().port })); });
+}
+const close = (a, b) => Math.abs(a.x - b.x) <= 6 && Math.abs(a.y - b.y) <= 6 && Math.abs(a.w - b.w) <= 8 && Math.abs(a.h - b.h) <= 8;
+const hasClose = (r, list) => list.some(x => close(r, x.rect || x));
+
+const AXE_RULES = ['color-contrast', 'image-alt', 'button-name', 'input-button-name', 'link-name', 'target-size', 'label', 'select-name'];
+async function runAxe(page) {
+  await page.addScriptTag({ content: axeSrc });
+  return page.evaluate(async rules => {
+    window.scrollTo(0, 0);
+    const r = await axe.run(document, { runOnly: { type: 'rule', values: rules }, resultTypes: ['violations', 'incomplete', 'passes'] });
+    const pack = list => list.map(rule => ({ id: rule.id, nodes: rule.nodes.map(n => {
+      let el = null; try { el = n.target.length === 1 ? document.querySelector(n.target[0]) : null; } catch (e) {} if (!el) return null;
+      const b = el.getBoundingClientRect(); return { rect: { x: b.left + scrollX, y: b.top + scrollY, w: b.width, h: b.height }, tag: el.tagName, role: el.getAttribute('role') || '', html: n.html.slice(0, 160) }; }).filter(Boolean) }));
+    return { violations: pack(r.violations), incomplete: pack(r.incomplete), passes: pack(r.passes) };
+  }, AXE_RULES);
+}
+const nodesOf = (axe, kind, ids) => axe[kind].filter(r => ids.includes(r.id)).flatMap(r => r.nodes);
+
+// 1つの検査: axeの違反を正解とし、ツールの検出(rect)と照合する
+function score(axeViol, axeIncomplete, axePass, toolRects, scope = () => true) {
+  const gt = axeViol.filter(scope), tool = toolRects;
+  const tp = gt.filter(n => hasClose(n.rect, tool)), fn = gt.filter(n => !hasClose(n.rect, tool));
+  const fpAll = tool.filter(r => !hasClose(r.rect || r, axeViol));
+  const fpConfirmed = fpAll.filter(r => hasClose(r.rect || r, axePass)), fpUnverified = fpAll.filter(r => !hasClose(r.rect || r, axePass));
+  return { axeViolations: gt.length, toolDetections: tool.length, tp: tp.length, fn: fn.length, fpConfirmed: fpConfirmed.length, fpUnverified: fpUnverified.length,
+    fnExamples: fn.slice(0, 4).map(n => n.html), fpExamples: fpConfirmed.slice(0, 4).map(r => ({ rect: r.rect || r, label: r.label || '' })), fpUnverifiedExamples: fpUnverified.slice(0, 3).map(r => ({ rect: r.rect || r, label: r.label || '' })) };
+}
+
+async function main() {
+  fs.mkdirSync(OUT, { recursive: true });
+  let pages;
+  if (LIVE && LIVE !== true) {
+    pages = fs.readFileSync(LIVE, 'utf8').split('\n').map(s => s.trim()).filter(s => s && !s.startsWith('#')).map((l, i) => { const [url, ...rest] = l.split(/\s+/); return { id: 'live' + (i + 1), label: rest.join(' ') || new URL(url).host, kind: 'live', url }; });
+  } else {
+    pages = T.pages.map(p => ({ ...p, file: p.local ? path.join(__dirname, p.local) : path.join(CORPUS, p.repo, p.path) })).filter(p => fs.existsSync(p.file));
+    if (!pages.length) throw new Error('検証用ページがありません。先に node fetch_corpus.js を実行してください');
+  }
+  if (ONLY) pages = pages.filter(p => ONLY.includes(p.id));
+  const { s: server, port } = await serve(), origin = `http://127.0.0.1:${port}`;
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const stubStats = LIVE ? null : offline.install(ctx, m => console.warn(m));
+  const toolPage = await ctx.newPage(); await toolPage.goto(`${origin}/tool/index.html`); await toolPage.waitForFunction(() => document.querySelector('#status').textContent.includes('解析完了'), null, { timeout: 30000 });
+  const results = [];
+  for (const p of pages) {
+    const url = p.url || (p.local ? `${origin}/fixtures/${path.basename(p.local)}` : `${origin}/corpus/${p.repo}/${p.path}`);
+    const live = await ctx.newPage(); await live.setViewportSize({ width: 1280, height: 800 });
+    try { await live.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { await live.waitForTimeout(1500); }
+    await live.waitForTimeout(600);
+    const html = '<!DOCTYPE html>\n' + await live.evaluate(() => document.documentElement.outerHTML), baseHref = live.url();
+    const audit = await live.evaluate(() => {   // ニールセンの一部の指摘は、ツールと別の実装で事実確認する
+      const q = sel => [...document.querySelectorAll(sel)];
+      const navLike = q('nav,[role=navigation],ul[class*="nav"],ul[class*="sidebar"],ul[class*="menu"]').filter(n => n.querySelectorAll('a').length >= 3 && !n.closest('footer'));
+      const navActive = navLike.some(n => n.matches('[aria-current],.active,[class*="active"]') || n.querySelector('[aria-current],[aria-selected=true],.active,.current,.selected,[class*="-active"]'));
+      const helpWords = /help|faq|support|contact|お問い合わせ|問い合わせ|サポート|ヘルプ|よくある/i;
+      const seen = e => { const r = e.getBoundingClientRect(), st = getComputedStyle(e); return r.width > 0 && r.height > 0 && st.visibility !== 'hidden' && st.display !== 'none'; };
+      const helpEl = q('a[href],button').filter(seen).find(e => { const t = (e.textContent || '').trim(); return (t.length <= 40 && helpWords.test(t)) || helpWords.test(e.getAttribute('aria-label') || ''); });
+      const helpLink = !!helpEl, helpMatch = helpEl ? helpEl.outerHTML.replace(/\s+/g, ' ').slice(0, 120) : '';
+      const forms = q('form').filter(f => f.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea').length >= 6);
+      return { navCandidates: navLike.length, navActive, helpLink, helpMatch, longForms: forms.length };
+    });
+    const axe = await runAxe(live); await live.close();
+    const t0 = Date.now();
+    const tool = await toolPage.evaluate(async ([html, name, base]) => {
+      await loadHTML(html, name, base);
+      const doc = D.doc, vis = D.isVis, snip = el => el.outerHTML.replace(/\s+/g, ' ').slice(0, 150);
+      const oracleSel = 'button,input[type=submit],input[type=button],input[type=reset],[role=button],a.btn,a[class*="btn-"]';
+      const oracle = [...doc.querySelectorAll(oracleSel)].filter(vis), toolBtn = S.comps.filter(c => c.type === 'button');
+      const toolSet = new Set(toolBtn.map(c => c.el)), orSet = new Set(oracle);
+      const exp = el => { const c = el.getAttribute('class') || ''; if (/\bbtn-link\b/.test(c)) return 'text'; if (/\bbtn-outline-/.test(c)) return 'secondary'; if (/\bbtn-(secondary|light)\b/.test(c)) return 'secondary'; if (/\bbtn-(primary|success|danger|warning|info|dark)\b/.test(c)) return 'primary'; return null; };
+      const kindPairs = toolBtn.filter(c => exp(c.el)).map(c => ({ exp: exp(c.el), got: c.bi.kind, html: snip(c.el) }));
+      return {
+        comps: S.comps.length, types: S.comps.reduce((a, c) => (a[c.type] = (a[c.type] || 0) + 1, a), {}), pageH: S.frameH, ms: 0,
+        issues: S.issues.filter(i => i.auto).map(i => ({ h: i.h, sev: i.sev, title: i.title, detail: i.detail, evidence: i.evidence, fix: i.fix })),
+        scores: NIELSEN.map(h => hScore(h.id)), debug: S.debug,
+        buttons: { oracle: oracle.length, tool: toolBtn.length, tp: oracle.filter(e => toolSet.has(e)).length,
+          fn: oracle.filter(e => !toolSet.has(e)).map(snip).slice(0, 6), fnCount: oracle.filter(e => !toolSet.has(e)).length,
+          fp: toolBtn.filter(c => !orSet.has(c.el)).map(c => ({ html: snip(c.el), kind: c.bi.kind })).slice(0, 8), fpCount: toolBtn.filter(c => !orSet.has(c.el)).length },
+        kindPairs
+      };
+    }, [html, p.label, baseHref]);
+    tool.ms = Date.now() - t0;
+    if (EVAL) { console.log('--eval', p.id, JSON.stringify(await toolPage.evaluate(EVAL), null, 1)); }
+    const D = tool.debug;
+    const checks = {
+      contrast: score(nodesOf(axe, 'violations', ['color-contrast']), nodesOf(axe, 'incomplete', ['color-contrast']), nodesOf(axe, 'passes', ['color-contrast']), D.lowContrast),
+      imageAlt: score(nodesOf(axe, 'violations', ['image-alt']), nodesOf(axe, 'incomplete', ['image-alt']), nodesOf(axe, 'passes', ['image-alt']), D.altMissing.map(r => ({ rect: r })), n => n.rect.w >= 48 && n.rect.h > 0),
+      // ツールは「ボタンに見える要素」を対象にするため、axeのlink-name違反のうち、ツールがボタンとして扱った要素も正解に含める
+      buttonName: score([...nodesOf(axe, 'violations', ['button-name', 'input-button-name']), ...nodesOf(axe, 'violations', ['link-name']).filter(n => hasClose(n.rect, D.allButtons))], [],
+        [...nodesOf(axe, 'passes', ['button-name', 'input-button-name']), ...nodesOf(axe, 'passes', ['link-name']).filter(n => hasClose(n.rect, D.allButtons))], D.iconNoLabel),
+      targetSize: score(nodesOf(axe, 'violations', ['target-size']), nodesOf(axe, 'incomplete', ['target-size']), nodesOf(axe, 'passes', ['target-size']), D.targetSmall, n => ['BUTTON', 'INPUT', 'SELECT'].includes(n.tag) || n.role === 'button')
+    };
+    const info = { axeContrastIncomplete: nodesOf(axe, 'incomplete', ['color-contrast']).length, axeLinkNameViolations: nodesOf(axe, 'violations', ['link-name']).filter(n => !hasClose(n.rect, D.allButtons)).length,
+      axeLabelViolations: nodesOf(axe, 'violations', ['label', 'select-name']).length, toolPlaceholderOnly: D.placeholderOnly.length,
+      toolPlaceholderOnlyAxePass: D.placeholderOnly.filter(r => hasClose(r.rect, nodesOf(axe, 'passes', ['label', 'select-name']))).length };
+    const { debug, ...toolOut } = tool;
+    results.push({ id: p.id, label: p.label, kind: p.kind, audit, url: p.url || `${p.repo}/${p.path}`, sha256: crypto.createHash('sha256').update(html).digest('hex').slice(0, 16), checks, info, tool: toolOut });
+    console.log(`${p.id.padEnd(16)} comps=${tool.comps} issues=${tool.issues.length} contrast tp/fp/fn=${checks.contrast.tp}/${checks.contrast.fpConfirmed + checks.contrast.fpUnverified}/${checks.contrast.fn}  btn recall=${tool.buttons.tp}/${tool.buttons.oracle}`);
+  }
+  await browser.close(); server.close();
+  const meta = { date: new Date().toISOString(), axeCore: axeVersion, playwright: require(process.env.PLAYWRIGHT_MODULE ? path.join(process.env.PLAYWRIGHT_MODULE, 'package.json') : 'playwright/package.json').version,
+    toolCommit: (() => { try { return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: TOOL_DIR, encoding: 'utf8' }).trim(); } catch (e) { return ''; } })(),
+    mode: LIVE ? 'live' : 'corpus (offline stubs)', stubs: stubStats ? { npm: stubStats.npm, css: stubStats.fontsCss, js: stubStats.emptyJs, images: stubStats.images, blockedHosts: [...stubStats.aborted] } : null,
+    corpus: LIVE ? null : Object.fromEntries(Object.entries(T.repos).map(([k, v]) => [k, v.commit.slice(0, 7)])) };
+  fs.writeFileSync(path.join(OUT, LIVE ? 'results_live.json' : 'results.json'), JSON.stringify({ meta, results }, null, 1));
+  require('./report').write(OUT, meta, results, !!LIVE);
+}
+main().catch(e => { console.error(e); process.exit(1); });
