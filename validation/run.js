@@ -7,7 +7,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), crypto
 const { execFileSync } = require('child_process');
 const offline = require('./lib/offline');
 const args = process.argv.slice(2), flag = n => { const i = args.indexOf(n); return i < 0 ? null : (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true); };
-const EXPLAIN = flag('--explain'), SET = flag('--set'), EVAL = flag('--eval'), LIVE = flag('--live'), ONLY = flag('--only') && String(flag('--only')).split(',');
+const DIAG = flag('--diag'), EXPLAIN = flag('--explain'), SET = flag('--set'), EVAL = flag('--eval'), LIVE = flag('--live'), ONLY = flag('--only') && String(flag('--only')).split(',');
 const OUT = path.resolve(flag('--out') || path.join(__dirname, 'results'));
 const TOOL_DIR = path.resolve(__dirname, '..'), CORPUS = path.join(__dirname, '.corpus');
 function loadPW() { for (const m of [process.env.PLAYWRIGHT_MODULE, 'playwright', 'playwright-core'].filter(Boolean)) { try { return require(m); } catch (e) {} } throw new Error('playwright が見つかりません（npm i playwright、または PLAYWRIGHT_MODULE を指定）'); }
@@ -73,6 +73,8 @@ async function main() {
     const live = await ctx.newPage(); await live.setViewportSize({ width: 1280, height: 800 });
     try { await live.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { await live.waitForTimeout(1500); }
     await live.waitForTimeout(600);
+    // --diag: 実ブラウザで実際に見えている文字要素に印を付けておき、ツールが「見えない」と判定したものを後で突き合わせる
+    if (DIAG) await live.evaluate(() => { document.body.querySelectorAll('*').forEach(el => { if (![...el.childNodes].some(t => t.nodeType === 3 && t.textContent.trim())) return; const r = el.getBoundingClientRect(); if (el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && r.width >= 4 && r.height >= 4 && r.top < 810 && r.bottom > 0 && r.left < 1280 && r.right > 0) el.setAttribute('data-uas-rv', '1'); }); });
     const html = '<!DOCTYPE html>\n' + await live.evaluate(() => document.documentElement.outerHTML), baseHref = live.url();
     const liveH = await live.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
     const audit = await live.evaluate(() => {   // ニールセンの一部の指摘は、ツールと別の実装で事実確認する
@@ -88,7 +90,7 @@ async function main() {
     });
     const axe = await runAxe(live); await live.close();
     const t0 = Date.now();
-    const tool = await toolPage.evaluate(async ([html, name, base]) => {
+    const tool = await toolPage.evaluate(async ([html, name, base, DIAG]) => {
       await loadHTML(html, name, base);
       const doc = D.doc, vis = D.isVis, snip = el => el.outerHTML.replace(/\s+/g, ' ').slice(0, 150);
       const oracleSel = 'button,input[type=submit],input[type=button],input[type=reset],[role=button],a.btn,a[class*="btn-"]';
@@ -96,7 +98,7 @@ async function main() {
       const toolSet = new Set(toolBtn.map(c => c.el)), orSet = new Set(oracle);
       const exp = el => { const c = el.getAttribute('class') || ''; if (/\bbtn-link\b/.test(c)) return 'text'; if (/\bbtn-outline-/.test(c)) return 'secondary'; if (/\bbtn-(secondary|light)\b/.test(c)) return 'secondary'; if (/\bbtn-(primary|success|danger|warning|info|dark)\b/.test(c)) return 'primary'; return null; };
       const kindPairs = toolBtn.filter(c => exp(c.el)).map(c => ({ exp: exp(c.el), got: c.bi.kind, html: snip(c.el) }));
-      return {
+      const ret = {
         comps: S.comps.length, types: S.comps.reduce((a, c) => (a[c.type] = (a[c.type] || 0) + 1, a), {}), pageH: S.frameH, ms: 0,
         issues: S.issues.filter(i => i.auto).map(i => ({ h: i.h, sev: i.sev, title: i.title, detail: i.detail, evidence: i.evidence, fix: i.fix })),
         scores: NIELSEN.map(h => hScore(h.id)), debug: S.debug,
@@ -105,8 +107,23 @@ async function main() {
           fp: toolBtn.filter(c => !orSet.has(c.el)).map(c => ({ html: snip(c.el), kind: c.bi.kind })).slice(0, 8), fpCount: toolBtn.filter(c => !orSet.has(c.el)).length },
         kindPairs
       };
-    }, [html, p.label, baseHref]);
+      let diag = null;
+      if (DIAG) {
+        const marked = [...doc.querySelectorAll('[data-uas-rv]')], miss = marked.filter(e => !vis(e)), causes = {};
+        const sig = n => n.tagName.toLowerCase() + (n.getAttribute('class') ? '.' + n.getAttribute('class').trim().split(/\s+/).slice(0, 2).join('.') : '');
+        miss.forEach(e => {
+          const s0 = D.cs(e); let why = null;
+          if (s0.display === 'none') why = 'self display:none'; else if (s0.visibility === 'hidden') why = 'self visibility:hidden'; else if (parseFloat(s0.opacity) === 0) why = 'self opacity:0 (animation=' + s0.animationName + ')';
+          else { for (let n = e.parentElement; n && n !== doc.documentElement; n = n.parentElement) { const s = D.cs(n), b = n.getBoundingClientRect(); if (s.display === 'none') { why = 'ancestor display:none ' + sig(n); break; } if (parseFloat(s.opacity) === 0) { why = 'ancestor opacity:0 ' + sig(n) + ' (animation=' + s.animationName + ', transition=' + s.transitionProperty + ', style=' + (n.getAttribute('style') || '').slice(0, 50) + ')'; break; } if (/(hidden|clip|auto|scroll)/.test(s.overflowX + ' ' + s.overflowY) && (b.width < 4 || b.height < 4)) { why = 'ancestor collapsed ' + sig(n) + ' ' + Math.round(b.width) + 'x' + Math.round(b.height) + ' ' + s.overflowX + '/' + s.overflowY; break; } } }
+          if (!why) { const r = D.rect(e); why = 'position/size: ' + r.x + ',' + r.y + ' ' + r.w + 'x' + r.h; }
+          (causes[why] = causes[why] || { n: 0, sample: '' }).n++; if (!causes[why].sample) causes[why].sample = snip(e);
+        });
+        diag = { realVisibleTextEls: marked.length, toolHidden: miss.length, causes };
+      }
+      return Object.assign(ret, { diag });
+    }, [html, p.label, baseHref, !!DIAG]);
     tool.ms = Date.now() - t0;
+    if (DIAG) { console.log('--diag', p.id, JSON.stringify(tool.diag, null, 1)); delete tool.diag; }
     if (EVAL) { console.log('--eval', p.id, JSON.stringify(await toolPage.evaluate(EVAL), null, 1)); }
     const D = tool.debug;
     const checks = {
