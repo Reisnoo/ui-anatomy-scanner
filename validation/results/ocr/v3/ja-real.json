@@ -1,0 +1,342 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "ja-real",
+  "summary": {
+   "buttons": "再現 22/30 (73.3%)／検出した枠 23 のうちDOMのボタンと一致 22 (95.7%)",
+   "pages": 23,
+   "lines": 233,
+   "lineRecall": 0.9227467811158798,
+   "CER": 0.03001304915180513,
+   "extraRate": 0.008057675996607293,
+   "fsN": 215,
+   "fsMedRatio": 1.0104166666666667,
+   "fsMedAbsErr": 0.02941176470588225,
+   "fsWithin15": 0.9627906976744186,
+   "fsWithin25": 0.986046511627907,
+   "byKind": {
+    "cjk14-19": {
+     "n": 183,
+     "med": 1.01,
+     "w15": 0.98
+    },
+    "cap14-19": {
+     "n": 20,
+     "med": 1.014,
+     "w15": 0.8
+    },
+    "cjk20+": {
+     "n": 10,
+     "med": 1.031,
+     "w15": 1
+    },
+    "line14-19": {
+     "n": 1,
+     "med": 1.398,
+     "w15": 0
+    },
+    "cap20+": {
+     "n": 1,
+     "med": 0.948,
+     "w15": 1
+    }
+   },
+   "conN": 211,
+   "conMedRelErr": 0.002656745953948354,
+   "conWithin20": 1,
+   "small": "P — R — (tp0/fp0/fn0)",
+   "low": "P 100.0% R 100.0% (tp3/fp0/fn0) ／基準ぎりぎり(±4%)で除外 8件",
+   "msPerPage": 1359.6565217387092
+  },
+  "pages": [
+   {
+    "id": "dads-button-all-buttons-us",
+    "lines": 20,
+    "recall": 0.75,
+    "CER": 0.183,
+    "ms": 1821,
+    "bad": [
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0.75,
+      "hyp": "十ボタン"
+     },
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ボタン",
+      "sim": 0.75,
+      "hyp": "十ボタン"
+     }
+    ]
+   },
+   {
+    "id": "dads-checkbox-all-checkboxes",
+    "lines": 18,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1315,
+    "bad": []
+   },
+   {
+    "id": "dads-radio-all-radios",
+    "lines": 18,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1216,
+    "bad": []
+   },
+   {
+    "id": "dads-form-control-label-multiple",
+    "lines": 8,
+    "recall": 0.88,
+    "CER": 0.019,
+    "ms": 924,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-input-text-with-form-cont",
+    "lines": 4,
+    "recall": 0.75,
+    "CER": 0.036,
+    "ms": 328,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-select-with-form-cont",
+    "lines": 4,
+    "recall": 0.75,
+    "CER": 0.027,
+    "ms": 505,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-textarea-with-counter",
+    "lines": 8,
+    "recall": 0.63,
+    "CER": 0.074,
+    "ms": 663,
+    "bad": [
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     },
+     {
+      "text": "0 / 20",
+      "sim": 0.75,
+      "hyp": "0720"
+     },
+     {
+      "text": "※必須",
+      "sim": 0.67,
+      "hyp": "*必須"
+     }
+    ]
+   },
+   {
+    "id": "dads-table-first-row-and",
+    "lines": 23,
+    "recall": 1,
+    "CER": 0,
+    "ms": 960,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-info-1",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 753,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-warning",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0.013,
+    "ms": 872,
+    "bad": []
+   },
+   {
+    "id": "dads-notification-banner-error",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 637,
+    "bad": []
+   },
+   {
+    "id": "dads-card-example-1",
+    "lines": 9,
+    "recall": 0.89,
+    "CER": 0.118,
+    "ms": 1304,
+    "bad": [
+     {
+      "text": "機内持ち込み手荷物検査",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-card-example-3",
+    "lines": 16,
+    "recall": 0.94,
+    "CER": 0.064,
+    "ms": 2017,
+    "bad": [
+     {
+      "text": "よくある質問と回答",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "dads-list-all-lists",
+    "lines": 36,
+    "recall": 0.97,
+    "CER": 0.014,
+    "ms": 5437,
+    "bad": [
+     {
+      "text": "②",
+      "sim": 0.33,
+      "hyp": "(2)"
+     }
+    ]
+   },
+   {
+    "id": "dads-tab-playground",
+    "lines": 8,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1835,
+    "bad": []
+   },
+   {
+    "id": "dads-accordion-stacked",
+    "lines": 8,
+    "recall": 1,
+    "CER": 0.007,
+    "ms": 5500,
+    "bad": []
+   },
+   {
+    "id": "dads-step-navigation-playground-ful",
+    "lines": 12,
+    "recall": 0.83,
+    "CER": 0.043,
+    "ms": 1381,
+    "bad": [
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": "\\U"
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": "ヘナ"
+     }
+    ]
+   },
+   {
+    "id": "dads-search-box-with-detail",
+    "lines": 3,
+    "recall": 0.67,
+    "CER": 0.2,
+    "ms": 329,
+    "bad": [
+     {
+      "text": "詳細検索",
+      "sim": 0.5,
+      "hyp": "ii検索"
+     }
+    ]
+   },
+   {
+    "id": "dads-resource-list-with-control",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0,
+    "ms": 417,
+    "bad": []
+   },
+   {
+    "id": "dads-menu-list-has-children",
+    "lines": 9,
+    "recall": 1,
+    "CER": 0,
+    "ms": 960,
+    "bad": []
+   },
+   {
+    "id": "dads-hamburger-menu-button-desktop-and-mo",
+    "lines": 2,
+    "recall": 1,
+    "CER": 0,
+    "ms": 154,
+    "bad": []
+   },
+   {
+    "id": "dads-emergency-banner-playground",
+    "lines": 4,
+    "recall": 1,
+    "CER": 0.061,
+    "ms": 1817,
+    "bad": []
+   },
+   {
+    "id": "dads-horizontal-menu-playground",
+    "lines": 1,
+    "recall": 0,
+    "CER": 1,
+    "ms": 131,
+    "bad": [
+     {
+      "text": "メニュー1",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   }
+  ]
+ }
+]
