@@ -15,6 +15,14 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   const pr = await p.evaluate(() => { const r = document.querySelector('.panel').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
   assert(pr.top >= 0 && pr.bottom <= pr.vh, 'PC：スクロールしても、結果パネル（タブを含む）が画面に収まる（' + pr.top + '〜' + pr.bottom + ' / ' + pr.vh + '）');
   assert(await p.evaluate(() => getComputedStyle(document.querySelector('#jump')).display) === 'none', 'PC：下の「結果／画面」切り替えは出さない');
+  // --- 入力欄・重ね表示・文字の大きさ ---
+  const ui = await p.evaluate(() => { const vis = e => !!e && getComputedStyle(e).display !== 'none' && e.offsetParent !== null; const s = document.querySelector('#settings'); const samples = [...document.querySelectorAll('.sample span')]; return { scrRowShown: vis(document.querySelector('#scrRow')), settingsOpen: s.open, sum: document.querySelector('#settingsSum').textContent, vpShown: (e => { const r = e.getBoundingClientRect(); return document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) === e; })(document.querySelector('#vpSel')), clamped: samples.filter(e => e.scrollHeight > e.clientHeight + 1).length, groups: [...document.querySelectorAll('.stage-bar .bar-group')].map(g => g.getAttribute('aria-label').slice(0, 5)), toggles: document.querySelectorAll('.stage-bar .bar-group:first-child .toggle').length, actions: document.querySelectorAll('.stage-bar .bar-actions .mini').length, minFont: Math.min(...[...document.querySelectorAll('.input-card *, .stage-card *:not(iframe), .panel *')].filter(e => e.closest('svg') === null && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && e.offsetParent !== null).map(e => parseFloat(getComputedStyle(e).fontSize))) }; });
+  assert(!ui.scrRowShown, '画面が1つのときは、「解析する画面」の行を出さない');
+  assert(!ui.settingsOpen && /1280×800/.test(ui.sum) && !ui.vpShown, '解析の設定は、既定で折りたたみ、いまの画面幅を見出しに出す');
+  assert(ui.clamped === 0, 'サンプルの説明が、途中で省略されない');
+  assert(ui.groups.length === 2 && ui.groups[0] === '重ねて表示' && ui.toggles === 6 && ui.actions === 2, 'ステージの操作を、「重ねて表示（6つ）」と「保存（2つ）」の2グループに分ける');
+  assert(ui.minFont >= 13, '入力欄・ステージ・結果パネルの文字は、最小13px以上（実測 ' + ui.minFont + 'px）');
+  await p.click('#settings summary'); assert(await p.evaluate(() => { const e = document.querySelector('#vpSel'), r = e.getBoundingClientRect(); return document.querySelector('#settings').open && document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) === e; }), '「解析の設定」を開くと、画面幅の選択が出る（押せる位置にある）');
   await p.close();
 
   p = await open(1100, 800); t = await tabs(p);
