@@ -1,0 +1,15 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>日本語の評価ページ（管理画面）</title><link rel="stylesheet" href="/vendor/@fontsource/noto-sans-jp/400.css"><link rel="stylesheet" href="/vendor/@fontsource/noto-sans-jp/700.css"><style>
+*{box-sizing:border-box}body{margin:0;font:14px/1.6 "Noto Sans JP",sans-serif;color:#1f2937;background:#f8fafc;display:flex;min-height:100vh}
+.side{width:220px;background:#0f172a;color:#cbd5e1;padding:20px 0}.side .t{color:#fff;font-weight:700;font-size:17px;padding:0 20px 18px}.side a{display:block;padding:10px 20px;color:#cbd5e1;font-size:14px}.side a.on{background:#1e293b;color:#fff;font-weight:700}.side .g{padding:14px 20px 4px;font-size:11px;color:#64748b}
+.main{flex:1;padding:24px 32px}h1{font-size:24px;margin:0 0 16px}.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}.k{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px}.k b{display:block;font-size:28px;font-weight:700}.k span{font-size:12px;color:#64748b}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e2e8f0;border-radius:10px}th,td{text-align:left;padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:14px}th{background:#f1f5f9;font-size:12px;color:#475569}
+.ok{color:#15803d;font-weight:700}.ng{color:#b91c1c;font-weight:700}.st{display:inline-block;background:#dbeafe;color:#1e40af;border-radius:10px;padding:1px 10px;font-size:12px}
+.act{display:flex;gap:10px;margin:0 0 14px}.pb{background:#2563eb;color:#fff;border:0;border-radius:8px;padding:9px 18px;font:700 14px "Noto Sans JP",sans-serif}.sb{background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:8px;padding:9px 18px;font:14px "Noto Sans JP",sans-serif}
+</style></head><body><div class="side"><div class="t">管理コンソール</div><div class="g">メニュー</div><a class="on" href="#">ダッシュボード</a><a href="#">注文一覧</a><a href="#">商品管理</a><a href="#">顧客管理</a><div class="g">設定</div><a href="#">ユーザー権限</a><a href="#">通知の設定</a></div>
+<div class="main"><h1>今月の概要</h1><div class="act"><button class="pb">レポートを出力</button><button class="sb">期間を変更</button></div>
+<div class="kpi"><div class="k"><span>売上（税込）</span><b>¥1,284,500</b></div><div class="k"><span>注文数</span><b>342件</b></div><div class="k"><span>新規顧客</span><b>58人</b></div><div class="k"><span>返品率</span><b>2.4%</b></div></div>
+<table><tr><th>注文番号</th><th>顧客名</th><th>金額</th><th>状態</th><th>備考</th></tr>
+<tr><td>A-10231</td><td>佐藤 花子</td><td>¥12,800</td><td><span class="st">発送済み</span></td><td class="ok">問題なし</td></tr>
+<tr><td>A-10232</td><td>鈴木 一郎</td><td>¥3,980</td><td><span class="st">処理中</span></td><td class="ok">問題なし</td></tr>
+<tr><td>A-10233</td><td>高橋 次郎</td><td>¥24,600</td><td><span class="st">確認待ち</span></td><td class="ng">在庫不足</td></tr>
+<tr><td>A-10234</td><td>田中 美咲</td><td>¥7,200</td><td><span class="st">発送済み</span></td><td style="color:#94a3b8;font-size:12px">コメントなし</td></tr></table></div></body></html>

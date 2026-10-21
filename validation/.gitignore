@@ -1,3 +1,4 @@
 .corpus/
 .cache/
 node_modules/
+.ocr_lang/

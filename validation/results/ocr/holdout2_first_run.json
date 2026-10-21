@@ -1,0 +1,553 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "holdout2",
+  "summary": {
+   "pages": 14,
+   "lines": 1146,
+   "lineRecall": 0.8961605584642234,
+   "CER": 0.05222129720729585,
+   "extraRate": 0.06034169392948019,
+   "fsN": 1027,
+   "fsMedRatio": 0.9907670454545454,
+   "fsMedAbsErr": 0.019240702479338734,
+   "fsWithin15": 0.9766309639727361,
+   "fsWithin25": 0.9863680623174295,
+   "byKind": {
+    "cap14-19": {
+     "n": 867,
+     "med": 0.991,
+     "w15": 1
+    },
+    "cap20+": {
+     "n": 98,
+     "med": 0.969,
+     "w15": 0.98
+    },
+    "cap<14": {
+     "n": 40,
+     "med": 1.027,
+     "w15": 0.72
+    },
+    "xh14-19": {
+     "n": 10,
+     "med": 1.147,
+     "w15": 1
+    },
+    "line14-19": {
+     "n": 10,
+     "med": 0.756,
+     "w15": 0.2
+    },
+    "xh20+": {
+     "n": 2,
+     "med": 1.084,
+     "w15": 1
+    }
+   },
+   "conN": 894,
+   "conMedRelErr": 0.0023582873873106373,
+   "conWithin20": 0.9944071588366891,
+   "small": "P 100.0% R 50.0% (tp1/fp0/fn1)",
+   "low": "P 100.0% R 96.6% (tp141/fp0/fn5) ／基準ぎりぎり(±4%)で除外 35件",
+   "msPerPage": 4276.892857142857
+  },
+  "pages": [
+   {
+    "id": "al-dash",
+    "lines": 176,
+    "recall": 0.76,
+    "CER": 0.231,
+    "ms": 6444,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "53",
+      "sim": 0.67,
+      "hyp": "53%"
+     },
+     {
+      "text": "%",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "44",
+      "sim": 0,
+      "hyp": "An"
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "I would love to.",
+      "sim": 0,
+      "hyp": "TypeMessage"
+     },
+     {
+      "text": "Count Dracula",
+      "sim": 0.17,
+      "hyp": "SalesGraph"
+     },
+     {
+      "text": "2/28/2015",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "How have you been? I was",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-login",
+    "lines": 10,
+    "recall": 0.8,
+    "CER": 0.055,
+    "ms": 703,
+    "bad": [
+     {
+      "text": "Admin",
+      "sim": 0.63,
+      "hyp": "AdminLTE"
+     },
+     {
+      "text": "LTE",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-register",
+    "lines": 10,
+    "recall": 0.8,
+    "CER": 0.059,
+    "ms": 717,
+    "bad": [
+     {
+      "text": "Admin",
+      "sim": 0.63,
+      "hyp": "AdminLTE"
+     },
+     {
+      "text": "LTE",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-form",
+    "lines": 145,
+    "recall": 0.94,
+    "CER": 0.025,
+    "ms": 8338,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "Action",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Go!",
+      "sim": 0.25,
+      "hyp": "[oot"
+     },
+     {
+      "text": "Textarea",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-table",
+    "lines": 194,
+    "recall": 0.87,
+    "CER": 0.055,
+    "ms": 7218,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Documentation",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "CSS grade",
+      "sim": 0.75,
+      "hyp": "csSgrade"
+     },
+     {
+      "text": "Previous",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "4",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-projects",
+    "lines": 132,
+    "recall": 0.92,
+    "CER": 0.045,
+    "ms": 5049,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Projects",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Delete",
+      "sim": 0.57,
+      "hyp": "woekete"
+     },
+     {
+      "text": "#",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "View",
+      "sim": 0.75,
+      "hyp": "view"
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-invoice",
+    "lines": 118,
+    "recall": 0.95,
+    "CER": 0.028,
+    "ms": 5927,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "UI Elements",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-mailbox",
+    "lines": 160,
+    "recall": 0.94,
+    "CER": 0.018,
+    "ms": 7243,
+    "bad": [
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "12",
+      "sim": 0,
+      "hyp": "a"
+     },
+     {
+      "text": "65",
+      "sim": 0.67,
+      "hyp": "65."
+     },
+     {
+      "text": "Inbox",
+      "sim": 0.6,
+      "hyp": "box"
+     },
+     {
+      "text": "1-50/200",
+      "sim": 0.63,
+      "hyp": "501200"
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "heroic",
+    "lines": 28,
+    "recall": 1,
+    "CER": 0,
+    "ms": 2677,
+    "bad": []
+   },
+   {
+    "id": "biz-front",
+    "lines": 86,
+    "recall": 0.88,
+    "CER": 0.071,
+    "ms": 5975,
+    "bad": [
+     {
+      "text": "$0",
+      "sim": 0.67,
+      "hyp": "$0."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$9",
+      "sim": 0.67,
+      "hyp": "$9."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$49",
+      "sim": 0.75,
+      "hyp": "$49."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Thank you for putting to",
+      "sim": 0.03,
+      "hyp": "We"
+     },
+     {
+      "text": "product. We loved workin",
+      "sim": 0.72,
+      "hyp": "SrcWelovedwrkigwithvouan"
+     },
+     {
+      "text": "things together for our ",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Phone number",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "coming",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 822,
+    "bad": []
+   },
+   {
+    "id": "new-age",
+    "lines": 36,
+    "recall": 0.94,
+    "CER": 0.037,
+    "ms": 3550,
+    "bad": [
+     {
+      "text": "Send Feedback",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Download for free",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "sidebar",
+    "lines": 20,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1769,
+    "bad": []
+   },
+   {
+    "id": "scrolling",
+    "lines": 25,
+    "recall": 1,
+    "CER": 0,
+    "ms": 3444,
+    "bad": []
+   }
+  ]
+ }
+]

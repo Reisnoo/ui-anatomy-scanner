@@ -1,0 +1,1100 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "dev",
+  "summary": {
+   "pages": 14,
+   "lines": 553,
+   "lineRecall": 0.895117540687161,
+   "CER": 0.0486492673992674,
+   "extraRate": 0.04272062956717257,
+   "fsN": 495,
+   "fsMedRatio": 0.9804465553977274,
+   "fsMedAbsErr": 0.023792613636363757,
+   "fsWithin15": 0.9959595959595959,
+   "fsWithin25": 0.9959595959595959,
+   "byKind": {
+    "cap20+": {
+     "n": 134,
+     "med": 0.964,
+     "w15": 1
+    },
+    "cap14-19": {
+     "n": 279,
+     "med": 0.991,
+     "w15": 1
+    },
+    "cap<14": {
+     "n": 76,
+     "med": 0.988,
+     "w15": 0.97
+    },
+    "xh14-19": {
+     "n": 2,
+     "med": 1.147,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 4,
+     "med": 1.091,
+     "w15": 1
+    }
+   },
+   "conN": 412,
+   "conMedRelErr": 0.0030006647968097676,
+   "conWithin20": 0.9854368932038835,
+   "small": "P 100.0% R 100.0% (tp11/fp0/fn0)",
+   "low": "P 100.0% R 97.2% (tp171/fp0/fn5) ／基準ぎりぎり(±4%)で除外 16件",
+   "msPerPage": 3896.45000000002
+  },
+  "pages": [
+   {
+    "id": "shop-home",
+    "lines": 41,
+    "recall": 0.83,
+    "CER": 0.053,
+    "ms": 2718,
+    "bad": [
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "©"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$26:66"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.43,
+      "hyp": "$56-608"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.75,
+      "hyp": "sale"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$26:66"
+     }
+    ]
+   },
+   {
+    "id": "shop-item",
+    "lines": 34,
+    "recall": 0.79,
+    "CER": 0.055,
+    "ms": 2180,
+    "bad": [
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": "©"
+     },
+     {
+      "text": "$45.00",
+      "sim": 0.5,
+      "hyp": "$4566"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Sale",
+      "sim": 0.5,
+      "hyp": "sate"
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.5,
+      "hyp": "$2660"
+     },
+     {
+      "text": "Sale",
+      "sim": 0.5,
+      "hyp": "sate"
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.5,
+      "hyp": "$56-60"
+     }
+    ]
+   },
+   {
+    "id": "bc-products",
+    "lines": 26,
+    "recall": 1,
+    "CER": 0.001,
+    "ms": 10626,
+    "bad": []
+   },
+   {
+    "id": "admin-dash",
+    "lines": 77,
+    "recall": 0.9,
+    "CER": 0.052,
+    "ms": 4767,
+    "bad": [
+     {
+      "text": "SB ADMIN",
+      "sim": 0,
+      "hyp": "ssnomi:"
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Charts",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#f8f9fc",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Illustrations",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-login",
+    "lines": 7,
+    "recall": 1,
+    "CER": 0,
+    "ms": 667,
+    "bad": []
+   },
+   {
+    "id": "admin-register",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 720,
+    "bad": []
+   },
+   {
+    "id": "admin-tables",
+    "lines": 104,
+    "recall": 0.85,
+    "CER": 0.056,
+    "ms": 4923,
+    "bad": [
+     {
+      "text": "SB ADMIN",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0,
+      "hyp": "a"
+     },
+     {
+      "text": "2011/12/12",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Previous",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-buttons",
+    "lines": 57,
+    "recall": 0.91,
+    "CER": 0.026,
+    "ms": 3877,
+    "bad": [
+     {
+      "text": "SB ADMIN",
+      "sim": 0,
+      "hyp": "sso:"
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Douglas McGee",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "landing",
+    "lines": 35,
+    "recall": 0.97,
+    "CER": 0.024,
+    "ms": 5103,
+    "bad": [
+     {
+      "text": "Updated For Bootstrap 5",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "agency",
+    "lines": 50,
+    "recall": 0.88,
+    "CER": 0.148,
+    "ms": 4875,
+    "bad": [
+     {
+      "text": "Welcome To Our Studio!",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Illustration",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Our Humble Beginnings",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "adipisicing elit. Sunt u",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "sapiente, totam reiciend",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "March 2011",
+      "sim": 0,
+      "hyp": "mna"
+     }
+    ]
+   },
+   {
+    "id": "freelancer",
+    "lines": 27,
+    "recall": 1,
+    "CER": 0,
+    "ms": 2460,
+    "bad": []
+   },
+   {
+    "id": "blog-home",
+    "lines": 37,
+    "recall": 0.95,
+    "CER": 0.031,
+    "ms": 3033,
+    "bad": [
+     {
+      "text": "CONTACT",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Clean Blog",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-contact",
+    "lines": 15,
+    "recall": 0.73,
+    "CER": 0.197,
+    "ms": 1689,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0.14,
+      "hyp": "oon"
+     },
+     {
+      "text": "SAMPLE POST",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact Me",
+      "sim": 0.22,
+      "hyp": "on"
+     },
+     {
+      "text": "Have questions? I have a",
+      "sim": 0.44,
+      "hyp": "haveanswers."
+     }
+    ]
+   },
+   {
+    "id": "bc-store",
+    "lines": 37,
+    "recall": 0.95,
+    "CER": 0.036,
+    "ms": 6914,
+    "bad": [
+     {
+      "text": "STRONG COFFEE, STRONG RO",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "lust",
+      "sim": 0.75,
+      "hyp": "Just"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "opts": {
+   "mode": "page",
+   "psm": 11,
+   "scale": 2
+  },
+  "dpr": 1,
+  "set": "dev",
+  "summary": {
+   "pages": 14,
+   "lines": 553,
+   "lineRecall": 0.7811934900542495,
+   "CER": 0.1446886446886447,
+   "extraRate": 0.04949758094529215,
+   "fsN": 432,
+   "fsMedRatio": 0.957217261904762,
+   "fsMedAbsErr": 0.045928030303030276,
+   "fsWithin15": 0.9745370370370371,
+   "fsWithin25": 0.9861111111111112,
+   "byKind": {
+    "cap20+": {
+     "n": 128,
+     "med": 0.951,
+     "w15": 1
+    },
+    "cap14-19": {
+     "n": 243,
+     "med": 0.969,
+     "w15": 0.95
+    },
+    "cap<14": {
+     "n": 55,
+     "med": 0.959,
+     "w15": 1
+    },
+    "xh14-19": {
+     "n": 2,
+     "med": 1.142,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 4,
+     "med": 1.106,
+     "w15": 1
+    }
+   },
+   "conN": 343,
+   "conMedRelErr": 0.0031134582663188055,
+   "conWithin20": 0.9825072886297376,
+   "small": "P 37.5% R 75.0% (tp3/fp5/fn1)",
+   "low": "P 100.0% R 97.5% (tp153/fp0/fn4) ／基準ぎりぎり(±4%)で除外 4件",
+   "msPerPage": 3596.7214285716013
+  },
+  "pages": [
+   {
+    "id": "shop-home",
+    "lines": 41,
+    "recall": 0.51,
+    "CER": 0.397,
+    "ms": 1617,
+    "bad": [
+     {
+      "text": "Cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Shop in style",
+      "sim": 0.73,
+      "hyp": "“hoe!nstyle"
+     },
+     {
+      "text": "With this shop hompeage ",
+      "sim": 0.04,
+      "hyp": "mf"
+     },
+     {
+      "text": "View options",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$2666"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.33,
+      "hyp": "$56-66"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "shop-item",
+    "lines": 34,
+    "recall": 0.65,
+    "CER": 0.159,
+    "ms": 2509,
+    "bad": [
+     {
+      "text": "Cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "0",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$45.00",
+      "sim": 0.67,
+      "hyp": "$4506"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "View options",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$20.00",
+      "sim": 0.33,
+      "hyp": "$2666"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Sale",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$50.00",
+      "sim": 0.33,
+      "hyp": "$56-66"
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Add to cart",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "bc-products",
+    "lines": 26,
+    "recall": 0.81,
+    "CER": 0.086,
+    "ms": 6832,
+    "bad": [
+     {
+      "text": "A FREE BOOTSTRAP BUSINES",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "BUSINESS CASUAL",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "COFFEES & TEAS",
+      "sim": 0.33,
+      "hyp": "JFFEE"
+     },
+     {
+      "text": "BAKERY & KITCHEN",
+      "sim": 0.33,
+      "hyp": "DELICIOUSMm)DM\\KNLR\\L/&K"
+     },
+     {
+      "text": "BULK SPECIALITY BLENDS",
+      "sim": 0.65,
+      "hyp": "LkQPEC,\\LITYBLEND"
+     }
+    ]
+   },
+   {
+    "id": "admin-dash",
+    "lines": 77,
+    "recall": 0.66,
+    "CER": 0.281,
+    "ms": 4500,
+    "bad": [
+     {
+      "text": "INTERFACE",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ADDONS",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "SB Admin Pro",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "is packed",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "with premium features,",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "components, and more!",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0.25,
+      "hyp": "[2+]"
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Generate Report",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Primary",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#4e73df",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#1cc88a",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-login",
+    "lines": 7,
+    "recall": 0.29,
+    "CER": 0.756,
+    "ms": 645,
+    "bad": [
+     {
+      "text": "Login",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Login with Google",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Login with Facebook",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Forgot Password?",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Create an Account!",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-register",
+    "lines": 6,
+    "recall": 0.17,
+    "CER": 0.82,
+    "ms": 845,
+    "bad": [
+     {
+      "text": "Register Account",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Register with Google",
+      "sim": 0.22,
+      "hyp": "jiste"
+     },
+     {
+      "text": "Register with Facebook",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Forgot Password?",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Already have an account?",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-tables",
+    "lines": 104,
+    "recall": 0.92,
+    "CER": 0.035,
+    "ms": 3524,
+    "bad": [
+     {
+      "text": "INTERFACE",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ADDONS",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": "@"
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": "0"
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "41",
+      "sim": 0.5,
+      "hyp": "4"
+     },
+     {
+      "text": "2011/12/12",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "1",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "admin-buttons",
+    "lines": 57,
+    "recall": 0.74,
+    "CER": 0.192,
+    "ms": 3369,
+    "bad": [
+     {
+      "text": "INTERFACE",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "CUSTOM COMPONENTS:",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ADDONS",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3+",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "7",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".btn-google",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".btn-facebook",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Split Button Primary",
+      "sim": 0,
+      "hyp": "CEE"
+     },
+     {
+      "text": "Split Button Success",
+      "sim": 0.06,
+      "hyp": "re"
+     },
+     {
+      "text": "Split Button Info",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Split Button Warning",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Split Button Danger",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "landing",
+    "lines": 35,
+    "recall": 0.94,
+    "CER": 0.015,
+    "ms": 6079,
+    "bad": [
+     {
+      "text": "Sign Up",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Submit",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "agency",
+    "lines": 50,
+    "recall": 0.72,
+    "CER": 0.216,
+    "ms": 4926,
+    "bad": [
+     {
+      "text": "SERVICES",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Lorem ipsum dolor sit am",
+      "sim": 0.62,
+      "hyp": "LoremipsunlorItametonsIr"
+     },
+     {
+      "text": "Lorem ipsum dolor sit am",
+      "sim": 0.59,
+      "hyp": "Loremipsumdolormetur"
+     },
+     {
+      "text": "adipisicing elit. Minima",
+      "sim": 0.53,
+      "hyp": "adipicingnimmajuam"
+     },
+     {
+      "text": "architecto quo inventore",
+      "sim": 0.55,
+      "hyp": "architecJuoirentIM¢€magr"
+     },
+     {
+      "text": "Lorem ipsum dolor sit am",
+      "sim": 0.44,
+      "hyp": "LoremipsumdolorAME"
+     },
+     {
+      "text": "adipisicing elit. Minima",
+      "sim": 0.44,
+      "hyp": "adipicingmajuam"
+     },
+     {
+      "text": "architecto quo inventore",
+      "sim": 0.47,
+      "hyp": "archiJuoirentIM¢€magrdic"
+     },
+     {
+      "text": "Lorem ipsum dolor sit am",
+      "sim": 0.5,
+      "hyp": "LoremipsImdolorAMEtur"
+     },
+     {
+      "text": "adipisicing elit. Minima",
+      "sim": 0.5,
+      "hyp": "adcingMnimmaquam"
+     },
+     {
+      "text": "architecto quo inventore",
+      "sim": 0.68,
+      "hyp": "architectJuoirentheumema"
+     },
+     {
+      "text": "Illustration",
+      "sim": 0.75,
+      "hyp": "ustration"
+     }
+    ]
+   },
+   {
+    "id": "freelancer",
+    "lines": 27,
+    "recall": 0.81,
+    "CER": 0.069,
+    "ms": 4384,
+    "bad": [
+     {
+      "text": "PORTFOLIO",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "ABOUT",
+      "sim": 0.4,
+      "hyp": "ARGU"
+     },
+     {
+      "text": "CONTACT",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "PORTFOLIO",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Send",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-home",
+    "lines": 37,
+    "recall": 0.97,
+    "CER": 0.023,
+    "ms": 3613,
+    "bad": [
+     {
+      "text": "OLDER POSTS →",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "blog-contact",
+    "lines": 15,
+    "recall": 0.93,
+    "CER": 0.026,
+    "ms": 1806,
+    "bad": [
+     {
+      "text": "SEND",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "bc-store",
+    "lines": 37,
+    "recall": 0.95,
+    "CER": 0.045,
+    "ms": 5705,
+    "bad": [
+     {
+      "text": "A FREE BOOTSTRAP BUSINES",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "BUSINESS CASUAL",
+      "sim": 0.5,
+      "hyp": "BUSTAEooCASTHT"
+     }
+    ]
+   }
+  ]
+ }
+]

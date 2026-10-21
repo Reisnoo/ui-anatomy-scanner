@@ -1,0 +1,16 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>日本語の評価ページ（申請フォーム）</title><link rel="stylesheet" href="/vendor/@fontsource/noto-sans-jp/400.css"><link rel="stylesheet" href="/vendor/@fontsource/noto-sans-jp/700.css"><style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.7 "Noto Sans JP",sans-serif;color:#111827;background:#f3f4f6}
+header{background:#1e293b;color:#f8fafc;padding:14px 40px;font-weight:700;font-size:18px}main{max-width:760px;margin:28px auto;background:#fff;border-radius:12px;padding:32px 40px}
+h1{font-size:26px;margin:0 0 6px}.lead{color:#6b7280;font-size:14px;margin:0 0 22px}.steps{display:flex;gap:8px;margin-bottom:22px;font-size:13px}.steps span{padding:4px 12px;border-radius:14px;background:#e5e7eb;color:#4b5563}.steps .on{background:#1d4ed8;color:#fff;font-weight:700}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 4px}input,select,textarea{width:100%;padding:10px 12px;border:1px solid #9ca3af;border-radius:6px;font:15px "Noto Sans JP",sans-serif}
+.help{font-size:12px;color:#6b7280;margin-top:3px}.err{font-size:13px;color:#b91c1c;margin-top:3px}
+.row{display:flex;gap:12px}.row>div{flex:1}.actions{display:flex;gap:12px;margin-top:26px}.p{background:#1d4ed8;color:#fff;border:0;border-radius:8px;padding:12px 32px;font:700 16px "Noto Sans JP",sans-serif}.g{background:#fff;color:#374151;border:1px solid #9ca3af;border-radius:8px;padding:12px 24px;font:16px "Noto Sans JP",sans-serif}.d{background:#fff;color:#b91c1c;border:1px solid #b91c1c;border-radius:8px;padding:12px 24px;font:16px "Noto Sans JP",sans-serif}
+.foot{text-align:center;font-size:12px;color:#9ca3af;margin:12px 0 28px}
+</style></head><body><header>社内申請システム</header><main>
+<h1>経費精算の申請</h1><p class="lead">必要事項を入力して、承認者に申請します。入力内容は一時保存されます。</p>
+<div class="steps"><span>1 内容の入力</span><span class="on">2 金額と証憑</span><span>3 確認</span></div>
+<div class="row"><div><label>申請者名</label><input value="山田 太郎"></div><div><label>部署</label><input value="営業企画部"></div></div>
+<label>利用日</label><input placeholder="2026年10月21日"><div class="help">領収書に記載された日付を入力してください。</div>
+<label>金額（税込）</label><input value="12,800"><div class="err">金額は半角数字で入力してください。</div>
+<label>用途</label><textarea rows="3" placeholder="例：顧客訪問のための交通費"></textarea>
+<div class="actions"><button class="p">申請する</button><button class="g">一時保存</button><button class="d">申請を削除</button></div></main><div class="foot">お困りの場合は、総務部（内線 1234）までご連絡ください。</div></body></html>

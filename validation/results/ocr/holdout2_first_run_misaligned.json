@@ -1,0 +1,618 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "holdout2",
+  "summary": {
+   "pages": 14,
+   "lines": 1146,
+   "lineRecall": 0.3865619546247818,
+   "CER": 0.478089760084765,
+   "extraRate": 0.2754897036664992,
+   "fsN": 443,
+   "fsMedRatio": 0.9825106534090909,
+   "fsMedAbsErr": 0.023792613636363757,
+   "fsWithin15": 0.9683972911963883,
+   "fsWithin25": 0.9706546275395034,
+   "byKind": {
+    "cap20+": {
+     "n": 80,
+     "med": 0.969,
+     "w15": 0.97
+    },
+    "cap14-19": {
+     "n": 346,
+     "med": 0.991,
+     "w15": 1
+    },
+    "cap<14": {
+     "n": 12,
+     "med": 1.957,
+     "w15": 0.08
+    },
+    "xh14-19": {
+     "n": 3,
+     "med": 1.115,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 2,
+     "med": 1.084,
+     "w15": 1
+    }
+   },
+   "conN": 415,
+   "conMedRelErr": 0.001967578622740727,
+   "conWithin20": 0.9879518072289156,
+   "small": "P — R — (tp0/fp0/fn0)",
+   "low": "P 86.2% R 90.9% (tp50/fp8/fn5)",
+   "msPerPage": 3809.035714285681
+  },
+  "pages": [
+   {
+    "id": "al-dash",
+    "lines": 176,
+    "recall": 0.17,
+    "CER": 0.79,
+    "ms": 5854,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": "-."
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "Mailbox",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Pages",
+      "sim": 0,
+      "hyp": "23Jan"
+     },
+     {
+      "text": "Extras",
+      "sim": 0,
+      "hyp": "You"
+     },
+     {
+      "text": "Search",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "MISCELLANEOUS",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Tabbed IFrame Plugin",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-login",
+    "lines": 10,
+    "recall": 0.8,
+    "CER": 0.055,
+    "ms": 671,
+    "bad": [
+     {
+      "text": "Admin",
+      "sim": 0.63,
+      "hyp": "AdminLTE"
+     },
+     {
+      "text": "LTE",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-register",
+    "lines": 10,
+    "recall": 0.8,
+    "CER": 0.059,
+    "ms": 778,
+    "bad": [
+     {
+      "text": "Admin",
+      "sim": 0.63,
+      "hyp": "AdminLTE"
+     },
+     {
+      "text": "LTE",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-form",
+    "lines": 145,
+    "recall": 0.24,
+    "CER": 0.725,
+    "ms": 6563,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "General Form",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Quick Example",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Email address",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Password",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "File input",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Choose file",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-table",
+    "lines": 194,
+    "recall": 0.19,
+    "CER": 0.764,
+    "ms": 6153,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "UI Elements",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "DataTables",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "DataTable with minimal f",
+      "sim": 0.21,
+      "hyp": "Joesroversve"
+     },
+     {
+      "text": "Rendering engine",
+      "sim": 0.13,
+      "hyp": "Browser"
+     },
+     {
+      "text": "Browser",
+      "sim": 0,
+      "hyp": "N"
+     },
+     {
+      "text": "Platform(s)",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-projects",
+    "lines": 132,
+    "recall": 0.34,
+    "CER": 0.657,
+    "ms": 3962,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "Projects",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Projects",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "#",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Project Name",
+      "sim": 0,
+      "hyp": "TeamMembers"
+     },
+     {
+      "text": "Team Members",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Project Progress",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-invoice",
+    "lines": 118,
+    "recall": 0.43,
+    "CER": 0.571,
+    "ms": 4568,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "Invoice",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Note:",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "This page has been enhan",
+      "sim": 0.73,
+      "hyp": "forprinting.Clicktheprin"
+     },
+     {
+      "text": "AdminLTE, Inc.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "From",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Admin, Inc.",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "al-mailbox",
+    "lines": 160,
+    "recall": 0.26,
+    "CER": 0.831,
+    "ms": 6780,
+    "bad": [
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "3",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "15",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Alexander Pierce",
+      "sim": 0.33,
+      "hyp": "noneice"
+     },
+     {
+      "text": "6",
+      "sim": 0,
+      "hyp": "[@"
+     },
+     {
+      "text": "2",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Inbox",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Compose",
+      "sim": 0.14,
+      "hyp": "Inbox"
+     },
+     {
+      "text": "Folders",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Inbox",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "12",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "heroic",
+    "lines": 28,
+    "recall": 1,
+    "CER": 0,
+    "ms": 2787,
+    "bad": []
+   },
+   {
+    "id": "biz-front",
+    "lines": 86,
+    "recall": 0.88,
+    "CER": 0.071,
+    "ms": 5874,
+    "bad": [
+     {
+      "text": "$0",
+      "sim": 0.67,
+      "hyp": "$0."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$9",
+      "sim": 0.67,
+      "hyp": "$9."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$49",
+      "sim": 0.75,
+      "hyp": "$49."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Thank you for putting to",
+      "sim": 0.03,
+      "hyp": "We"
+     },
+     {
+      "text": "product. We loved workin",
+      "sim": 0.72,
+      "hyp": "SrcWelovedwrkigwithvouan"
+     },
+     {
+      "text": "things together for our ",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Phone number",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "coming",
+    "lines": 6,
+    "recall": 1,
+    "CER": 0,
+    "ms": 857,
+    "bad": []
+   },
+   {
+    "id": "new-age",
+    "lines": 36,
+    "recall": 0.94,
+    "CER": 0.037,
+    "ms": 3534,
+    "bad": [
+     {
+      "text": "Send Feedback",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Download for free",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "sidebar",
+    "lines": 20,
+    "recall": 1,
+    "CER": 0,
+    "ms": 1629,
+    "bad": []
+   },
+   {
+    "id": "scrolling",
+    "lines": 25,
+    "recall": 1,
+    "CER": 0,
+    "ms": 3317,
+    "bad": []
+   }
+  ]
+ }
+]

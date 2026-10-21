@@ -1,0 +1,573 @@
+[
+ {
+  "opts": {
+   "mode": "seg"
+  },
+  "dpr": 1,
+  "set": "holdout",
+  "summary": {
+   "pages": 16,
+   "lines": 1241,
+   "lineRecall": 0.3682514101531023,
+   "CER": 0.4357711714997872,
+   "extraRate": 0.20039355084423005,
+   "fsN": 457,
+   "fsMedRatio": 0.9907670454545454,
+   "fsMedAbsErr": 0.023792613636363757,
+   "fsWithin15": 0.9540481400437637,
+   "fsWithin25": 0.9671772428884027,
+   "byKind": {
+    "cap20+": {
+     "n": 102,
+     "med": 0.966,
+     "w15": 0.99
+    },
+    "cap14-19": {
+     "n": 333,
+     "med": 0.991,
+     "w15": 0.95
+    },
+    "cap<14": {
+     "n": 14,
+     "med": 0.996,
+     "w15": 0.86
+    },
+    "line14-19": {
+     "n": 1,
+     "med": 0.135,
+     "w15": 0
+    },
+    "xh14-19": {
+     "n": 5,
+     "med": 1.131,
+     "w15": 1
+    },
+    "xh20+": {
+     "n": 2,
+     "med": 1.101,
+     "w15": 1
+    }
+   },
+   "conN": 403,
+   "conMedRelErr": 0.0027555961132009407,
+   "conWithin20": 0.9851116625310173,
+   "small": "P 0.0% R — (tp0/fp1/fn0)",
+   "low": "P 79.2% R 90.5% (tp57/fp15/fn6)",
+   "msPerPage": 4162.368749999994
+  },
+  "pages": [
+   {
+    "id": "mb-pricing",
+    "lines": 53,
+    "recall": 0.85,
+    "CER": 0.031,
+    "ms": 3331,
+    "bad": [
+     {
+      "text": "$0",
+      "sim": 0.67,
+      "hyp": "$0."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$9",
+      "sim": 0.67,
+      "hyp": "$9."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "$49",
+      "sim": 0.75,
+      "hyp": "$49."
+     },
+     {
+      "text": "/ mo.",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "mb-contact",
+    "lines": 35,
+    "recall": 0.94,
+    "CER": 0.005,
+    "ms": 1627,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "mb-faq",
+    "lines": 44,
+    "recall": 0.95,
+    "CER": 0.002,
+    "ms": 4412,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "mb-portfolio",
+    "lines": 22,
+    "recall": 0.91,
+    "CER": 0.01,
+    "ms": 939,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "mb-blog",
+    "lines": 63,
+    "recall": 0.84,
+    "CER": 0.109,
+    "ms": 3745,
+    "bad": [
+     {
+      "text": "News",
+      "sim": 0,
+      "hyp": "ad"
+     },
+     {
+      "text": "News",
+      "sim": 0,
+      "hyp": "ad"
+     },
+     {
+      "text": "Kelly Rowan",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "March 12, 2023 · 6 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Josiah Barclay",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "March 23, 2023 · 4 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Evelyn Martinez",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "April 2, 2023 · 10 min r",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     },
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "+"
+     }
+    ]
+   },
+   {
+    "id": "sba-dash",
+    "lines": 382,
+    "recall": 0.03,
+    "CER": 0.993,
+    "ms": 11905,
+    "bad": [
+     {
+      "text": "Dashboard",
+      "sim": 0.33,
+      "hyp": "lard"
+     },
+     {
+      "text": "Dashboard",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Primary Card",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "View Details",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Warning Card",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "View Details",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Success Card",
+      "sim": 0.36,
+      "hyp": "Card"
+     },
+     {
+      "text": "View Details",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Danger Card",
+      "sim": 0.4,
+      "hyp": "Card"
+     },
+     {
+      "text": "View Details",
+      "sim": 0.64,
+      "hyp": "Details"
+     },
+     {
+      "text": "Area Chart Example",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Bar Chart Example",
+      "sim": 0.47,
+      "hyp": "Example"
+     }
+    ]
+   },
+   {
+    "id": "sba-tables",
+    "lines": 377,
+    "recall": 0.03,
+    "CER": 0.906,
+    "ms": 11404,
+    "bad": [
+     {
+      "text": "Tables",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Dashboard",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Tables",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "DataTables is a third pa",
+      "sim": 0.55,
+      "hyp": "pluginthatisusedtogenera"
+     },
+     {
+      "text": "visit the",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "official DataTables docu",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": ".",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "DataTable Example",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Name",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Position",
+      "sim": 0.13,
+      "hyp": "Office"
+     },
+     {
+      "text": "Office",
+      "sim": 0.17,
+      "hyp": "date"
+     },
+     {
+      "text": "Age",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "sba-login",
+    "lines": 11,
+    "recall": 0.91,
+    "CER": 0.007,
+    "ms": 657,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "sba-register",
+    "lines": 12,
+    "recall": 0.92,
+    "CER": 0.006,
+    "ms": 627,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "sba-charts",
+    "lines": 28,
+    "recall": 0.96,
+    "CER": 0.002,
+    "ms": 1975,
+    "bad": [
+     {
+      "text": "·",
+      "sim": 0,
+      "hyp": "-"
+     }
+    ]
+   },
+   {
+    "id": "creative",
+    "lines": 35,
+    "recall": 0.91,
+    "CER": 0.043,
+    "ms": 5631,
+    "bad": [
+     {
+      "text": "FIND OUT MORE",
+      "sim": 0,
+      "hyp": "="
+     },
+     {
+      "text": "GET STARTED!",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "DOWNLOAD NOW!",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   },
+   {
+    "id": "grayscale",
+    "lines": 28,
+    "recall": 0.82,
+    "CER": 0.066,
+    "ms": 3876,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "About",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Projects",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "GRAYSCALE",
+      "sim": 0,
+      "hyp": "incntB"
+     }
+    ]
+   },
+   {
+    "id": "resume",
+    "lines": 51,
+    "recall": 1,
+    "CER": 0.002,
+    "ms": 6096,
+    "bad": []
+   },
+   {
+    "id": "one-page",
+    "lines": 27,
+    "recall": 0.85,
+    "CER": 0.06,
+    "ms": 4287,
+    "bad": [
+     {
+      "text": "One Page Wonder",
+      "sim": 0,
+      "hyp": "A"
+     },
+     {
+      "text": "Will Rock Your Socks Off",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "LEARN MORE",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "about to rock...",
+      "sim": 0.79,
+      "hyp": "abouttorock"
+     }
+    ]
+   },
+   {
+    "id": "small-biz",
+    "lines": 37,
+    "recall": 1,
+    "CER": 0,
+    "ms": 3253,
+    "bad": []
+   },
+   {
+    "id": "stylish",
+    "lines": 36,
+    "recall": 0.69,
+    "CER": 0.187,
+    "ms": 2836,
+    "bad": [
+     {
+      "text": "Start Bootstrap",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Home",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "About",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Services",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Portfolio",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Contact",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Stylish Portfolio",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "!",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "Welcome to",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "your",
+      "sim": 0,
+      "hyp": ""
+     },
+     {
+      "text": "next website!",
+      "sim": 0,
+      "hyp": ""
+     }
+    ]
+   }
+  ]
+ }
+]

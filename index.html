@@ -98,6 +98,11 @@ textarea { width:100%; min-height:110px; font-family:ui-monospace,Menlo,Consolas
 .page canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; mix-blend-mode:multiply; opacity:.8; }
 .page svg { position:absolute; inset:0; overflow:visible; pointer-events:none; }
 .page svg .pin { pointer-events:auto; cursor:pointer; }
+.page img#shot { position:absolute; left:0; top:0; display:none; width:100%; height:auto; }
+.page.imgmode iframe#frame { opacity:0; }
+.page.imgmode img#shot { display:block; }
+.drop { border:1px dashed var(--border); border-radius:10px; padding:16px; text-align:center; font-size:13px; color:var(--muted); background:var(--bg); }
+.drop.over { border-color:var(--primary); background:var(--primary-light); color:var(--primary-strong); }
 .page iframe#frameLens { position:absolute; left:0; top:0; display:none; }
 .page #vig { position:absolute; inset:0; pointer-events:none; display:none; }
 .page iframe#frameCmp { position:absolute; left:0; top:0; display:none; }
@@ -230,6 +235,7 @@ th { color:var(--muted); font-weight:600; }
           <button role="tab" aria-selected="true" data-src="sample">サンプル</button>
           <button role="tab" aria-selected="false" data-src="url">URL</button>
           <button role="tab" aria-selected="false" data-src="html">HTML貼り付け</button>
+          <button role="tab" aria-selected="false" data-src="img">画像（OCR）</button>
         </div>
         <span class="status" id="status" role="status">準備中…</span>
       </div>
@@ -255,6 +261,7 @@ th { color:var(--muted); font-weight:600; }
         <div class="empty" id="empty">サンプルを選ぶか、URL / HTML を入力して解析してください</div>
         <div class="page-holder" id="holder">
           <div class="page" id="page">
+            <img id="shot" alt="入力したスクリーンショット">
             <iframe id="frame" sandbox="allow-same-origin" tabindex="-1" title="解析対象ページ"></iframe>
             <iframe id="frameLens" sandbox="" tabindex="-1" title="Age Lens 適用後のページ" aria-hidden="true"></iframe>
             <div id="vig"></div>
@@ -440,6 +447,7 @@ button, [role="button"], input[type="submit"], .icon-btn { min-width: 44px; min-
 <img src="product.jpg" alt="黒いレザーのビジネスバッグ（正面）">
 <img src="divider.svg" alt="">`],
 ];
+const IMAGE_OK = /文字のコントラスト比|12px未満の小さな文字|操作領域が(24|44)px未満|ファーストビューの操作要素/;
 const RESP_CODES = {
   overflow: `/* 横スクロールの原因を、親の幅に収める */
 *, *::before, *::after { box-sizing: border-box; }
@@ -675,7 +683,7 @@ const SAMPLES = [
 const S = {
   srcMode:'sample', sampleKey:null, sourceName:'', frameH:FOLD_H,
   comps:[], targets:[], issues:[], stats:{}, scale:1,
-  vp:'pc', vpCustom:{w:1280,h:800}, resp:null, imageMode:false, respInfo:null, tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
+  shot:null, ocr:null, ocrOpt:{langs:'jpn+eng', dpr:'auto'}, vpBeforeImg:null, vp:'pc', vpCustom:{w:1280,h:800}, resp:null, imageMode:false, respInfo:null, tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
   hiddenTypes:new Set(['link']),
   gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, useLens:false, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
   show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
@@ -699,8 +707,9 @@ function prepareHTML(html, baseHref){
   return inject + html;
 }
 
-async function loadHTML(html, name, baseHref){
+async function loadHTML(html, name, baseHref, opt={}){
   setStatus('描画中…');
+  if(!opt.image && S.imageMode) leaveImageMode();
   S.sourceName = name;
   S.src = {html, baseHref};
   S.multi = null; S.plCache = new Map();
@@ -725,7 +734,7 @@ async function loadHTML(html, name, baseHref){
   frame.style.height = FOLD_H+'px'; S.anaH = nat;
   const probe = [...doc.body.querySelectorAll('*')].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).slice(0,400).map(e=>[e, e.getBoundingClientRect().top]);
   runAnalysis();
-  frameLens.srcdoc = frame.srcdoc;
+  frameLens.srcdoc = (opt.image && S.shot) ? imageDoc() : frame.srcdoc;
   computeLens(); applyLens();
   frame.style.height = h+'px';
   const moved = probe.filter(([e,y0])=>Math.abs(e.getBoundingClientRect().top-y0)>12).length;
@@ -1175,7 +1184,7 @@ function buildIssues(){
     if(op<1){ const B=effBg(el.parentElement); if(!B) return; const mix=(a,b)=>({r:a.r*op+b.r*(1-op), g:a.g*op+b.g*(1-op), b:a.b*op+b.b*(1-op), a:1}); fgc=mix(fgc,B); bgc=mix(bg,B); }
     const ratio=contrast(fgc,bgc);
     const large = fs>=24 || (fs>=18.66 && parseInt(s.fontWeight)>=700);
-    if(ratio < (large?3:4.5)){ if(bgUnderUnknown(el)){ lowUnknown.push(el); return; } lowC.push({el,ratio,fgc,bgc,large}); }
+    if(ratio < (large?3:4.5)*(S.imageMode?.96:1)){ if(bgUnderUnknown(el)){ lowUnknown.push(el); return; } lowC.push({el,ratio,fgc,bgc,large}); }
   });
   if(lowC.length){ lowC.sort((a,b)=>a.ratio-b.ratio); add('SUP', lowC.length>=5?3:2, `文字のコントラスト比が基準未満の箇所が${lowC.length}件`, 'WCAG 2.2 AA（通常文字 4.5:1／大きな文字 3:1）を下回る組み合わせがある。', '前景・背景の色を調整して基準を満たす。', lowC.slice(0,12).map(x=>x.el), [...lowC.slice(0,3).map(x=>`“${labelOf(x.el,14)}” ${x.ratio.toFixed(1)}:1`), ...(lowUnknown.length?[`背景が重なっていて判定できない文字${lowUnknown.length}件は除外`]:[])], contrastCode(lowC)); }
   if(small.length) add('SUP', small.length>=5?2:1, `12px未満の小さな文字が${small.length}箇所ある`, '小さい文字は読み取りが難しく、特に高齢者や低視力の利用者に不利。', '本文は14〜16px以上を基本にする。', small.slice(0,12), small.slice(0,3).map(e=>`“${labelOf(e,14)}” ${Math.round(parseFloat(cs(e).fontSize)*10)/10}px`), smallCode(small));
@@ -1252,6 +1261,9 @@ function buildIssues(){
 
   /* 定型の修正コードを付ける（個別に付いているものは、そのまま） */
   issues.forEach(i=>{ if(!i.code){ const m=STATIC_CODES.find(([re])=>re.test(i.title)); if(m) i.code=m[1]; } });
+  if(S.imageMode){   // 画像（OCR）では、DOMの構造（リンク・フォーム・見出しの意味）が分からないため、見た目から判定できるものだけを残す
+    for(let k=issues.length-1;k>=0;k--){ const i=issues[k]; if(!(IMAGE_OK.test(i.title))) issues.splice(k,1); else i.detail+=' ※画像（OCR）からの推定値で、文字の大きさ・色には誤差を含みます。'; }
+  }
 
   /* 手動チェック項目 */
   NIELSEN.forEach(h=>(MANUAL[h.id]||[]).forEach((q,i)=>issues.push({id:`m_${h.id}_${i}`, h:h.id, sev:0, title:q, detail:'', fix:'', rects:[], evidence:[], auto:false, state:'unreviewed', msev:2})));
@@ -1498,7 +1510,8 @@ function renderPanel(){
   el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : panelGaze());
 }
 
-function panelComps(){
+function panelComps(){ return (S.imageMode?panelOcr():'')+panelCompsBase(); }
+function panelCompsBase(){
   const by={}; S.comps.forEach(c=>{ (by[c.type]||(by[c.type]=[])).push(c); });
   const btn=by.button||[]; const kinds={}; btn.forEach(b=>{ kinds[b.bi.kind]=(kinds[b.bi.kind]||0)+1; });
   const tiles=[['要素の総数',S.comps.length],['ボタン',btn.length],['バナー',(by.banner||[]).length],['入力欄',(by.input||[]).length+(by.search||[]).length],['リンク',S.stats.links],['見出し',(by.heading||[]).length]];
@@ -2422,14 +2435,14 @@ function renderVpUI(){
   const sel=$('#vpSel'); if(!sel) return;
   if(!sel.options.length) sel.innerHTML=VIEWPORTS.map(v=>`<option value="${v.key}">${v.name}（${v.w}×${v.h}）</option>`).join('')+'<option value="custom">カスタム…</option>';
   sel.value=S.vp; const v=curVp();
-  $('#vpCustom').hidden = S.vp!=='custom'; $('#vpW').value=S.vpCustom.w; $('#vpH').value=S.vpCustom.h;
+  $('#vpCustom').hidden = S.vp!=='custom' || !!S.imageMode; $('#vpW').value=S.vpCustom.w; $('#vpH').value=S.vpCustom.h;
   sel.disabled = !!S.imageMode;
   $('#vpNote').textContent = S.imageMode ? 'スクリーンショットは、画像の幅で解析します' : `${v.w}×${v.h}px　${v.note||''}`;
 }
 async function setViewport(key, opt={}){
   if(key==='custom'){ const c=opt.custom||S.vpCustom; S.vpCustom={w:clamp(Math.round(+c.w||1280),320,3840), h:clamp(Math.round(+c.h||800),480,2400)}; }
   S.vp=key; applyViewportSize(); renderVpUI();
-  if(S.src && S.comps.length && !opt.noReload) await loadHTML(S.src.html, S.sourceName, S.src.baseHref);
+  if(S.src && S.comps.length && !opt.noReload) await loadHTML(S.src.html, S.sourceName, S.src.baseHref, {image:S.imageMode});
 }
 const respSig = () => S.src ? `${S.sourceName}|${(S.src.html||'').length}` : '';
 const normTitle = t => t.replace(/画面幅\d+pxで、/,'').replace(/（\d+px幅）/,'').replace(/^\d+px幅でも、/,'').replace(/\d+(?=個|枚|箇所|件|つ|%)/g,'〇');
@@ -2446,6 +2459,7 @@ function respMetrics(v){
 }
 async function analyzeAllWidths(){
   if(!S.src || !S.comps.length){ toast('先に画面を解析してください'); return; }
+  if(S.imageMode){ toast('画像（OCR）では、画面幅は画像の幅で固定です'); return; }
   const start=S.vp, startCustom={...S.vpCustom}, rows=[]; S.respBusy=true;
   try{
     for(const v of VIEWPORTS){ setStatus(`画面幅を比べています… ${v.name}（${v.w}px）`); await setViewport(v.key); rows.push(respMetrics(v)); }
@@ -2517,6 +2531,363 @@ function buildRespReport(){
 }
 
 /* ============================================================
+   スクリーンショット入力（OCR）
+   画像から文字を読み取り、位置・文字の大きさ・色を推定する。ブラウザ内で処理し、画像は外部に送信しない
+   （OCRエンジンと言語データは、初回だけCDNから取得してブラウザに保存される）
+   ============================================================ */
+const OCR_URLS = {
+  script:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+  worker:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
+  core:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1',
+  lang:null   // 未指定のとき、tesseract.js は @tesseract.js-data/<言語>/4.0.0_best_int（日本語 約2MB・英語 約3MB）を使う
+};
+const ocrCfg = () => Object.assign({}, OCR_URLS, window.UAS_OCR||{});
+const OCRS = {worker:null, key:'', prog:null};
+const OCR_DEFAULT = {langs:'jpn+eng', mode:'seg', psm:11, scale:2, tileH:2400, minConf:35, fgPct:.01, smallThr:11.2, cal:{wPad:.5}};
+function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=()=>rej(new Error('OCRエンジンを読み込めませんでした（ネットワークを確認してください）')); document.head.appendChild(s); }); }
+async function ocrWorker(langs, onProgress){
+  const c=ocrCfg(); if(!window.Tesseract) await loadScript(c.script);
+  OCRS.prog=onProgress||null;
+  if(OCRS.worker && OCRS.key===langs) return OCRS.worker;
+  if(OCRS.worker){ try{ await OCRS.worker.terminate(); }catch(e){} OCRS.worker=null; }
+  const opt={logger:m=>{ if(OCRS.prog) OCRS.prog(m); }};
+  if(c.worker) opt.workerPath=c.worker; if(c.core) opt.corePath=c.core; if(c.lang) opt.langPath=c.lang;
+  OCRS.worker=await Tesseract.createWorker(langs,1,opt); OCRS.key=langs;
+  return OCRS.worker;
+}
+const CJK_RE = /[぀-ヿ㐀-䶿一-鿿ｦ-ﾟ]/;
+const FW_RE = /[぀-ヿ㐀-䶿一-鿿]/;       // 全角の文字（送り幅＝文字サイズ）
+const CAP_ASC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789bdfhkl', XH = 'acemnorsuvwxz';
+const med = a => { if(!a.length) return null; const s=[...a].sort((x,y)=>x-y), m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2; };
+/* tesseract.js の出力（blocks）から、行・単語・文字の位置をCSSピクセルで取り出す。bandは、帯に分けて読んだ場合の位置のずれ */
+function ocrCollect(data, k, ox, oy){
+  const lines=[];
+  (data.blocks||[]).forEach(b=>(b.paragraphs||[]).forEach(p=>(p.lines||[]).forEach(l=>{
+    const words=(l.words||[]).map(w=>({text:w.text, conf:w.confidence, x:(w.bbox.x0)/k+ox, y:(w.bbox.y0)/k+oy, w:(w.bbox.x1-w.bbox.x0)/k, h:(w.bbox.y1-w.bbox.y0)/k,
+      syms:(w.symbols||[]).map(s=>({t:s.text, x:s.bbox.x0/k+ox, y:s.bbox.y0/k+oy, w:(s.bbox.x1-s.bbox.x0)/k, h:(s.bbox.y1-s.bbox.y0)/k}))}));
+    if(!words.length) return;
+    const x0=Math.min(...words.map(w=>w.x)), y0=Math.min(...words.map(w=>w.y)), x1=Math.max(...words.map(w=>w.x+w.w)), y1=Math.max(...words.map(w=>w.y+w.h));
+    lines.push({text:words.map(w=>w.text).join(' ').replace(/\s+/g,' ').trim(), conf:l.confidence, x:x0, y:y0, w:x1-x0, h:y1-y0, words});
+  })));
+  return lines;
+}
+/* 文字の大きさ（CSSピクセル）の推定。
+   ・全角が主の行：切り出した行の実際の幅（画像から測った値）÷ 文字数。全角文字の送り幅は文字サイズに等しい（OCRが返す文字ごとの位置は、日本語では信頼できない）
+   ・英数字が主の行：大文字・ascenderの高さ（小文字だけならx-height）から求める */
+const FWC_RE = /[　-〿぀-ヿ㐀-䶿一-鿿＀-｠￠-￦]/;
+function ocrCharEq(text){
+  const t=text.replace(/(?<=[　-鿿＀-￯])\s+(?=[　-鿿＀-￯])/g,'');
+  let eq=0, fw=0;
+  for(const ch of t){
+    if(FWC_RE.test(ch)){ eq+=1; fw+=1; }
+    else if(/\s/.test(ch)) eq+=.27;
+    else if(/[0-9]/.test(ch)) eq+=.56;
+    else if(/[A-Z]/.test(ch)) eq+=.66;
+    else if(/[a-z]/.test(ch)) eq+=.52;
+    else if(/[.,:;'`|!ilI]/.test(ch)) eq+=.3;
+    else eq+=.6;
+  }
+  return {eq, fw, n:[...t].length};
+}
+function ocrFontSize(line, cal){
+  cal=cal||{};
+  const ce=ocrCharEq(line.text||line.words.map(w=>w.text).join(' '));
+  if(line.box && ce.n>=2 && ce.fw>=ce.n*.5){
+    const w=Math.max(1,(line.box.w-(cal.wPad==null?.5:cal.wPad)));
+    return {v:(w/Math.max(1,ce.eq-(cal.eqOff==null?0:cal.eqOff)))*(cal.cjk||1), n:ce.n, k:'cjk'};
+  }
+  const syms=line.words.flatMap(w=>w.syms);
+  const cap=syms.filter(s=>s.t.length===1 && CAP_ASC.includes(s.t) && s.h>2).map(s=>s.h);
+  if(cap.length>=1) return {v:med(cap)/.72*(cal.cap||.93), n:cap.length, k:'cap'};
+  const xh=syms.filter(s=>s.t.length===1 && XH.includes(s.t) && s.h>2).map(s=>s.h);
+  if(xh.length) return {v:med(xh)/.52*(cal.xh||1), n:xh.length, k:'xh'};
+  return {v:line.h*(cal.line||1.0), k:'line'};
+}
+/* 行の矩形の中の色から、文字色と背景色を推定する */
+function ocrColors(ctx, k, r, fgPct){
+  const x=Math.max(0,Math.floor(r.x*k)), y=Math.max(0,Math.floor(r.y*k)), w=Math.max(1,Math.min(ctx.canvas.width-x,Math.ceil(r.w*k))), h=Math.max(1,Math.min(ctx.canvas.height-y,Math.ceil(r.h*k)));
+  const d=ctx.getImageData(x,y,w,h).data, n=w*h, hist=new Map();
+  for(let i=0;i<n;i++){ const o=i*4, key=(d[o]>>4)<<8|(d[o+1]>>4)<<4|(d[o+2]>>4); let e=hist.get(key); if(!e){ e={n:0,r:0,g:0,b:0}; hist.set(key,e); } e.n++; e.r+=d[o]; e.g+=d[o+1]; e.b+=d[o+2]; }
+  let best=null; hist.forEach(e=>{ if(!best||e.n>best.n) best=e; });
+  const bg={r:best.r/best.n, g:best.g/best.n, b:best.b/best.n};
+  // 背景に近い階調（隣の階調も含む）の割合 → 単色背景かどうかの目安
+  let near=0; for(let i=0;i<n;i++){ const o=i*4; if(Math.hypot(d[o]-bg.r,d[o+1]-bg.g,d[o+2]-bg.b)<40) near++; }
+  const dist=new Float32Array(n); for(let i=0;i<n;i++){ const o=i*4; dist[i]=Math.hypot(d[o]-bg.r,d[o+1]-bg.g,d[o+2]-bg.b); }
+  const idx=[...dist.keys()].sort((a,b)=>dist[b]-dist[a]), top=Math.max(1,Math.round(n*(fgPct||.04)));
+  let fr=0,fg=0,fb=0; for(let j=0;j<top;j++){ const o=idx[j]*4; fr+=d[o]; fg+=d[o+1]; fb+=d[o+2]; }
+  const fgc={r:fr/top,g:fg/top,b:fb/top};
+  return {bg, fg:fgc, bgShare:near/n, ratio:contrast(fgc,bg)};
+}
+/* ---- 文字行の切り出し（ページ全体を一度に読むと、白抜き文字・色つき背景の文字が拾われないため） ----
+   1) 色の変化が大きい画素（文字の縁）を拾う  2) 罫線・枠線のような長い直線を除く  3) 横方向につないで、文字のかたまりにする
+   4) かたまりを、高さに応じた間隔で行にまとめる */
+function ocrSegment(srcCanvas, dpr, p){
+  p=Object.assign({T:22, gx:3, longRun:48, minH:5, maxH:150, minW:5}, p);
+  const W=Math.max(1,Math.round(srcCanvas.width/dpr)), H=Math.max(1,Math.round(srcCanvas.height/dpr));
+  const c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d',{willReadFrequently:true}); g.imageSmoothingQuality='high'; g.drawImage(srcCanvas,0,0,W,H);
+  const d=g.getImageData(0,0,W,H).data, M=new Uint8Array(W*H), a=Math.abs;
+  for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
+    const i=(y*W+x)*4, l=i-4, r=i+4, u=i-W*4, b=i+W*4;
+    const gx=Math.max(a(d[r]-d[l]),a(d[r+1]-d[l+1]),a(d[r+2]-d[l+2])), gy=Math.max(a(d[b]-d[u]),a(d[b+1]-d[u+1]),a(d[b+2]-d[u+2]));
+    if(gx>p.T||gy>p.T) M[y*W+x]=1;
+  }
+  // 長い直線（罫線・枠線・下線）を除く。除いた場所は覚えておき、枠の角（丸い角の断片）を後で捨てる
+  const RM=new Uint8Array(W*H), M0=M.slice(), hRuns=[];
+  // 細い直線（上下3画素が空いている長い連なり）だけを罫線とみなす。文字の密な行は残す
+  const sparseH=(y,x,e)=>{ let c=0,t=0; for(const yy of [y-3,y+3]){ if(yy<0||yy>=H) continue; for(let k=x;k<e;k++){ t++; if(M0[yy*W+k]) c++; } } return t===0 || c/t<.25; };
+  const sparseV=(x,y,e)=>{ let c=0,t=0; for(const xx of [x-3,x+3]){ if(xx<0||xx>=W) continue; for(let k=y;k<e;k++){ t++; if(M0[k*W+xx]) c++; } } return t===0 || c/t<.25; };
+  for(let y=0;y<H;y++){ let x=0; while(x<W){ if(!M0[y*W+x]){ x++; continue; } let e=x; while(e<W&&M0[y*W+e]) e++; if(e-x>p.longRun && sparseH(y,x,e)){ hRuns.push({y,x0:x,x1:e}); for(let k=x;k<e;k++){ M[y*W+k]=0; RM[y*W+k]=1; } } x=e; } }
+  for(let x=0;x<W;x++){ let y=0; while(y<H){ if(!M0[y*W+x]){ y++; continue; } let e=y; while(e<H&&M0[e*W+x]) e++; if(e-y>p.longRun && sparseV(x,y,e)) for(let k=y;k<e;k++){ M[k*W+x]=0; RM[k*W+x]=1; } y=e; } }
+  // 枠（ボタン・入力欄・カードなどの四角）：上下の辺がほぼ同じ横幅で、間隔が14〜90pxの組を探す。辺の近く（縦の辺と角）も消す
+  const merged=[]; hRuns.sort((u,v)=>u.y-v.y||u.x0-v.x0).forEach(r=>{ const m=merged.find(q=>r.y-q.y1<=2 && Math.min(q.x1,r.x1)-Math.max(q.x0,r.x0)>0.8*Math.min(q.x1-q.x0,r.x1-r.x0)); if(m){ m.y1=r.y; m.x0=Math.min(m.x0,r.x0); m.x1=Math.max(m.x1,r.x1); } else merged.push({y0:r.y,y1:r.y,x0:r.x0,x1:r.x1}); });
+  const containers=[], usedB=new Set();
+  merged.forEach((A,i)=>{ let best=null; for(let j=0;j<merged.length;j++){ const B=merged[j]; if(j===i||usedB.has(j)) continue; const dy=B.y0-A.y1; if(dy<14||dy>90) continue; if(Math.abs(A.x0-B.x0)>12||Math.abs(A.x1-B.x1)>12) continue; if(!best||dy<best.dy) best={j,dy,B}; }
+    if(best){ usedB.add(best.j); const B=best.B, x0=Math.min(A.x0,B.x0), x1=Math.max(A.x1,B.x1), y0=A.y0, y1=B.y1; containers.push({x:x0,y:y0,w:x1-x0,h:y1-y0+1});
+      for(let yy=Math.max(0,y0-4);yy<Math.min(H,y1+5);yy++){ for(let dx=-4;dx<=4;dx++){ for(const xx of [x0+dx,x1+dx]){ if(xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } } } }
+      for(let yy=y0;yy<y0+9;yy++) for(let xx=x0;xx<x0+9;xx++){ if(yy<H&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
+      for(let yy=y0;yy<y0+9;yy++) for(let xx=x1-9;xx<x1;xx++){ if(yy<H&&xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
+      for(let yy=y1-8;yy<=y1;yy++) for(let xx=x0;xx<x0+9;xx++){ if(yy<H&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } }
+      for(let yy=y1-8;yy<=y1;yy++) for(let xx=x1-9;xx<x1;xx++){ if(yy<H&&xx>=0&&xx<W){ M[yy*W+xx]=0; RM[yy*W+xx]=1; } } } });
+  const RD=new Uint8Array(W*H);   // 除いた直線の周り（3画素）
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){ if(!RM[y*W+x]) continue; for(let dy=-3;dy<=3;dy++){ const yy=y+dy; if(yy<0||yy>=H) continue; for(let dx=-3;dx<=3;dx++){ const xx=x+dx; if(xx>=0&&xx<W) RD[yy*W+xx]=1; } } }
+  // 横方向の隙間（文字どうしの間）をつなぐ
+  for(let y=0;y<H;y++){ let last=-1e9; for(let x=0;x<W;x++){ if(M[y*W+x]){ if(x-last>1 && x-last<=p.gx+1) for(let k=last+1;k<x;k++) M[y*W+k]=1; last=x; } } }
+  // 連結成分
+  const lab=new Int32Array(W*H), boxes=[], st=new Int32Array(W*H); let nl=0;
+  for(let s0=0;s0<W*H;s0++){ if(!M[s0]||lab[s0]) continue; nl++; let sp=0; st[sp++]=s0; lab[s0]=nl; let x0=W,y0=H,x1=0,y1=0,n=0,nr=0;
+    while(sp){ const q=st[--sp], qx=q%W, qy=(q-qx)/W; n++; if(RD[q]) nr++; if(qx<x0)x0=qx; if(qx>x1)x1=qx; if(qy<y0)y0=qy; if(qy>y1)y1=qy;
+      if(qx>0&&M[q-1]&&!lab[q-1]){ lab[q-1]=nl; st[sp++]=q-1; } if(qx<W-1&&M[q+1]&&!lab[q+1]){ lab[q+1]=nl; st[sp++]=q+1; }
+      if(qy>0&&M[q-W]&&!lab[q-W]){ lab[q-W]=nl; st[sp++]=q-W; } if(qy<H-1&&M[q+W]&&!lab[q+W]){ lab[q+W]=nl; st[sp++]=q+W; } }
+    boxes.push({x:x0,y:y0,w:x1-x0+1,h:y1-y0+1,n,fr:nr/n}); }
+  // 行にまとめる：縦の重なりが大きく、横の隙間が、高さの0.8倍以内のものを結ぶ
+  let bs=boxes.filter(b=>b.h<=p.maxH*2 && b.w<W*.9 && b.n>=3 && !(b.fr>.5 && b.n<600));   // 枠線の断片（角など）は除く
+  bs.sort((u,v)=>u.x-v.x);
+  const par=bs.map((_,i)=>i), find=i=>{ while(par[i]!==i){ par[i]=par[par[i]]; i=par[i]; } return i; };
+  for(let i=0;i<bs.length;i++){ const A=bs[i];
+    for(let j=i+1;j<bs.length;j++){ const B=bs[j]; if(B.x>A.x+A.w+Math.max(A.h,B.h)*.8+2) { if(B.x>A.x+A.w+p.maxH) break; continue; }
+      const ov=Math.min(A.y+A.h,B.y+B.h)-Math.max(A.y,B.y), mh=Math.min(A.h,B.h), Mh=Math.max(A.h,B.h);
+      const gap=B.x-(A.x+A.w), near=gap<=Math.max(A.h,B.h)*.8+2;
+      // 背の低い文字（ー、・など）は、隣の文字の高さの範囲に収まっていれば結ぶ
+      if(near && ((ov>=mh*.5 && Mh<=mh*2.6) || (ov>=mh*.9 && Mh<=mh*9))) par[find(j)]=find(i); } }
+  const grp=new Map(); bs.forEach((b,i)=>{ const r=find(i), e=grp.get(r); if(!e) grp.set(r,{x:b.x,y:b.y,x1:b.x+b.w,y1:b.y+b.h,n:b.n}); else { e.x=Math.min(e.x,b.x); e.y=Math.min(e.y,b.y); e.x1=Math.max(e.x1,b.x+b.w); e.y1=Math.max(e.y1,b.y+b.h); e.n+=b.n; } });
+  const out=[]; grp.forEach(e=>{ const w=e.x1-e.x, h=e.y1-e.y; if(h<p.minH||h>p.maxH||w<p.minW) return; if(w*h>W*H*.35) return; out.push({x:e.x,y:e.y,w,h,n:e.n}); });
+  return {boxes:out, containers, W, H};
+}
+/* 切り出した行を、背景に関係なく「白地に黒の文字」に直して、縦に並べた1枚の画像にまとめる */
+function ocrMontage(srcCanvas, dpr, boxes, o){
+  const sctx=srcCanvas.getContext('2d',{willReadFrequently:true}), TH=o.lineH||44, pad=o.pad==null?4:o.pad, gap=o.gap||36, margin=24, stagger=o.stagger==null?260:o.stagger, maxMH=o.montH||3000;
+  const items=[];
+  boxes.forEach((b,idx)=>{
+    const bx=Math.max(0,b.x-pad), by=Math.max(0,b.y-pad), bw=Math.min(srcCanvas.width/dpr-bx,b.w+2*pad), bh=Math.min(srcCanvas.height/dpr-by,b.h+2*pad);
+    const sc=Math.max(.4,Math.min(4,TH/(b.h*dpr))), cw=Math.max(8,Math.round(bw*dpr*sc)), ch=Math.max(8,Math.round(bh*dpr*sc));
+    const cv=document.createElement('canvas'); cv.width=cw; cv.height=ch; const g=cv.getContext('2d',{willReadFrequently:true}); g.imageSmoothingQuality='high';
+    g.drawImage(srcCanvas,Math.round(bx*dpr),Math.round(by*dpr),Math.round(bw*dpr),Math.round(bh*dpr),0,0,cw,ch);
+    const im=g.getImageData(0,0,cw,ch), d=im.data, n=cw*ch, hist=new Map();
+    for(let i=0;i<n;i++){ const k=(d[i*4]>>4)<<8|(d[i*4+1]>>4)<<4|(d[i*4+2]>>4); let e=hist.get(k); if(!e){ e={n:0,r:0,g:0,b:0}; hist.set(k,e); } e.n++; e.r+=d[i*4]; e.g+=d[i*4+1]; e.b+=d[i*4+2]; }
+    let best=null; hist.forEach(e=>{ if(!best||e.n>best.n) best=e; }); const br=best.r/best.n, bgc=best.g/best.n, bb=best.b/best.n;
+    const dist=new Float32Array(n); for(let i=0;i<n;i++) dist[i]=Math.hypot(d[i*4]-br,d[i*4+1]-bgc,d[i*4+2]-bb);
+    const sorted=Float32Array.from(dist).sort(), mx=Math.max(24,sorted[Math.min(n-1,Math.floor(n*.995))]);
+    for(let i=0;i<n;i++){ const v=Math.round(255*(1-Math.min(1,dist[i]/mx))); d[i*4]=d[i*4+1]=d[i*4+2]=v; d[i*4+3]=255; }
+    // 下線・上線（行の幅の大半を占める細い線）を消す
+    const dark=new Float32Array(ch); for(let y=0;y<ch;y++){ let c=0; for(let x=0;x<cw;x++) if(d[(y*cw+x)*4]<110) c++; dark[y]=c/cw; }
+    if(cw>=ch*1.5) for(let y=0;y<ch;y++){ if(dark[y]>=.7 && (y>=ch*.55 || y<=ch*.2)){ let y0=y, y1=y; while(y0>0&&dark[y0-1]>=.35) y0--; while(y1<ch-1&&dark[y1+1]>=.35) y1++; if(y1-y0<=Math.max(8,ch*.18)) for(let yy=y0;yy<=y1;yy++) for(let x=0;x<cw;x++){ const q=(yy*cw+x)*4; d[q]=d[q+1]=d[q+2]=255; } } }
+    g.putImageData(im,0,0);
+    items.push({idx, b:{x:bx,y:by,w:bw,h:bh}, ink:{x:b.x,y:b.y,w:b.w,h:b.h}, sc, cv, cw, ch});
+  });
+  // 縦に積む（高さの上限ごとに別の画像にする）
+  const sheets=[]; let cur=null;
+  items.forEach(it=>{ if(!cur || cur.h+it.ch+gap>maxMH){ cur={items:[],h:margin,w:0}; sheets.push(cur); } it.mx=margin+(cur.items.length%3)*stagger; it.my=cur.h; cur.items.push(it); cur.h+=it.ch+gap; cur.w=Math.max(cur.w,it.mx-margin+it.cw); });   // 左右にずらして積む（短い行が縦に揃うと、縦書きの1列と誤認されるため）
+  sheets.forEach(sh=>{ const W=sh.w+2*margin, H=sh.h+margin-gap, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,W,H); sh.items.forEach(it=>g.drawImage(it.cv,it.mx,it.my)); sh.canvas=cv; });
+  return sheets;
+}
+/* 切り出し方式のOCR */
+async function ocrExtractSeg(srcCanvas, o, onProgress){
+  const dpr=o.dpr||1, w=await ocrWorker(o.langs, onProgress);
+  await w.setParameters({tessedit_pageseg_mode:String(o.segPsm||6), user_defined_dpi:'300', preserve_interword_spaces:'1'});
+  const seg=ocrSegment(srcCanvas, dpr, o.seg), sheets=ocrMontage(srcCanvas, dpr, seg.boxes, o), res=[];
+  for(let si=0; si<sheets.length; si++){
+    if(onProgress) onProgress({status:'sheet', i:si, n:sheets.length});
+    const sh=sheets[si], r=await w.recognize(sh.canvas,{},{blocks:true}), lines=[];
+    (r.data.blocks||[]).forEach(b=>(b.paragraphs||[]).forEach(pa=>(pa.lines||[]).forEach(l=>lines.push(l))));
+    const per=new Map();
+    lines.forEach(l=>{ const cy=(l.bbox.y0+l.bbox.y1)/2; const it=sh.items.find(i=>cy>=i.my-18 && cy<i.my+i.ch+18); if(!it) return; (per.get(it)||per.set(it,[]).get(it)).push(l); });
+    per.forEach((ls,it)=>{
+      const k=it.sc*dpr, mapx=x=>it.b.x+(x-it.mx)/k, mapy=y=>it.b.y+(y-it.my)/k;
+      const words=ls.flatMap(l=>(l.words||[]).map(wd=>({text:wd.text, conf:wd.confidence, x:mapx(wd.bbox.x0), y:mapy(wd.bbox.y0), w:(wd.bbox.x1-wd.bbox.x0)/k, h:(wd.bbox.y1-wd.bbox.y0)/k,
+        syms:(wd.symbols||[]).map(s=>({t:s.text, x:mapx(s.bbox.x0), y:mapy(s.bbox.y0), w:(s.bbox.x1-s.bbox.x0)/k, h:(s.bbox.y1-s.bbox.y0)/k}))})));
+      if(!words.length) return;
+      const x0=Math.min(...words.map(q=>q.x)), y0=Math.min(...words.map(q=>q.y)), x1=Math.max(...words.map(q=>q.x+q.w)), y1=Math.max(...words.map(q=>q.y+q.h));
+      const nch=ls.reduce((a,l)=>a+(l.text||'').length,0)||1, conf=ls.reduce((a,l)=>a+l.confidence*((l.text||'').length),0)/nch;
+      res.push({text:words.map(q=>q.text).join(' ').replace(/\s+/g,' ').trim(), conf, x:x0, y:y0, w:x1-x0, h:y1-y0, words, box:it.ink||it.b});
+    });
+  }
+  res.containers=seg.containers; res.W=seg.W; res.H=seg.H;
+  return res;
+}
+/* 画像（canvas）からOCRして、行ごとの位置・文字の大きさ・色を返す。dprは、画像の1ピクセルがCSSの何分の1か（Retinaのスクリーンショットは2） */
+async function ocrExtract(srcCanvas, opts={}, onProgress){
+  const o=Object.assign({}, OCR_DEFAULT, opts), dpr=o.dpr||1;
+  let lines=[];
+  if(o.mode==='seg'){ lines=await ocrExtractSeg(srcCanvas, o, onProgress); }
+  else {
+  const W=srcCanvas.width, H=srcCanvas.height, k=o.scale, w=await ocrWorker(o.langs, onProgress);
+  await w.setParameters({tessedit_pageseg_mode:String(o.psm), user_defined_dpi:'300', preserve_interword_spaces:'1'});
+  const band=Math.max(600,Math.round(o.tileH/k)), overlap=Math.round(60/k);
+  for(let y0=0; y0<H; y0+=band-overlap){
+    const hh=Math.min(band,H-y0), c=document.createElement('canvas'); c.width=Math.round(W*k); c.height=Math.round(hh*k);
+    const g=c.getContext('2d'); g.imageSmoothingQuality='high'; g.drawImage(srcCanvas,0,y0,W,hh,0,0,c.width,c.height);
+    if(o.invert){ g.globalCompositeOperation='difference'; g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.globalCompositeOperation='source-over'; }
+    if(onProgress) onProgress({status:'band', y:y0, H});
+    const r=await w.recognize(c,{},{blocks:true});
+    // OCR入力の座標 → 元画像のピクセル → CSSピクセル（÷dpr）
+    ocrCollect(r.data, k*dpr, 0, y0/dpr).forEach(l=>lines.push(l));
+    if(y0+hh>=H) break;
+  }
+  }
+  // 帯の重なりで二重に読んだ単語を除く（位置が重なるものは、信頼度が高い方を残す）
+  const keep=[]; lines.sort((a,b)=>b.conf-a.conf).forEach(l=>{ if(!keep.some(m=>{ const ix=Math.min(l.x+l.w,m.x+m.w)-Math.max(l.x,m.x), iy=Math.min(l.y+l.h,m.y+m.h)-Math.max(l.y,m.y); return ix>0&&iy>0&&ix*iy>.5*Math.min(l.w*l.h,m.w*m.h); })) keep.push(l); });
+  const ctx=srcCanvas.getContext('2d'), out=[];
+  keep.sort((a,b)=>a.y-b.y||a.x-b.x).forEach(l=>{
+    if(l.conf<o.minConf) return; const t=l.text.replace(/[\s|_~`^]+/g,''); if(!t.length || (t.length<2 && l.conf<75)) return;
+    const fs=ocrFontSize(l,o.cal), col=ocrColors(ctx, dpr, l.box||l, o.fgPct);
+    out.push({...l, fs:fs.v, fsKind:fs.k, fg:col.fg, bg:col.bg, bgShare:col.bgShare, ratio:col.ratio});
+  });
+  out.containers=lines.containers||[]; out.W=lines.W; out.H=lines.H;
+  return out;
+}
+
+/* OCRの文字の後処理：日本語の文字の間の余分な空白を除く。円記号の誤読（\ → ¥）を直す */
+function ocrCleanText(t){
+  let x=t.replace(/(?<=[　-鿿＀-￯])\s+(?=[　-鿿＀-￯])/g,'');
+  x=x.replace(/\\(?=\d)/g,'¥').replace(/\s+/g,' ').trim();
+  return x;
+}
+const hex2 = c => '#'+[c.r,c.g,c.b].map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+function ocrModeColor(ctx, dpr, r){
+  const x=Math.max(0,Math.floor(r.x*dpr)), y=Math.max(0,Math.floor(r.y*dpr)), w=Math.max(1,Math.min(ctx.canvas.width-x,Math.ceil(r.w*dpr))), h=Math.max(1,Math.min(ctx.canvas.height-y,Math.ceil(r.h*dpr)));
+  const d=ctx.getImageData(x,y,w,h).data, hist=new Map(); const step=Math.max(1,Math.floor(Math.sqrt(w*h/4000)));
+  for(let yy=0;yy<h;yy+=step) for(let xx=0;xx<w;xx+=step){ const o=(yy*w+xx)*4, k=(d[o]>>4)<<8|(d[o+1]>>4)<<4|(d[o+2]>>4); let e=hist.get(k); if(!e){ e={n:0,r:0,g:0,b:0}; hist.set(k,e); } e.n++; e.r+=d[o]; e.g+=d[o+1]; e.b+=d[o+2]; }
+  let best=null; hist.forEach(e=>{ if(!best||e.n>best.n) best=e; }); return {r:best.r/best.n, g:best.g/best.n, b:best.b/best.n};
+}
+/* 枠（ボタン・入力欄の候補）と文字の行を結び付ける。
+   ボタン：文字が枠の中ほどにある（左右の余白がほぼ同じ）。入力欄：枠が横長で、文字が左に寄っている。段落を囲む箱・表の行・カードの見出し帯などは除く。
+   高さ24px未満の小さな枠（バッジ・タグなど）は、ボタンと区別できないため、ボタンとして扱わない */
+function ocrControls(lines, containers, ctx, dpr, W, H){
+  const inside=(l,c)=>{ const cx=l.box.x+l.box.w/2, cy=l.box.y+l.box.h/2; return cx>=c.x-2 && cx<=c.x+c.w+2 && cy>=c.y-2 && cy<=c.y+c.h+2; };
+  const used=new Set(), controls=[];
+  [...containers].filter(c=>c.w>=28&&c.w<=520&&c.h>=24&&c.h<=90).sort((a,b)=>a.w*a.h-b.w*b.h).forEach(c=>{
+    const ls=lines.filter(l=>!used.has(l) && inside(l,c)); if(!ls.length) return;
+    const text=ls.map(l=>l.text).join(' ').trim(); if(text.length>40) return;
+    const tx0=Math.min(...ls.map(l=>l.box.x)), tx1=Math.max(...ls.map(l=>l.box.x+l.box.w)), ty0=Math.min(...ls.map(l=>l.box.y)), ty1=Math.max(...ls.map(l=>l.box.y+l.box.h));
+    const tw=tx1-tx0, th=ty1-ty0, padL=tx0-c.x, padR=c.x+c.w-tx1, padT=ty0-c.y, padB=c.y+c.h-ty1;
+    if(padL<2||padR<2||padT<2||padB<2) return;                         // 文字が枠にはみ出している（枠ではない）
+    if(c.h>th*3.4) return;                                              // 文字に対して枠が縦に大きすぎる（カード・段落の箱）
+    const centered=Math.abs(padL-padR)<=Math.max(10,c.w*.18), leftAligned=padL<=Math.max(26,c.h*.8) && padR>padL*1.8;
+    const inC=ocrModeColor(ctx,dpr,{x:c.x+3,y:c.y+3,w:Math.max(1,c.w-6),h:Math.max(1,c.h-6)});
+    const ox=Math.max(0,c.x-6), oy=Math.max(0,c.y-6), outC=ocrModeColor(ctx,dpr,{x:ox,y:oy,w:Math.min(W-ox,c.w+12),h:Math.min(H-oy,5)});
+    const filled=Math.hypot(inC.r-outC.r,inC.g-outC.g,inC.b-outC.b)>45, first=ls[0];
+    let kind=null;
+    if(centered && c.w<=tw+Math.max(16,th*14)) kind='button';
+    else if(leftAligned && c.w>=90 && c.h>=28 && c.h<=64 && !filled) kind='input';
+    if(!kind) return;
+    ls.forEach(l=>used.add(l)); controls.push({rect:c, lines:ls, text, kind, filled, fill:inC});
+  });
+  return {controls, rest:lines.filter(l=>!used.has(l))};
+}
+/* OCRの結果から、アプリが解析できるHTMLを作る（文字の行・ボタン・入力欄・見出しを、画像と同じ位置に置く）。画像の中身そのものではなく、推定による再構成 */
+function ocrBuildHTML(lines, meta, ctx, dpr, W, H, o){
+  o=o||{};
+  const clean=lines.map(l=>({...l, text:ocrCleanText(l.text)})).filter(l=>l.text.length>=1 && l.box);
+  const {controls, rest}=ocrControls(clean, meta.containers||[], ctx, dpr, W, H);
+  const pageBg=ocrModeColor(ctx,dpr,{x:0,y:0,w:W,h:Math.min(H,3000)});
+  const ja=clean.some(l=>FWC_RE.test(l.text));
+  const sizes=clean.map(l=>l.fs).sort((a,b)=>a-b), medFs=sizes.length?sizes[sizes.length>>1]:14;
+  const fsOut=v=>{ const r=Math.round(v*10)/10; return (r>=(o.smallThr||11.2) && r<12)?12:r; };   // 推定には±5%ほどの誤差があるため、11.2〜12pxは12pxとして扱う（11px前後以下だけを小さい文字とする）
+  const px=v=>Math.round(v*10)/10+'px';
+  let out='', i=0;
+  const colorOf=l=>({fg:hex2(l.fg), bg:l.bgShare>=.5?hex2(l.bg):null});
+  const unknownBg=bg=>`background-image:linear-gradient(${bg},${bg})`;   // 背景が単色でない：コントラストを判定しない
+  const heads=rest.filter(l=>l.fs>=Math.max(20,medFs*1.35)).sort((a,b)=>b.fs-a.fs);
+  const h1=heads.length?heads[0]:null;
+  // 上部に横に並ぶ短い項目は、ナビゲーションとして扱う
+  const topRow=rest.filter(l=>l.box.y<Math.min(160,H*.2) && l.text.length<=24 && l.fs<Math.max(20,medFs*1.35));
+  const rows=new Map(); topRow.forEach(l=>{ const k=Math.round((l.box.y+l.box.h/2)/10); (rows.get(k)||rows.set(k,[]).get(k)).push(l); });
+  const navSet=new Set(); rows.forEach(r=>{ if(r.length>=3) r.forEach(l=>navSet.add(l)); });
+  rest.forEach(l=>{
+    const b=l.box, c=colorOf(l), st=`left:${px(b.x)};top:${px(b.y)};width:${px(b.w)};height:${px(b.h)};font-size:${px(fsOut(l.fs))};line-height:${px(b.h)};color:${c.fg};${c.bg?`background-color:${c.bg}`:unknownBg('#888')}`;
+    const tag=(l===h1)?'h1':(heads.includes(l)?'h2':(navSet.has(l)?'a':'p'));
+    out+= tag==='a' ? `<a class="o" href="#" style="${st}" data-ocr="${i++}">${esc(l.text)}</a>` : `<${tag} class="o" style="${st}" data-ocr="${i++}">${esc(l.text)}</${tag}>`;
+  });
+  if(navSet.size){ const ns=[...navSet], nx0=Math.min(...ns.map(l=>l.box.x)), ny0=Math.min(...ns.map(l=>l.box.y)), nx1=Math.max(...ns.map(l=>l.box.x+l.box.w)), ny1=Math.max(...ns.map(l=>l.box.y+l.box.h)); out=out.replace(/<a class="o"/,`<nav class="o" style="left:${px(nx0)};top:${px(ny0)};width:${px(nx1-nx0)};height:${px(ny1-ny0)}"></nav><a class="o"`); }
+  controls.forEach(ct=>{
+    const r=ct.rect, l=ct.lines[0], c=colorOf(l), fillHex=hex2(ct.fill), base=`left:${px(r.x)};top:${px(r.y)};width:${px(r.w)};height:${px(r.h)};font-size:${px(fsOut(l.fs))}`;
+    if(ct.kind==='input') out+=`<input class="o" type="text" placeholder="${esc(ct.text)}" aria-label="${esc(ct.text)}" style="${base};border:1px solid #888;border-radius:6px;background:${fillHex};color:${c.fg}" data-ocr="${i++}">`;
+    else out+=`<button class="o" type="button" style="${base};border:${ct.filled?'0':'1px solid '+c.fg};border-radius:8px;background:${fillHex};color:${c.fg};display:flex;align-items:center;justify-content:center;padding:0" data-ocr="${i++}">${esc(ct.text)}</button>`;
+  });
+  return `<!doctype html><html lang="${ja?'ja':'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:${W}px;height:${H}px;background:${hex2(pageBg)};position:relative;overflow:hidden}.o{position:absolute;display:block;white-space:nowrap;font-family:sans-serif;font-weight:400;text-decoration:none;overflow:visible}button.o,input.o{font-family:sans-serif}</style></head><body>${out}</body></html>`;
+}
+
+/* ============================================================
+   画像（OCR）モード
+   ============================================================ */
+const MAX_SHOT_BYTES = 30*1024*1024, MAX_SHOT_CSS_H = 8000;
+function autoDpr(W,H){ if(W<1600 && H/W>1.6) return clamp(Math.round(W/390),1,3); if(W>=3600) return 3; if(W>=2000) return 2; return 1; }
+function imageDoc(){ return S.shot ? `<!doctype html><html><body style="margin:0"><img src="${S.shot.dataURL}" style="display:block;width:${PAGE_W}px;height:auto" alt=""></body></html>` : ''; }
+function leaveImageMode(){
+  S.imageMode=false; S.ocr=null; $('#page').classList.remove('imgmode');
+  if(S.vpBeforeImg){ S.vp=S.vpBeforeImg.vp; S.vpCustom=S.vpBeforeImg.custom; S.vpBeforeImg=null; }
+  applyViewportSize(); renderVpUI();
+}
+async function loadShotFile(file){
+  if(!file) return;
+  if(!/^image\//.test(file.type)){ setStatus('画像ファイルを選んでください（PNG・JPEG・WebPなど）', true); return; }
+  if(file.size>MAX_SHOT_BYTES){ setStatus('画像が大きすぎます（30MBまで）', true); return; }
+  setStatus('画像を読み込んでいます…');
+  try{
+    const bmp=await createImageBitmap(file), c=document.createElement('canvas'); c.width=bmp.width; c.height=bmp.height;
+    const g=c.getContext('2d',{willReadFrequently:true}); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(bmp,0,0);
+    S.shot={canvas:c, name:(file.name||'スクリーンショット').replace(/\.[a-z0-9]+$/i,''), w:c.width, h:c.height, dataURL:null};
+    const t=document.createElement('canvas'), k=Math.min(1,2400/c.width); t.width=Math.round(c.width*k); t.height=Math.round(c.height*k); t.getContext('2d').drawImage(c,0,0,t.width,t.height);
+    S.shot.dataURL=t.toDataURL('image/jpeg',.9);
+  }catch(e){ setStatus('この画像を読み込めませんでした', true); return; }
+  renderSrc(); await analyzeShot();
+}
+async function analyzeShot(){
+  const sh=S.shot, o=S.ocrOpt; if(!sh) return;
+  const dpr = o.dpr==='auto' ? autoDpr(sh.w,sh.h) : +o.dpr;
+  const cssW=Math.round(sh.w/dpr); let cssH=Math.round(sh.h/dpr);
+  if(cssW<320 || cssW>3840){ setStatus(`画像の幅（${cssW}px相当）が範囲外です。画像の倍率を直してください（320〜3840px）`, true); return; }
+  let canvas=sh.canvas, cut=false;
+  if(cssH>MAX_SHOT_CSS_H){ const c=document.createElement('canvas'); c.width=sh.w; c.height=MAX_SHOT_CSS_H*dpr; c.getContext('2d',{willReadFrequently:true}).drawImage(sh.canvas,0,0); canvas=c; cssH=MAX_SHOT_CSS_H; cut=true; }
+  setStatus('文字を読み取っています…（初回は、OCRエンジンの取得に時間がかかります）');
+  const t0=performance.now(); let lines;
+  try{
+    lines=await ocrExtract(canvas,{langs:o.langs,dpr},m=>{ if(m.status==='band'||m.status==='sheet') return; if(typeof m.progress==='number') setStatus(`${m.status==='recognizing text'?'文字を読み取り中':'OCRの準備中（'+m.status+'）'}… ${Math.round(m.progress*100)}%`); });
+  }catch(e){ setStatus('OCRを実行できませんでした：'+(e&&e.message?e.message:e)+'（ネットワークと、ブラウザの対応を確認してください）', true); return; }
+  const ms=performance.now()-t0, ctx=canvas.getContext('2d');
+  const html=ocrBuildHTML(lines,{containers:lines.containers},ctx,dpr,cssW,cssH);
+  if(!S.imageMode) S.vpBeforeImg={vp:S.vp, custom:{...S.vpCustom}};
+  S.imageMode=true;
+  const foldH = cssW<=600?812 : cssW<=1024?1024 : 800;
+  await setViewport('custom',{custom:{w:cssW,h:Math.min(foldH,cssH)},noReload:true});
+  $('#shot').src=sh.dataURL; $('#page').classList.add('imgmode');
+  S.ocr={n:lines.length, conf:lines.length?lines.reduce((a,l)=>a+l.conf,0)/lines.length:0, ms, dpr, cssW, cssH, cut, ctl:(html.match(/<(button|input) class="o"/g)||[]).length, low:lines.filter(l=>l.conf<75).map(l=>({text:ocrCleanText(l.text), conf:l.conf, x:l.box.x, y:l.box.y, w:l.box.w, h:l.box.h})).sort((a,b)=>a.conf-b.conf).slice(0,30)};
+  await loadHTML(html, sh.name, '', {image:true});
+  setStatus(`解析完了：文字${S.ocr.n}行を読み取り（${(ms/1000).toFixed(1)}秒）／${S.comps.length}要素／指摘${S.issues.filter(i=>i.auto).length}件${cut?`。画像が長いため先頭${MAX_SHOT_CSS_H}pxまで`:''}（${sh.name}）`);
+  S.tab='comps'; renderAll();
+}
+function panelOcr(){
+  const O=S.ocr; if(!O) return '';
+  return `<div class="sec"><h3>画像（OCR）の読み取り結果</h3><div class="tiles">
+    <div class="tile"><b>${O.n}行</b><span>読み取った文字の行</span></div>
+    <div class="tile"><b>${Math.round(O.conf)}%</b><span>認識の信頼度（平均）</span></div>
+    <div class="tile"><b>${O.ctl}</b><span>ボタン・入力欄の候補</span></div>
+    <div class="tile"><b>${(O.ms/1000).toFixed(1)}秒</b><span>処理時間（${O.cssW}×${O.cssH}px相当・${O.dpr}倍）</span></div></div>
+    <div class="note" style="margin-top:8px"><b style="color:var(--text)">推定による再構成です。</b>画像の文字・位置・色から、文字の大きさ・コントラスト・ボタンの大きさを推定しています（実測値の誤差の目安は README の「OCRの精度」）。DOMが取れないため、リンク・フォーム・見出しの意味や、ニールセンの多くの項目は自動では判定せず、コントラスト・小さな文字・操作領域・ファーストビューの操作数だけを指摘します。写真・グラデーションの上の文字は、読み取れないことがあります。</div>
+    ${O.low.length?`<details class="grp"><summary>認識の信頼度が低い行（${O.low.length}）— 読み間違いの可能性</summary><div class="inner">${O.low.map(l=>`<div class="item"><span class="t">${Math.round(l.conf)}%</span><span class="l">${esc(l.text)}</span><span class="p">@${Math.round(l.x)},${Math.round(l.y)}</span></div>`).join('')}</div></details>`:''}</div>`;
+}
+
+/* ============================================================
    入力UI
    ============================================================ */
 function renderSrc(){
@@ -2527,6 +2898,13 @@ function renderSrc(){
     b.innerHTML=`<div class="row"><input type="url" id="urlIn" placeholder="https://example.com/" aria-label="解析するURL"><button class="btn" id="urlGo">解析する</button></div>
     <details style="margin-top:8px"><summary class="hint" style="cursor:pointer">中継(プロキシ)URLを設定する（任意）</summary><div class="row" style="margin-top:6px"><input type="url" id="proxyIn" placeholder="https://your-worker.example.workers.dev/?url={url}" aria-label="中継URL"></div></details>
     <p class="hint">他サイトのHTMLはブラウザからは直接取得できないことが多い（CORS）ため、自分で用意した中継を指定するか、「HTML貼り付け」をご利用ください。スクリプトは実行せず、HTMLとCSSのみで描画します。</p>`;
+  } else if(S.srcMode==='img'){
+    const o=S.ocrOpt, sh=S.shot;
+    b.innerHTML=`<div class="drop" id="dropZone"><div><b>スクリーンショットを選ぶ・貼り付ける・ここにドロップ</b></div><div class="row" style="justify-content:center;margin-top:8px"><button class="btn" id="imgPick">画像を選ぶ</button><input type="file" id="imgFile" accept="image/*" hidden><span class="hint" style="margin:0">またはクリップボードの画像を貼り付け（Ctrl/⌘+V）</span></div></div>
+    <div class="vp-row"><label for="ocrLang">言語</label><select id="ocrLang" aria-label="OCRの言語"><option value="jpn+eng" ${o.langs==='jpn+eng'?'selected':''}>日本語＋英語</option><option value="eng" ${o.langs==='eng'?'selected':''}>英語のみ</option><option value="jpn" ${o.langs==='jpn'?'selected':''}>日本語のみ</option></select>
+      <label for="ocrDpr">画像の倍率</label><select id="ocrDpr" aria-label="画像の倍率（Retinaは2倍）">${['auto','1','2','3'].map(v=>`<option value="${v}" ${String(o.dpr)===v?'selected':''}>${v==='auto'?'自動':v+'倍'}</option>`).join('')}</select>
+      ${sh?'<button class="mini" id="ocrRerun">この設定で読み直す</button>':''}</div>
+    <p class="hint">画像はこのブラウザの中だけで処理され、外部には送信されません。OCRエンジンと言語データ（約5MB）は、初回だけ CDN（jsDelivr）から取得してブラウザに保存します。画像の中の文字・大きさ・色・ボタンの位置を推定し、DOMが取れない画面（デザイン案・他社サイト・アプリ）で使えます。読み取りと推定には誤りが含まれます（精度は README を参照）。</p>`;
   } else {
     b.innerHTML=`<textarea id="htmlIn" placeholder="<!doctype html> … ページのHTMLを貼り付け（ブラウザの「ページのソースを表示」からコピー）" aria-label="HTML"></textarea><div class="row" style="margin-top:8px"><button class="btn" id="htmlGo">解析する</button><span class="hint" style="margin:0">外部CSSは絶対URLなら読み込まれます</span></div>`;
   }
@@ -2596,6 +2974,8 @@ document.addEventListener('click', e=>{
   if(t.id==='themeBtn'){ toggleTheme(); return; }
   if(t.id==='copyReport'){ navigator.clipboard.writeText(buildReport()).then(()=>toast('レポートをコピーしました'),()=>toast('コピーに失敗しました')); return; }
   if(t.id==='dlReport'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buildReport()],{type:'text/markdown'})); a.download='ui-analysis-report.md'; a.click(); return; }
+  if(t.id==='imgPick'){ const f=$('#imgFile'); if(f) f.click(); return; }
+  if(t.id==='ocrRerun'){ analyzeShot(); return; }
   if(t.id==='vpApply'){ setViewport('custom',{custom:{w:$('#vpW').value, h:$('#vpH').value}}); return; }
   if(t.id==='respRun'){ analyzeAllWidths(); return; }
   if(t.id==='respCopy'){ navigator.clipboard.writeText(buildRespReport()).then(()=>toast('画面幅の比較をコピーしました'),()=>toast('コピーできませんでした')); return; }
@@ -2621,6 +3001,9 @@ document.addEventListener('change', e=>{
   const t=e.target;
   if(t.dataset.type){ t.checked?S.hiddenTypes.delete(t.dataset.type):S.hiddenTypes.add(t.dataset.type); renderOverlay(); }
   else if(t.dataset.act==='msev'){ const is=S.issues.find(i=>i.id===t.dataset.issue); is.msev=+t.value; is.sev=+t.value; renderPanel(); renderOverlay(); }
+  else if(t.id==='imgFile'){ const f=t.files&&t.files[0]; t.value=''; loadShotFile(f); }
+  else if(t.id==='ocrLang'){ S.ocrOpt.langs=t.value; }
+  else if(t.id==='ocrDpr'){ S.ocrOpt.dpr=t.value; }
   else if(t.id==='vpSel'){ if(t.value==='custom'){ S.vp='custom'; renderVpUI(); } else setViewport(t.value); }
   else if(t.id==='gPersona'){ S.gaze.persona=t.value; S.gaze.wV=S.gaze.wR=S.gaze.wP=null; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
   else if(t.id==='gTask'){ S.gaze.task=t.value; S.gaze.trial=0; simulate(); renderPanel(); renderOverlay(); }
@@ -2674,6 +3057,20 @@ $('#stageScroll').addEventListener('mousemove', e=>{
   const hb=$('#holder').getBoundingClientRect();
   S.lens.cx=Math.round((e.clientX-hb.left)/S.scale); S.lens.cy=Math.round((e.clientY-hb.top)/S.scale);
   const R=780-660*S.lens.tunnel; $('#vig').style.background=`radial-gradient(circle at ${S.lens.cx}px ${S.lens.cy}px, rgba(0,0,0,0) ${R*.55}px, rgba(0,0,0,.9) ${R*1.2}px)`;
+});
+/* 貼り付け・ドロップで画像を受け取る */
+document.addEventListener('paste', e=>{
+  const items=[...(e.clipboardData&&e.clipboardData.items||[])].filter(i=>i.kind==='file' && /^image\//.test(i.type)); if(!items.length) return;
+  const tg=e.target; if(tg && /^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName) && S.srcMode!=='img') return;
+  e.preventDefault(); if(S.srcMode!=='img'){ S.srcMode='img'; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b.dataset.src==='img')); renderSrc(); }
+  loadShotFile(items[0].getAsFile());
+});
+['dragenter','dragover'].forEach(ev=>document.addEventListener(ev, e=>{ if(![...(e.dataTransfer&&e.dataTransfer.types||[])].includes('Files')) return; e.preventDefault(); const z=$('#dropZone'); if(z) z.classList.add('over'); }));
+['dragleave','drop'].forEach(ev=>document.addEventListener(ev, e=>{ const z=$('#dropZone'); if(z) z.classList.remove('over'); }));
+document.addEventListener('drop', e=>{
+  const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f || !/^image\//.test(f.type)) return; e.preventDefault();
+  if(S.srcMode!=='img'){ S.srcMode='img'; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b.dataset.src==='img')); renderSrc(); }
+  loadShotFile(f);
 });
 function scrollToRect(r){ if(!r) return; const sc=$('#stageScroll'); sc.scrollTo({top:Math.max(0, r.y*S.scale-90), behavior:'smooth'}); }
 
