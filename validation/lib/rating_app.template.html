@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>指摘の採点アプリ｜UI Anatomy Scanner</title>
+<style>
+:root{--bg:#F8FAFC;--surface:#fff;--border:#E2E8F0;--text:#0F172A;--muted:#526173;--primary:#2563EB;--primary-light:#EFF6FF;--ok:#15803D;--ok-bg:#DCFCE7;--warn:#A16207;--warn-bg:#FEF9C3;--bad:#B91C1C;--bad-bg:#FEE2E2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",sans-serif}
+button,select,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0}
+.grow{flex:1}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:6px;padding:6px 12px;min-height:36px;font-weight:600}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+select{border:1px solid var(--border);border-radius:6px;padding:5px 8px;min-height:36px;background:var(--surface)}
+.prog{min-width:220px;font-size:13px;color:var(--muted)}
+.bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:3px}
+.bar>i{display:block;height:100%;background:var(--primary);width:0}
+main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(360px,1fr);gap:16px;padding:16px;align-items:start}
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.shot{height:calc(100vh - 150px);min-height:320px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:#fff;position:relative}
+@media(max-width:900px){.shot{height:60vh}}
+.shot .inner{position:relative}
+.shot img{display:block}
+.box{position:absolute;border:3px solid #DC2626;background:rgba(220,38,38,.12);border-radius:3px;pointer-events:none}
+.box b{white-space:nowrap;position:absolute;left:-3px;top:-22px;background:#DC2626;color:#fff;font-size:12px;padding:1px 6px;border-radius:3px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:6px}
+.chip{display:inline-block;border:1px solid var(--border);border-radius:99px;padding:0 8px;font-size:12px;background:var(--bg)}
+h2{font-size:18px;line-height:1.45;margin:6px 0}
+.h-code{font-weight:600;color:var(--primary)}
+.sev{display:inline-block;border-radius:4px;padding:0 6px;font-size:12px;font-weight:600;background:var(--warn-bg);color:var(--warn)}
+.ev{font-size:13px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;margin:6px 0;word-break:break-all}
+.ev code{font-size:12px}
+.fix{font-size:14px}
+.judge{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.judge button{border:2px solid var(--border);background:var(--surface);border-radius:10px;padding:10px 6px;font-weight:600;font-size:15px;min-height:56px}
+.judge button small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.judge button[data-v="妥当"][aria-pressed=true]{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.judge button[data-v="疑わしい"][aria-pressed=true]{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+.judge button[data-v="誤り"][aria-pressed=true]{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+details{margin:8px 0;font-size:13px;color:var(--muted)}
+details summary{cursor:pointer;font-weight:600}
+textarea{width:100%;min-height:60px;border:1px solid var(--border);border-radius:6px;padding:6px 8px}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.hint{font-size:12px;color:var(--muted)}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:4px 10px;font-size:13px;margin:6px}
+dialog{border:1px solid var(--border);border-radius:12px;max-width:760px;width:92vw;padding:20px}
+dialog::backdrop{background:rgba(15,23,42,.4)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--border);padding:4px 8px;text-align:left}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0F172A;color:#fff;border-radius:8px;padding:8px 16px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>指摘の採点アプリ</h1>
+  <label>評価者 <select id="rater" aria-label="評価者"><option value="1">評価者1</option><option value="2">評価者2</option></select></label>
+  <label><input type="checkbox" id="onlyUn"> 未採点だけ</label>
+  <label><input type="checkbox" id="withCtl"> コントロール（わざと違反を入れたページ）も含める</label>
+  <div class="grow"></div>
+  <div class="prog" role="status" aria-live="polite"><span id="progTxt"></span><div class="bar"><i id="progBar"></i></div></div>
+  <button class="btn" id="sum">集計を見る</button>
+  <button class="btn" id="imp">CSVを読み込む</button>
+  <button class="btn primary" id="exp">CSVを書き出す</button>
+  <input type="file" id="file" accept=".csv,text/csv" hidden>
+</header>
+<main>
+  <section aria-label="ページの画像">
+    <div class="meta"><b id="pgName"></b><span class="chip" id="pgSet"></span><span class="hint" id="pgNote"></span></div>
+    <div class="shot" id="shot" tabindex="0" aria-label="ページの画像（赤い枠が、ツールの指摘の場所）"><div class="inner" id="inner"></div></div>
+  </section>
+  <section class="card" aria-label="採点">
+    <div class="meta"><span id="pos"></span><span class="chip" id="stateChip"></span></div>
+    <div><span class="h-code" id="hCode"></span>　<span id="hName"></span>　<span class="sev" id="sev"></span></div>
+    <h2 id="title"></h2>
+    <div id="detail"></div>
+    <div id="evid"></div>
+    <div class="fix" id="fix"></div>
+    <div class="judge" role="group" aria-label="判定">
+      <button data-v="妥当" aria-pressed="false">妥当（1）<small>事実で、問題になりうる</small></button>
+      <button data-v="疑わしい" aria-pressed="false">疑わしい（2）<small>事実だが、この文脈では微妙</small></button>
+      <button data-v="誤り" aria-pressed="false">誤り（3）<small>事実と違う</small></button>
+    </div>
+    <details><summary>判断の基準（クリックで開く）</summary>
+      <p><b>妥当</b>：指摘の内容が事実で、そのページの種類にとって実際に問題になりうる。<br><b>疑わしい</b>：事実だが、そのページの文脈では問題とは言いにくい（例：問い合わせフォームにキャンセルがない）。<br><b>誤り</b>：指摘の内容が事実と違う。</p>
+      <p>左の画像の赤い枠が、ツールが指摘した場所です。画像は、ページの上から5000pxまでです。枠が画像にない指摘は、ページの下の方にあります（必要なら、元のページを開いて確かめてください）。</p>
+    </details>
+    <label class="hint" for="note">メモ（任意）</label>
+    <textarea id="note" placeholder="迷った理由など"></textarea>
+    <div class="nav">
+      <button class="btn" id="prev">← 前へ</button><button class="btn" id="next">次へ →</button><button class="btn" id="nextUn">次の未採点（n）</button><button class="btn" id="clr">判定を消す（0）</button>
+    </div>
+    <p class="hint">キー操作：1＝妥当／2＝疑わしい／3＝誤り（押すと次の未採点へ進みます）、← →＝前後、n＝次の未採点、0＝判定を消す。採点はこのブラウザに自動で保存されます。AIによる採点は含まれません。</p>
+  </section>
+</main>
+<dialog id="dlg"><div id="dlgBody"></div><div class="nav"><button class="btn" id="dlgClose">閉じる</button></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const DATA = /*__DATA__*/null;
+const LAB = ['妥当','疑わしい','誤り'], KEY = 'uas-rating-v1';
+const $ = s => document.querySelector(s), esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let ST = { rater:'1', onlyUn:false, withCtl:false, a:{'1':{},'2':{}}, notes:{'1':{},'2':{}}, idx:0 };
+try{ const s = JSON.parse(localStorage.getItem(KEY)||'null'); if(s && s.a) ST = Object.assign(ST, s); }catch(e){}
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(ST)); }catch(e){ toast('保存できませんでした。CSVを書き出して、控えを取ってください'); } };
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2600); }
+const total = () => DATA.rows.filter(r => ST.withCtl || r.set!=='control');
+const list = () => total().filter(r => !ST.onlyUn || !ST.a[ST.rater][r.key]);
+function render(){
+  const L = list(), all = total(); ST.idx = Math.max(0, Math.min(ST.idx, L.length-1));
+  const done = all.filter(r => ST.a[ST.rater][r.key]).length;
+  $('#progTxt').textContent = `評価者${ST.rater}：${done} / ${all.length} 件 採点済み`; $('#progBar').style.width = (all.length?done/all.length*100:0)+'%';
+  $('#rater').value = ST.rater; $('#onlyUn').checked = ST.onlyUn; $('#withCtl').checked = ST.withCtl;
+  if(!L.length){ ['detail','evid','fix','hCode','hName','sev','pos','pgName','pgSet','pgNote','stateChip'].forEach(i=>$('#'+i).textContent=''); $('#title').textContent = ST.onlyUn ? 'すべて採点済みです。「CSVを書き出す」で保存できます。' : '対象がありません。'; $('#inner').innerHTML=''; $('#note').value=''; document.querySelectorAll('.judge button').forEach(b=>b.setAttribute('aria-pressed','false')); return; }
+  const r = L[ST.idx], pg = DATA.pages[r.page], v = ST.a[ST.rater][r.key]||'', nm = DATA.names[r.h]||{ja:'',en:''};
+  $('#pos').textContent = `${ST.idx+1} / ${L.length} 件目`; $('#stateChip').textContent = v ? '採点済み：'+v : '未採点';
+  $('#hCode').textContent = r.h==='SUP' ? '補助' : r.h; $('#hName').textContent = nm.ja + (nm.en?`（${nm.en}）`:''); $('#sev').textContent = '重大度 '+r.sev+'（ツール）';
+  $('#title').textContent = r.title; $('#detail').textContent = r.detail||'';
+  $('#evid').innerHTML = (r.evList&&r.evList.length) ? '<div class="ev">根拠：'+r.evList.slice(0,6).map(e=>'<code>'+esc(e)+'</code>').join(' ／ ')+'</div>' : (r.evidence?'<div class="ev">根拠：<code>'+esc(r.evidence)+'</code></div>':'');
+  $('#fix').innerHTML = r.fix ? '<b>ツールの改善案</b>：'+esc(r.fix) : '';
+  document.querySelectorAll('.judge button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v===v));
+  $('#note').value = ST.notes[ST.rater][r.key]||'';
+  $('#pgName').textContent = pg.label; $('#pgSet').textContent = r.set; $('#pgNote').textContent = pg.pageH>pg.shownH ? `（ページの高さ ${pg.pageH}px のうち、上の ${pg.shownH}px を表示）` : '';
+  const sc = DATA.scale, w = Math.round(1280*sc), inner = $('#inner'); inner.style.width = w+'px';
+  const rects = (r.rects||[]).filter(q=>q.y < pg.shownH);
+  inner.innerHTML = `<img src="${pg.img}" width="${w}" alt="${esc(pg.label)}のページ画像">` + rects.map((q,i)=>`<div class="box" style="left:${q.x*sc-3}px;top:${q.y*sc-3}px;width:${Math.max(6,q.w*sc)}px;height:${Math.max(6,q.h*sc)}px">${i===0?'<b>指摘</b>':''}</div>`).join('');
+  if((r.rects||[]).length && !rects.length) inner.insertAdjacentHTML('afterbegin','<div class="warn">この指摘の場所は、画像の外（ページの下の方）です。</div>');
+  else if(!(r.rects||[]).length) inner.insertAdjacentHTML('afterbegin','<div class="warn">この指摘は、ページ全体に関するもので、枠はありません（または、場所が取得できませんでした）。</div>');
+  const sh = $('#shot'); sh.scrollTop = rects.length ? Math.max(0, rects[0].y*sc - 140) : 0; sh.scrollLeft = 0;
+}
+function setV(v){
+  const L=list(); if(!L.length) return; const r=L[ST.idx];
+  if(v) ST.a[ST.rater][r.key]=v; else delete ST.a[ST.rater][r.key]; save();
+  if(v && !ST.onlyUn){ gotoNextUn(true); return; }   // 「未採点だけ」のときは、採点した項目が一覧から消えるので、そのまま次の項目が出る
+  render(); if(v && ST.onlyUn && !list().length) toast('すべて採点済みです。「CSVを書き出す」で保存できます');
+}
+function gotoNextUn(notify){
+  const L=list(); for(let k=1;k<=L.length;k++){ const j=(ST.idx+k)%L.length; if(!ST.a[ST.rater][L[j].key]){ ST.idx=j; render(); return; } }
+  render(); if(notify) toast('すべて採点済みです。「CSVを書き出す」で保存できます');
+}
+document.querySelectorAll('.judge button').forEach(b => b.addEventListener('click', () => setV(b.dataset.v)));
+$('#prev').onclick = () => { ST.idx--; render(); };
+$('#next').onclick = () => { ST.idx++; render(); };
+$('#nextUn').onclick = () => gotoNextUn(true);
+$('#clr').onclick = () => setV('');
+$('#note').addEventListener('change', e => { const L=list(); if(!L.length) return; const k=L[ST.idx].key; if(e.target.value.trim()) ST.notes[ST.rater][k]=e.target.value.trim(); else delete ST.notes[ST.rater][k]; save(); });
+$('#rater').onchange = e => { ST.rater = e.target.value; ST.idx = 0; save(); render(); };
+$('#onlyUn').onchange = e => { ST.onlyUn = e.target.checked; ST.idx = 0; save(); render(); };
+$('#withCtl').onchange = e => { ST.withCtl = e.target.checked; ST.idx = 0; save(); render(); };
+document.addEventListener('keydown', e => {
+  if(/^(TEXTAREA|INPUT|SELECT)$/.test(document.activeElement.tagName) || e.ctrlKey || e.metaKey || e.altKey || $('#dlg').open) return;
+  if(e.key==='1') setV('妥当'); else if(e.key==='2') setV('疑わしい'); else if(e.key==='3') setV('誤り'); else if(e.key==='0') setV('');
+  else if(e.key==='ArrowRight'){ ST.idx++; render(); } else if(e.key==='ArrowLeft'){ ST.idx--; render(); } else if(e.key==='n') gotoNextUn(true); else return;
+  e.preventDefault();
+});
+/* ---- CSV ---- */
+const q = v => { v=String(v==null?'':v); return '"'+v.replace(/"/g,'""')+'"'; };
+function csv(){
+  const head=['page','set','issue_no','heuristic','severity','title','evidence','rater1','rater2','note'];
+  const rows=DATA.rows.map(r=>{ const n=[ST.notes['1'][r.key]?'評価者1：'+ST.notes['1'][r.key]:'', ST.notes['2'][r.key]?'評価者2：'+ST.notes['2'][r.key]:''].filter(Boolean).join('／'); return [r.page,r.set,r.no,r.h,r.sev,r.title,r.evidence,ST.a['1'][r.key]||'',ST.a['2'][r.key]||'',n]; });
+  return '﻿'+[head,...rows].map(r=>r.map(q).join(',')).join('\n')+'\n';
+}
+$('#exp').onclick = () => { const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv()],{type:'text/csv'})); a.download='rating_sheet_rated.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),30000); toast('CSVを書き出しました。score_ratings.js で集計できます'); };
+function parseCSV(t){ const rows=[]; let row=[],cur='',qq=false; t=t.replace(/^﻿/,''); for(let i=0;i<t.length;i++){ const c=t[i]; if(qq){ if(c==='"'){ if(t[i+1]==='"'){ cur+='"'; i++; } else qq=false; } else cur+=c; } else if(c==='"') qq=true; else if(c===','){ row.push(cur); cur=''; } else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; } else if(c!=='\r') cur+=c; } if(cur||row.length){ row.push(cur); rows.push(row); } return rows; }
+$('#imp').onclick = () => $('#file').click();
+$('#file').onchange = async e => {
+  const f=e.target.files[0]; e.target.value=''; if(!f) return; const rows=parseCSV(await f.text()), h=rows[0]||[], ix=n=>h.indexOf(n);
+  if(ix('page')<0||ix('issue_no')<0||ix('rater1')<0){ toast('採点シートのCSVではありません'); return; }
+  let add=0, skip=0;
+  rows.slice(1).forEach(r=>{ const key=r[ix('page')]+'|'+r[ix('set')]+'|'+r[ix('issue_no')]; if(!DATA.rows.some(x=>x.key===key)) return; ['1','2'].forEach(w=>{ const v=(r[ix('rater'+w)]||'').trim(); if(!LAB.includes(v)) return; if(ST.a[w][key]){ if(ST.a[w][key]!==v) skip++; } else { ST.a[w][key]=v; add++; } }); });
+  save(); render(); toast(`${add}件を取り込みました${skip?`（すでに採点済みで違う判定の${skip}件は、いまの判定を残しました）`:''}`);
+};
+/* ---- 集計（score_ratings.js と同じ式） ---- */
+$('#sum').onclick = () => {
+  const all=total(); let h='<h2>集計'+(ST.withCtl?'（コントロールを含む）':'（コントロールを除く）')+'</h2>';
+  ['1','2'].forEach(w=>{ const rs=all.filter(r=>LAB.includes(ST.a[w][r.key])); if(!rs.length){ h+=`<p>評価者${w}：採点なし</p>`; return; }
+    const c=Object.fromEntries(LAB.map(l=>[l,rs.filter(r=>ST.a[w][r.key]===l).length])), by={}; rs.forEach(r=>{ (by[r.h]=by[r.h]||{n:0,v:0}).n++; if(ST.a[w][r.key]==='妥当') by[r.h].v++; });
+    h+=`<p><b>評価者${w}</b>：${rs.length}件　妥当 ${c['妥当']}（${Math.round(c['妥当']/rs.length*100)}%）／疑わしい ${c['疑わしい']}／誤り ${c['誤り']}</p><table><tr><th>原則</th>${Object.keys(by).sort().map(k=>`<th>${k==='SUP'?'補助':k}</th>`).join('')}</tr><tr><td>妥当／件数</td>${Object.keys(by).sort().map(k=>`<td>${by[k].v}/${by[k].n}</td>`).join('')}</tr></table>`; });
+  const both=all.filter(r=>LAB.includes(ST.a['1'][r.key])&&LAB.includes(ST.a['2'][r.key]));
+  if(both.length){ const n=both.length, po=both.filter(r=>ST.a['1'][r.key]===ST.a['2'][r.key]).length/n, pe=LAB.reduce((s,l)=>s+both.filter(r=>ST.a['1'][r.key]===l).length/n*both.filter(r=>ST.a['2'][r.key]===l).length/n,0), k=pe===1?1:(po-pe)/(1-pe);
+    h+=`<p><b>2人の一致</b>：両方が採点した${n}件で、一致率 ${Math.round(po*100)}%、Cohenのκ（3値）＝ ${k.toFixed(2)}</p>`; }
+  else h+='<p class="hint">2人の一致（κ）は、2人が同じ指摘を採点すると出ます（別の評価者のCSVを「CSVを読み込む」で合体できます）。</p>';
+  h+='<p class="hint">この集計は、人が付けた判定の集計です。κは、0.6以上で「実質的な一致」とされることが多いですが、普遍的な基準ではありません。</p>';
+  $('#dlgBody').innerHTML=h; $('#dlg').showModal();
+};
+$('#dlgClose').onclick = () => $('#dlg').close();
+render();
+</script>
+</body>
+</html>
