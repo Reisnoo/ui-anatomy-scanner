@@ -241,6 +241,13 @@ th { color:var(--muted); font-weight:600; }
 .vp-row input[type=number] { width:68px; }
 .vp-row[hidden], .scr-row[hidden] { display:none; }   /* display:flex が hidden 属性に勝たないように */
 .scr-chips { display:flex; gap:6px; flex-wrap:wrap; }
+.heur-ctl { gap:6px; flex-wrap:wrap; margin:0 0 10px; align-items:center; }
+.next-steps { border:1px solid var(--primary); background:var(--primary-light); border-radius:10px; padding:12px 14px; margin-bottom:16px; }
+.next-steps .ns-head { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.next-steps .ns-sum { margin:6px 0 10px; font-size:14px; }
+:root[data-theme="dark"] .next-steps { background:#13244a; }
+.app-rep { margin-left:auto; min-height:36px; padding:4px 12px; }
+@media (max-width:600px){ .app-rep { margin-left:auto; padding:4px 10px; } .app-bar .disclaimer { order:5; flex:1 0 100%; } }
 .settings { margin-top:8px; border-top:1px solid var(--border); padding-top:6px; }
 .settings > summary { cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); padding:4px 0; display:flex; gap:10px; align-items:baseline; list-style:none; }
 .settings > summary::-webkit-details-marker { display:none; }
@@ -268,6 +275,7 @@ th { color:var(--muted); font-weight:600; }
     UI Anatomy Scanner <span class="tag">Prototype</span>
   </h1>
   <div class="disclaimer">指摘と視線はルールベースの推定です。実ユーザーテストの代替ではなく、視線は実測ではなく仮想です。</div>
+  <button class="btn ghost app-rep" id="repBtn" title="履歴をもとに、提出用レポート（単体HTML）を書き出す画面へ移ります">レポートを書き出す</button>
   <button class="icon-btn" id="themeBtn" aria-label="ダークモード切替"></button>
 </header>
 
@@ -335,13 +343,13 @@ th { color:var(--muted); font-weight:600; }
   <nav class="jump" id="jump" aria-label="結果と画面の切り替え" hidden><button type="button" data-jump="panel" aria-pressed="true">結果</button><button type="button" data-jump="stage" aria-pressed="false">画面</button></nav>
   <aside class="card panel">
     <div class="tabs" role="tablist" aria-label="分析結果">
-      <button role="tab" aria-selected="true" data-tab="comps"><span class="tn" aria-hidden="true">①</span><span class="tl">構成要素</span><span class="sr-only">① 構成要素</span></button>
-      <button role="tab" aria-selected="false" data-tab="heur"><span class="tn" aria-hidden="true">②</span><span class="tl">10原則</span><span class="sr-only">② 10原則</span></button>
-      <button role="tab" aria-selected="false" data-tab="gaze"><span class="tn" aria-hidden="true">③</span><span class="tl">仮想視線</span><span class="sr-only">③ 仮想視線</span></button>
-      <button role="tab" aria-selected="false" data-tab="lens"><span class="tn" aria-hidden="true">④</span><span class="tl">Age Lens</span><span class="sr-only">④ Age Lens</span></button>
-      <button role="tab" aria-selected="false" data-tab="cmp"><span class="tn" aria-hidden="true">⑤</span><span class="tl">比較</span><span class="sr-only">⑤ 比較</span></button>
-      <button role="tab" aria-selected="false" data-tab="multi"><span class="tn" aria-hidden="true">⑥</span><span class="tl">ペルソナ</span><span class="sr-only">⑥ ペルソナ</span></button>
-      <button role="tab" aria-selected="false" data-tab="resp"><span class="tn" aria-hidden="true">⑦</span><span class="tl">画面幅</span><span class="sr-only">⑦ 画面幅</span></button>
+      <button role="tab" aria-selected="true" data-tab="comps" title="画面の部品（ボタン・見出し・画像など）の種類・数・位置"><span class="tn" aria-hidden="true">①</span><span class="tl">構成要素</span><span class="sr-only">① 構成要素</span></button>
+      <button role="tab" aria-selected="false" data-tab="heur" title="ニールセンの10のユーザビリティ原則で、弱い点を見る"><span class="tn" aria-hidden="true">②</span><span class="tl">10原則</span><span class="sr-only">② 10原則</span></button>
+      <button role="tab" aria-selected="false" data-tab="gaze" title="ルールから作った仮想の視線の動き（実測ではありません）"><span class="tn" aria-hidden="true">③</span><span class="tl">仮想視線</span><span class="sr-only">③ 仮想視線</span></button>
+      <button role="tab" aria-selected="false" data-tab="lens" title="年齢や視覚特性（ぼやけ・色覚など）での見え方"><span class="tn" aria-hidden="true">④</span><span class="tl">Age Lens</span><span class="sr-only">④ Age Lens</span></button>
+      <button role="tab" aria-selected="false" data-tab="cmp" title="Before/After・履歴・提出用レポート"><span class="tn" aria-hidden="true">⑤</span><span class="tl">比較</span><span class="sr-only">⑤ 比較</span></button>
+      <button role="tab" aria-selected="false" data-tab="multi" title="利用者像（ペルソナ）ごとの、視線と見え方の違いを並べて比べる"><span class="tn" aria-hidden="true">⑥</span><span class="tl">ペルソナ</span><span class="sr-only">⑥ ペルソナ</span></button>
+      <button role="tab" aria-selected="false" data-tab="resp" title="スマホ〜大画面での、崩れ・指摘・視線の違い"><span class="tn" aria-hidden="true">⑦</span><span class="tl">画面幅</span><span class="sr-only">⑦ 画面幅</span></button>
       <button role="tab" aria-selected="false" data-tab="kp" title="Where・When・Why（どの要素・どの画面・なぜ）"><span class="tn" aria-hidden="true">⑧</span><span class="tl">記録(3W)</span><span class="sr-only">⑧ Where・When・Why</span></button>
     </div>
     <div class="panel-body" id="panelBody"></div>
@@ -752,7 +760,7 @@ const S = {
   versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false, kp:true, kpDraft:false}, multi:null, multiLens:false,
   pActive:new Set(), pTab:'compare', pEdit:null, plCache:new Map(),
   lensList:[], lensTap:[], lensOut:[], lensEval:new Map(), lensCollide:[], lensNoJudge:0,
-  kp:[], kpSel:null, kpSeq:0,
+  kp:[], kpSel:null, kpSeq:0, heurFilter:'all', heurSort:'h',
 };
 const frame = $('#frame'), frameLens = $('#frameLens'), frameCmp = $('#frameCmp');
 
@@ -1801,7 +1809,21 @@ function renderPanel(){
   el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : S.tab==='kp'?panelKp() : panelGaze());
 }
 
-function panelComps(){ return (S.imageMode?panelOcr():'')+panelCompsBase(); }
+function nextSteps(){
+  let off=false; try{ off=localStorage.getItem('uas-next-off')==='1'; }catch(e){}
+  if(off || !S.comps.length) return '';
+  const act=S.issues.filter(isActive), high=act.filter(i=>i.sev>=3).length;
+  return `<div class="next-steps" role="region" aria-label="次にやること"><div class="ns-head"><b>解析できました。次は</b><button class="mini" data-next-off="1" aria-label="この案内を閉じる">閉じる</button></div>
+    <p class="ns-sum">指摘 <b>${act.length}件</b>${high?`（うち重大度3以上 <b>${high}件</b>）`:''}・要素 <b>${S.comps.length}個</b></p>
+    <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn" data-goto="heur">② 指摘を見る</button><button class="btn ghost" data-goto="gaze">③ 仮想視線を見る</button><button class="btn ghost" data-goto="kp">⑧ 気になる点を記録</button><button class="btn ghost" data-goto="report">レポートを書き出す</button></div></div>`;
+}
+function gotoTab(k){ const b=$(`.tabs button[data-tab="${k}"]`); if(b) b.click(); }
+function gotoReport(){
+  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
+  const el=$('#rTitle'); if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); try{ el.focus({preventScroll:true}); }catch(e){} }
+  scrollToResults();
+}
+function panelComps(){ return (S.imageMode?panelOcr():'')+nextSteps()+panelCompsBase(); }
 function panelCompsBase(){
   const by={}; S.comps.forEach(c=>{ (by[c.type]||(by[c.type]=[])).push(c); });
   const btn=by.button||[]; const kinds={}; btn.forEach(b=>{ kinds[b.bi.kind]=(kinds[b.bi.kind]||0)+1; });
@@ -1829,15 +1851,27 @@ function panelHeur(){
     <div class="legend" style="flex-direction:column;gap:4px;margin-bottom:8px">${[4,3,2,1].map(s=>`<span><span class="sev s${s}">重大度${s}</span> ${SEV_LABEL[s]} ${sevCnt[s]}件</span>`).join('')}</div>
     <div class="hint" style="margin:0">スコアは 100 − Σ(重大度の重み)。自動判定の指摘と、あなたが「問題あり」にした項目のみ集計。未確認の手動項目: <b>${unrev}</b>件</div></div></div>
     <div class="row" style="margin-bottom:10px"><button class="btn" id="copyReport">レポートをコピー(Markdown)</button><button class="btn ghost" id="dlReport">.md を保存</button></div>`;
+  const PF={all:()=>true, auto:i=>i.auto, manual:i=>!i.auto, sev3:i=>isActive(i)&&i.sev>=3}, FL=[['all','すべて'],['auto','自動の指摘'],['manual','要確認'],['sev3','重大度3以上']], pred=PF[S.heurFilter]||PF.all;
+  h+=`<div class="row heur-ctl" role="group" aria-label="指摘の絞り込みと並べ替え">${FL.map(([k,l])=>`<button class="mini" data-hf="${k}" aria-pressed="${S.heurFilter===k}">${l} ${S.issues.filter(PF[k]).length}</button>`).join('')}</div><div class="row heur-ctl" role="group" aria-label="並べ替え"><span class="bar-label">並べ替え</span><button class="mini" data-hs="h" aria-pressed="${S.heurSort==='h'}">原則順</button><button class="mini" data-hs="sev" aria-pressed="${S.heurSort==='sev'}">重大度順</button></div>`;
+  if(S.heurSort==='sev'){
+    const hn=Object.fromEntries([...NIELSEN,SUP].map(x=>[x.id,x]));
+    const list=S.issues.filter(pred).sort((a,b)=>(isActive(b)?b.sev:-1)-(isActive(a)?a.sev:-1) || (a.h>b.h?1:-1));
+    h+= list.length ? list.map(is=>`<div class="hint" style="margin:10px 0 2px">${is.h==='SUP'?'補助':is.h}　${hn[is.h]?hn[is.h].ja:''}</div>`+issueHTML(is)).join('') : '<p class="hint">該当する指摘はありません。</p>';
+    return h;
+  }
+  let shown=0;
   [...NIELSEN, SUP].forEach(hh=>{
-    const list=S.issues.filter(i=>i.h===hh.id);
+    const list=S.issues.filter(i=>i.h===hh.id), view=list.filter(pred);
+    if(S.heurFilter!=='all' && !view.length) return;
+    shown++;
     const act=list.filter(isActive); const sc=hh.id==='SUP'?null:hScore(hh.id);
     const worst=Math.max(0,...act.map(i=>i.sev));
-    const open=S.openH.has(hh.id) ? 'open':'';
+    const open=(S.openH.has(hh.id) || (S.heurFilter!=='all' && view.length)) ? 'open':'';
     h+=`<details class="h-card" data-h="${hh.id}" ${open}><summary><span class="h-code">${hh.id==='SUP'?'補助':hh.id}</span><span class="h-name">${hh.ja}<small>${hh.en}</small></span>${act.length?`<span class="sev s${worst}">${act.length}件</span>`:`<span class="sev s0">指摘なし</span>`}${sc!==null?`<span class="score">${sc}</span>`:''}</summary><div class="h-body">`;
-    list.forEach(is=>{ h+=issueHTML(is); });
+    view.forEach(is=>{ h+=issueHTML(is); });
     h+=`</div></details>`;
   });
+  if(!shown) h+='<p class="hint">該当する指摘はありません。</p>';
   return h;
 }
 function issueHTML(is){
@@ -3235,6 +3269,11 @@ document.addEventListener('click', e=>{
   const t=e.target.closest('button,[data-issue],.item'); if(!t) return;
   if(t.dataset.scr!==undefined){ selectScreen(t.dataset.scr==='all'?null:+t.dataset.scr); return; }
   if(t.id==='scrAll'){ analyzeAllScreens(); return; }
+  if(t.dataset.hf){ S.heurFilter=t.dataset.hf; renderPanel(); return; }
+  if(t.dataset.hs){ S.heurSort=t.dataset.hs; renderPanel(); return; }
+  if(t.dataset.nextOff){ try{ localStorage.setItem('uas-next-off','1'); }catch(e){} renderPanel(); return; }
+  if(t.dataset.goto){ if(t.dataset.goto==='report') gotoReport(); else gotoTab(t.dataset.goto); return; }
+  if(t.id==='repBtn'){ if(!S.comps.length){ toast('先に画面を解析してください'); return; } gotoReport(); return; }
   if(t.dataset.jump){ const el=t.dataset.jump==='stage'?$('.stage-card'):$('.panel'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }
   if(t.id==='kpAdd'){ kpAddFromForm(); return; }
   if(t.id==='kpDraft'){ kpDraftFromIssues(); return; }
