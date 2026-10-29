@@ -1187,17 +1187,20 @@ function runAnalysis(){
       if(!v) v=(n.getAttribute('title')||'').trim();
       if(v) return v;
     }
-    return g('value');
+    return g('value')||pseudoText(el);
   };
+  // CSS の content で出している文言(label::after { content:"カートに追加" } など)。アクセシブルネームにも含まれる
+  const pseudoText = el => ['::before','::after'].map(k=>{ const c=win.getComputedStyle(el,k).content; return c&&c!=='none'&&c!=='normal'&&/^["']/.test(c) ? c.slice(1,-1) : ''; }).join(' ').replace(/\s+/g,' ').trim();
   const labelOf = (el,max=26) => {
     let t=(el.getAttribute('aria-label')||'').trim();
     if(!t) t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+    if(!t) t=pseudoText(el);
     if(!t) t=String(el.getAttribute('alt')||el.getAttribute('title')||el.value||el.getAttribute('placeholder')||el.getAttribute('name')||'').trim();
     if(!t) t='<'+el.tagName.toLowerCase()+'>';
     return t.length>max ? t.slice(0,max-1)+'…' : t;
   };
   const pageBg = effBg(doc.body) || {r:255,g:255,b:255};
-  D = {doc,win,cs,cls,rect,isVis,effBg,labelOf,pageBg,H,pulsing};
+  D = {doc,win,cs,cls,rect,isVis,effBg,labelOf,pageBg,H,pulsing,pseudoText};
 
   const body = doc.body;
   const all = [...body.querySelectorAll('*')];
@@ -1218,6 +1221,20 @@ function runAnalysis(){
     if((filled||outlined) && padL>=6 && r.h>=24 && r.h<=80 && r.w<=420 && !a.querySelector('div,p,h1,h2,h3,ul')) btnSet.add(a);
     else if(/\b(btn|button|cta)\b/i.test(cls(a)) && r.h<=80) btnSet.add(a);
   });
+  /* a・button 以外で作ったボタン(label や、cursor:pointer の div / span)。塗り・枠線・余白が「ボタンらしい」ものだけ */
+  body.querySelectorAll('label,div,span').forEach(el=>{
+    if(btnSet.has(el) || !isVis(el)) return;
+    const s=cs(el); if(s.cursor!=='pointer') return;
+    const par=el.parentElement; if(par && cs(par).cursor==='pointer') return;   // 親から引き継いだ cursor は対象外(自分で pointer にした要素だけ)
+    if(el.tagName==='LABEL' && !el.getAttribute('for') && !el.querySelector('input,select,textarea')) return;
+    for(let n=par;n&&n!==body;n=n.parentElement) if(btnSet.has(n)) return;
+    if(el.closest('a,button,[role=button]')) return;
+    const r=rect(el), padL=parseFloat(s.paddingLeft)||0;
+    const filled = (()=>{ const c=parseColor(s.backgroundColor); const pb=effBg(par)||pageBg; return c&&c.a>.5&&colorDist(c,pb)>45; })();
+    const bw=parseFloat(s.borderTopWidth)||0, bc=parseColor(s.borderTopColor);
+    const outlined = bw>=1 && bc && bc.a>.3 && padL>=8;
+    if(((filled||outlined) && padL>=6 && r.h>=24 && r.h<=80 && r.w<=420 && !el.querySelector('div,p,h1,h2,h3,ul')) || (/\b(btn|button|cta)\b/i.test(cls(el)) && r.h<=80 && r.h>=20)) btnSet.add(el);
+  });
   const btnInfo = el => {
     const s=cs(el);
     const bg=parseColor(s.backgroundColor)||{r:0,g:0,b:0,a:0}, col=parseColor(s.color)||{r:0,g:0,b:0,a:1};
@@ -1226,7 +1243,7 @@ function runAnalysis(){
     const filled = bg.a>.5 && (onImage || colorDist(bg,pb)>45);
     const bw=parseFloat(s.borderTopWidth)||0, bcol=parseColor(s.borderTopColor);
     const outlined = !filled && bw>=1 && bcol && bcol.a>.3;
-    const text=((el.innerText||'').trim()||(el.value||'')).trim();
+    const text=((el.innerText||'').trim()||(el.value||'')||pseudoText(el)).trim();
     let kind;
     if(!text) kind='icon';
     else if(filled) kind = (sat(bg)>.35 || lum(bg)<.12 || onImage) ? 'primary':'secondary';
@@ -1299,7 +1316,8 @@ function runAnalysis(){
     [...p.children].forEach(ch=>{ if(!isVis(ch)) return; const k=ch.tagName+'|'+cls(ch); (groups.get(k)||groups.set(k,[]).get(k)).push(ch); });
     groups.forEach(list=>{
       if(list.length<3) return;
-      const ok=list.every(ch=>{ const r=rect(ch); return r.w>=120&&r.h>=80&&r.w<=700 && ch.querySelector('img,svg,h1,h2,h3,h4,a,button'); });
+      const ok=list.every(ch=>{ const r=rect(ch); if(ch.matches('label[for]')) return r.w>=120&&r.h>=48&&r.w<=700;   // 選択カード(label)は、高さ48px以上
+        return r.w>=120&&r.h>=80&&r.w<=700 && ch.querySelector('img,svg,h1,h2,h3,h4,a,button,label[for]'); });
       if(!ok) return;
       list.forEach(ch=>{ if(!cardSeen.has(ch)){ cardSeen.add(ch); add('card', ch, {sub:'一覧'}); } });
     });
@@ -1312,6 +1330,13 @@ function runAnalysis(){
   body.querySelectorAll('footer').forEach(el=>{ if(isVis(el)) add('footer', el); });
 
   S.comps = comps;
+  /* 実験・評価用の AOI 指定(id / class に aoi を含む要素。例: #aoi-target, .aoi-decoy)。⑨の実測視線の集計に使う */
+  S.aoi = [];
+  body.querySelectorAll('[id],[class]').forEach(el=>{
+    const toks=[el.id, ...(cls(el).split(/\s+/))].filter(t=>t&&/(^|[-_])aoi([-_]|$)/i.test(t)); if(!toks.length||!isVis(el)) return;
+    const r=rect(el); if(r.w<4||r.h<4) return;
+    toks.forEach(name=>S.aoi.push({name, rect:r, label:labelOf(el,22)}));
+  });
   S.compIndex = new Map(comps.map(c=>[c.el,c]));
   S.stats = {links:[...body.querySelectorAll('a[href]')].filter(isVis).length, all};
 
@@ -2135,6 +2160,23 @@ function realCompute(){
   if(v.st.bad) v.warn.push(`${v.st.bad}行は、X・Yが数値でないため読み飛ばしました。`);
   return done();
 }
+function hitAoi(x,y){
+  let best=null, ba=Infinity; const m=6;
+  (S.aoi||[]).forEach(a=>{ const r=a.rect; if(x>=r.x-m&&x<=r.x+r.w+m&&y>=r.y-m&&y<=r.y+r.h+m){ const ar=r.w*r.h; if(ar<ba){ ba=ar; best=a; } } });
+  return best;
+}
+function realAoiRows(fix){
+  const g=new Map();
+  (S.aoi||[]).forEach(a=>{ if(!g.has(a.name)) g.set(a.name,{name:a.name, els:[], dur:0, n:0, first:0}); g.get(a.name).els.push({a, dur:0, n:0, first:0}); });
+  const out={dur:0,n:0,first:0};
+  fix.forEach((f,i)=>{
+    const a=hitAoi(f.x,f.y);
+    if(!a){ out.dur+=f.dur; out.n++; if(!out.first) out.first=i+1; return; }
+    const o=g.get(a.name), e=o.els.find(x=>x.a===a);
+    [o,e].forEach(z=>{ z.dur+=f.dur; z.n++; if(!z.first) z.first=i+1; });
+  });
+  return {groups:[...g.values()].sort((a,b)=>b.dur-a.dur), out};
+}
 function realDwell(fix){
   const m=new Map();
   fix.forEach((f,i)=>{ const id=f.target?f.target.id:'_none'; let o=m.get(id); if(!o){ o={t:f.target, dur:0, n:0, first:i+1}; m.set(id,o); } o.dur+=f.dur; o.n++; });
@@ -2161,7 +2203,7 @@ function realCSV(){
 function realDemoTable(){
   const T=S.targets.filter(t=>t.cy<FOLD_H&&t.rect.w>20&&t.rect.h>10).sort((a,b)=>a.cy-b.cy||a.cx-b.cx), pick=[];
   for(let i=0;i<T.length&&pick.length<14;i+=Math.max(1,Math.floor(T.length/14))) pick.push(T[i]);
-  if(pick.length<3) [[.2,.15],[.5,.3],[.75,.25],[.3,.55],[.6,.6],[.5,.85]].forEach(q=>pick.push({cx:q[0]*PAGE_W,cy:q[1]*FOLD_H}));   // 要素が見つからない画面では、画面の割合で作る
+  if(pick.length<6){ pick.length=0; [[.2,.15],[.5,.3],[.75,.25],[.3,.55],[.6,.6],[.5,.85]].forEach(q=>pick.push({cx:q[0]*PAGE_W,cy:q[1]*FOLD_H})); }   // 要素が見つからない画面では、画面の割合で作る
   let h=hashStr('demo|'+S.sourceName), rnd=()=>{ h=(h*1664525+1013904223)>>>0; return h/4294967296; }, t=0;
   const body=pick.map(tg=>{ const d=Math.round(160+rnd()*380), x=(tg.cx+(rnd()-.5)*20)/PAGE_W*1920, y=(tg.cy+(rnd()-.5)*14)/FOLD_H*1080; const row=[t,Math.round(x),Math.round(y),d]; t+=d+40; return row; });
   return {head:['timestamp_ms','gaze_x_px','gaze_y_px','duration_ms'], body, dec:false};
@@ -2196,6 +2238,8 @@ function ensureRealHeat(){
 }
 function realOverlay(g){
   const r=S.real&&realCompute(); if(!r||!r.fix.length) return;
+  (S.aoi||[]).forEach(a=>{ const q=a.rect, w=Math.min(200,a.name.length*8+10);
+    g.push(`<rect x="${q.x}" y="${q.y}" width="${q.w}" height="${q.h}" fill="#7E22CE" fill-opacity=".05" stroke="#7E22CE" stroke-width="2" stroke-dasharray="6 4"/><rect x="${q.x}" y="${q.y+q.h-14}" width="${w}" height="14" fill="#7E22CE"/><text x="${q.x+4}" y="${q.y+q.h-3}" font-size="10" fill="#fff" font-weight="600">${esc(a.name)}</text>`); });
   const f=r.fix.slice(0, S.real.upTo==null?r.fix.length:S.real.upTo), C='#1D4ED8';
   if(f.length>1){ const pts=f.map(p=>`${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(' ');
     g.push(`<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" opacity=".9"/><polyline points="${pts}" fill="none" stroke="${C}" stroke-width="3.5" stroke-linejoin="round" stroke-dasharray="10 5"/>`); }
@@ -2259,6 +2303,12 @@ function realResultHTML(){
   const tiles=[['総注視時間',(total/1000).toFixed(1)+'s'],['注視回数',f.length],['主要CTAに到達',ctaT],['平均サッケード',Math.round(meanAmp)+'px']];
   h+=`<div class="sec"><div class="tiles">${tiles.map(([k,v])=>`<div class="tile"><b style="font-size:16px">${v}</b><span>${k}</span></div>`).join('')}</div>
     <div class="row" style="margin-top:10px;gap:6px;flex-wrap:wrap"><button class="mini" id="rgPlay">${ico('play',14)}再生</button><button class="mini" id="rgCsv">変換後の注視点をCSVで保存</button></div></div>`;
+  if(S.aoi&&S.aoi.length){
+    const ar=realAoiRows(f), fmt=o=>`${(o.dur/1000).toFixed(2)}s (${(o.dur/total*100).toFixed(0)}%)`, fst=o=>o.n?'#'+o.first:'—';
+    h+=`<div class="sec"><h3>AOI別の滞留(HTMLの aoi 指定)</h3><table><tr><th>AOI</th><th>要素数</th><th>滞留</th><th>回数</th><th>最初に見た順</th></tr>${ar.groups.map(o=>`<tr><td>${esc(o.name)}</td><td>${o.els.length}</td><td>${fmt(o)}</td><td>${o.n}</td><td>${fst(o)}</td></tr>`).join('')}<tr><td>（どのAOIでもない）</td><td>—</td><td>${fmt(ar.out)}</td><td>${ar.out.n}</td><td>${fst(ar.out)}</td></tr></table>
+      <details class="grp"><summary>AOIの要素ごと(${S.aoi.length}個)</summary><div class="inner"><table><tr><th>AOI</th><th>要素</th><th>滞留</th><th>回数</th><th>最初</th></tr>${ar.groups.flatMap(o=>o.els).map(e=>`<tr><td>${esc(e.a.name)}</td><td>${esc(e.a.label)}</td><td>${fmt(e)}</td><td>${e.n}</td><td>${fst(e)}</td></tr>`).join('')}</table></div></details>
+      <p class="hint">要素の id・class に「aoi」を含むもの(例: <code>#aoi-target</code>・<code>.aoi-decoy</code>)を、AOIとして集計します。ステージの紫の破線が、AOIの位置です。座標が合っているかの確認にも使えます。</p></div>`;
+  }
   const dw=realDwell(f);
   h+=`<div class="sec"><h3>要素ごとの滞留(実測)</h3><table><tr><th>要素</th><th>滞留</th><th>回数</th><th>最初に見た順</th></tr>${dw.slice(0,10).map(o=>`<tr><td>${o.t?esc((REAL_TYPE_JA[o.t.type]||o.t.type)+'：'+o.t.label):'（要素の外）'}</td><td>${(o.dur/1000).toFixed(2)}s (${(o.dur/total*100).toFixed(0)}%)</td><td>${o.n}</td><td>#${o.first}</td></tr>`).join('')}</table></div>`;
   const rs=realTypeShare(f), ss=(S.gaze.agg&&S.targets.length)?simTypeShare():{}, keys=[...new Set([...Object.keys(rs),...Object.keys(ss)])].sort((a,b)=>(rs[b]||0)-(rs[a]||0));

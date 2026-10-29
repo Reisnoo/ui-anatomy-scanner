@@ -76,6 +76,18 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   await p.waitForTimeout(500); assert(await p.evaluate(() => S.comps.length) === 0, '(前提)標準タグがない画面は、構成要素が0個');
   await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', G + 'fix.csv'); await p.waitForSelector('#rgResult .tile');
   assert(await p.evaluate(() => realCompute().fix.length) === 6 && (await p.textContent('#rgResult')).includes('構成要素が見つかっていません'), '構成要素が0個でも、軌跡を重ねられる(要素別の集計は出ない旨を表示)');
+  // 標準タグを使わない作り: label のボタン・CSS の content の文言・選択カード・aoi 指定
+  await p.evaluate(async h => { await loadHTML(h, 'aoi-shop'); }, require('fs').readFileSync(path.join(__dirname, 'fixtures/aoi-shop.html'), 'utf8')); await p.waitForTimeout(600);
+  const dt = await p.evaluate(() => ({ btn: S.comps.filter(c => c.type === 'button').map(c => c.label), card: S.comps.filter(c => c.type === 'card').length, aoi: S.aoi.map(a => a.name).sort().join() }));
+  assert(dt.btn.length === 3 && dt.btn.every(l => l === 'カートに追加'), 'label で作ったボタン(文言は CSS の content)を、ボタンとして拾う');
+  assert(dt.card >= 3, '選択カード(label)と商品カードを、カードとして拾う(' + dt.card + ')');
+  assert(dt.aoi === 'aoi-decoy,aoi-decoy,aoi-target', 'id・class の aoi 指定を、AOIとして読む');
+  const tg = await p.evaluate(() => { const a = S.aoi.find(x => x.name === 'aoi-target').rect, d = S.aoi.find(x => x.name === 'aoi-decoy').rect; const k = 1920 / PAGE_W; return { t: [(a.x + a.w / 2) * k, (a.y + 30) * 1080 / FOLD_H], d: [(d.x + d.w / 2) * k, (d.y + 30) * 1080 / FOLD_H] }; });
+  const csvText = 'x,y,duration\n' + [[...tg.t, 400], [...tg.t, 300], [...tg.t, 200], [...tg.d, 500], [10, 790, 100]].map(r => r.join(',')).join('\n');
+  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', { name: 'aoi.csv', mimeType: 'text/csv', buffer: Buffer.from(csvText) }); await p.waitForSelector('#rgResult .tile');
+  const ar = await p.evaluate(() => { const r = realAoiRows(realCompute().fix); return { g: r.groups.map(o => [o.name, o.els.length, o.dur, o.n, o.first]), out: [r.out.dur, r.out.n] }; });
+  assert(JSON.stringify(ar.g[0]) === '["aoi-target",1,900,3,1]' && JSON.stringify(ar.g[1]) === '["aoi-decoy",2,500,1,4]', 'AOI別に、滞留・回数・最初に見た順を集計する(target 900ms/3回、decoy 500ms/1回)');
+  assert((await p.textContent('#rgResult')).includes('AOI別の滞留') && await p.evaluate(() => document.querySelector('#ov').innerHTML.includes('stroke="#7E22CE"')), 'AOI別の表と、AOIの位置(紫の破線)をステージに出す');
   // デモ
   await p.click('#rgDemo'); await p.waitForSelector('#rgResult .tile'); assert((await p.textContent('#panelBody')).includes('デモ用データ(作り物)') && await p.evaluate(() => realCompute().fix.length) >= 5, 'デモ用データ(作り物と明記)で試せる');
   await p.click('#rgClear'); assert(await p.evaluate(() => S.real === null), '読み込みを消せる');
