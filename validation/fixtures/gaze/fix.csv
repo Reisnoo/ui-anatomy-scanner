@@ -1,0 +1,8 @@
+Participant,FixationIndex,GazePointX (px),GazePointY (px),Duration (ms)
+P1,1,300,120,300
+P1,2,640,300,450
+P1,3,980,420,260
+P1,4,1500,700,380
+P1,5,330,900,200
+P1,6,960,540,500
+P1,7,3000,200,300

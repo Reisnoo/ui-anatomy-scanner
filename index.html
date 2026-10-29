@@ -232,6 +232,8 @@ th,td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--border);
 th { color:var(--muted); font-weight:600; }
 .note { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--muted); }
 .note ul { margin:4px 0 0; padding-left:18px; }
+.real-badge { display:inline-block; font-size:13px; font-weight:600; color:#1D4ED8; background:transparent; border:1px solid #1D4ED8; border-radius:6px; padding:2px 10px; }
+:root[data-theme="dark"] .real-badge { color:#93C5FD; border-color:#93C5FD; }
 .sim-badge { display:inline-block; font-size:13px; font-weight:600; color:var(--muted); background:transparent; border:1px solid var(--border); border-radius:6px; padding:2px 10px; }
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0F172A; color:#fff; padding:8px 16px; border-radius:6px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; }
 .toast.on { opacity:1; }
@@ -316,6 +318,8 @@ th { color:var(--muted); font-weight:600; }
           <label class="toggle"><input type="checkbox" id="tgLens"> 読みにくさマップ</label>
           <label class="toggle"><input type="checkbox" id="tgMulti"> 全ペルソナの軌跡</label>
           <label class="toggle"><input type="checkbox" id="tgHeat"> ヒートマップ</label>
+          <label class="toggle"><input type="checkbox" id="tgReal"> 実測視線の軌跡</label>
+          <label class="toggle"><input type="checkbox" id="tgRealHeat"> 実測ヒートマップ</label>
         </div>
         <div class="bar-group bar-actions" role="group" aria-label="この解析結果を保存">
           <span class="bar-label">保存</span>
@@ -333,6 +337,7 @@ th { color:var(--muted); font-weight:600; }
             <div id="vig"></div>
             <iframe id="frameCmp" sandbox="" tabindex="-1" title="Before(比較元)のページ" aria-hidden="true"></iframe>
             <canvas id="heat"></canvas>
+            <canvas id="heatReal"></canvas>
             <svg id="ov" aria-hidden="true"></svg>
           </div>
         </div>
@@ -351,6 +356,7 @@ th { color:var(--muted); font-weight:600; }
       <button role="tab" aria-selected="false" data-tab="multi" title="利用者像（ペルソナ）ごとの、視線と見え方の違いを並べて比べる"><span class="tn" aria-hidden="true">⑥</span><span class="tl">ペルソナ</span><span class="sr-only">⑥ ペルソナ</span></button>
       <button role="tab" aria-selected="false" data-tab="resp" title="スマホ〜大画面での、崩れ・指摘・視線の違い"><span class="tn" aria-hidden="true">⑦</span><span class="tl">画面幅</span><span class="sr-only">⑦ 画面幅</span></button>
       <button role="tab" aria-selected="false" data-tab="kp" title="Where・When・Why（どの要素・どの画面・なぜ）"><span class="tn" aria-hidden="true">⑧</span><span class="tl">記録(3W)</span><span class="sr-only">⑧ Where・When・Why</span></button>
+      <button role="tab" aria-selected="false" data-tab="real" title="視線計測の記録（Excel / CSV）を読み込んで、画面に重ねる（③の仮想視線とは別物）"><span class="tn" aria-hidden="true">⑨</span><span class="tl">実測視線</span><span class="sr-only">⑨ 実測視線（Excel / CSV）</span></button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -754,7 +760,8 @@ const S = {
   shot:null, ocr:null, ocrOpt:{langs:'jpn+eng', dpr:'auto'}, vpBeforeImg:null, vp:'pc', vpCustom:{w:1280,h:800}, resp:null, imageMode:false, respInfo:null, tab:'comps', openH:new Set(['H1']), selIssue:null, hlComp:null,
   hiddenTypes:new Set(['link']),
   gaze:{persona:'hurry', task:'browse', range:'fold', trial:0, useLens:false, wV:null, wR:null, wP:null, fix:[], upTo:0, agg:null, timer:null},
-  show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false},
+  show:{comps:true, pins:false, path:false, heat:false, lensMap:false, multi:false, real:false, realHeat:false},
+  real:null,
   lens:{on:false, preset:null, split:50, blur:0, contrast:1, yellow:0, tunnel:0, cvd:'none', cvdS:1, cx:640, cy:400},
   base:null, cmp:{split:50, show:true}, src:null, wipe:null, wipeKey:null,
   versions:[], vSeq:0, cTab:'pair', histSel:null, hCur:true, histCache:new Map(), io:{raw:false, pers:false, mode:'append'}, pendingShare:null, rep:{title:'UI改善の履歴レポート', author:'', purpose:'', note:'', thumbs:false, kp:true, kpDraft:false}, multi:null, multiLens:false,
@@ -863,7 +870,7 @@ async function analyzeAllScreens(){
   const n=Math.min(room, items.length), keep=S.screenIdx;
   for(let i=0;i<n;i++){ await selectScreen(i,true); addVersion((items[i].id||items[i].label), true); }
   await selectScreen(keep==null?null:keep, true);
-  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
+  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false,real:false,realHeat:false}); syncToggles(); renderAll();
   toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑤比較→履歴で、画面どうしを比べられます`);
 }
 
@@ -1114,8 +1121,10 @@ function renderOverlay(){
     const x=PAGE_W*S.cmp.split/100;
     g.push(`<line x1="${x}" y1="0" x2="${x}" y2="${Math.max(S.frameH,S.wipe.H)}" stroke="#2563EB" stroke-width="3"/><rect x="${x-70}" y="8" width="140" height="22" rx="6" fill="#2563EB"/><text x="${x}" y="24" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">${esc(S.wipe.label)}</text>`);
   }
+  if(S.show.real) realOverlay(g);
   svg.innerHTML = g.join('');
   const hc = $('#heat'); hc.style.display = S.show.heat ? 'block':'none';
+  ensureRealHeat();
 }
 
 /* ============================================================
@@ -1748,8 +1757,8 @@ function simulate(){
   drawHeat(pts);
 }
 
-function drawHeat(pts){
-  const cv=$('#heat'), sc=.5; cv.width=Math.round(PAGE_W*sc); cv.height=Math.round(S.frameH*sc);
+function drawHeat(pts, id='heat'){
+  const cv=$('#'+id), sc=.5; cv.width=Math.round(PAGE_W*sc); cv.height=Math.round(S.frameH*sc);
   const g=cv.getContext('2d'); g.clearRect(0,0,cv.width,cv.height);
   const off=document.createElement('canvas'); off.width=cv.width; off.height=cv.height; const og=off.getContext('2d');
   pts.forEach(p=>{ const r=(50+p.dur/10)*sc; const gr=og.createRadialGradient(p.x*sc,p.y*sc,0,p.x*sc,p.y*sc,r); const a=Math.min(.3,p.dur/2500); gr.addColorStop(0,`rgba(0,0,0,${a})`); gr.addColorStop(1,'rgba(0,0,0,0)'); og.fillStyle=gr; og.fillRect(p.x*sc-r,p.y*sc-r,r*2,r*2); });
@@ -1798,6 +1807,7 @@ const LEAD = {
   multi:'ペルソナによって、見え方がどう分かれるかを見ます。',
   resp:'画面幅（スマホ〜大画面）で、指摘と視線がどう変わるかを見ます。',
   kp:'どの要素（Where）が、どの画面（When）で、なぜ（Why）気になるかを、1件ずつ記録します。',
+  real:'視線計測の記録（Excel / CSV）を、解析中の画面に重ねて、実際の見られ方を確かめます。',
   multiEdit:'重みと視覚特性を決めて、自分のペルソナを保存します。',
   cmpHist:'バージョンを順に並べて、何がいつ良くなり、どこで後退したかを見ます。',
 };
@@ -1806,7 +1816,7 @@ new MutationObserver(()=>{ $$('#panelBody h3:not([aria-level])').forEach(h=>h.se
 function renderPanel(){
   const el=$('#panelBody');
   if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
-  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : S.tab==='kp'?panelKp() : panelGaze());
+  el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : S.tab==='kp'?panelKp() : S.tab==='real'?panelReal() : panelGaze());
 }
 
 function nextSteps(){
@@ -1819,7 +1829,7 @@ function nextSteps(){
 }
 function gotoTab(k){ const b=$(`.tabs button[data-tab="${k}"]`); if(b) b.click(); }
 function gotoReport(){
-  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false}); syncToggles(); renderAll();
+  S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false,real:false,realHeat:false}); syncToggles(); renderAll();
   const el=$('#rTitle'); if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); try{ el.focus({preventScroll:true}); }catch(e){} }
   scrollToResults();
 }
@@ -1939,6 +1949,344 @@ function gazeResult(){
   h+=`<div class="sec"><h3>注視の順序</h3><table><tr><th>#</th><th>対象</th><th>滞留</th><th>累計</th></tr>${shown.map((x,i)=>`<tr><td>${i+1}</td><td>${esc((dj[x.target.type]||x.target.type)+'：'+x.target.label)}</td><td>${x.dur}ms</td><td>${((x.t0+x.dur)/1000).toFixed(1)}s</td></tr>`).join('')}</table></div>`;
   return h;
 }
+
+/* ============================================================
+   ⑨ 実測視線（視線データ:CSV / Excel(.xlsx) の読み込み）
+   ③の仮想視線とは別物。読み込んだ記録を、解析中の画面に重ねて見る。
+   記録時の画面解像度 → 解析する画面(PAGE_W×FOLD_H)へ、縦横の倍率で座標を変換する
+   ============================================================ */
+const REC_PRESETS = [[1920,1080],[1920,1200],[2560,1440],[1536,864],[1440,900],[1366,768],[1280,800],[1280,720]];
+const REAL_MAX_ROWS = 200000, REAL_MAX_BYTES = 20e6;
+const REAL_TYPE_JA = {heading:'見出し',image:'画像',banner:'バナー',button:'ボタン',input:'入力欄',search:'検索',navlink:'ナビ',text:'本文',card:'カード',nav:'ステップ/パンくず',none:'要素の外'};
+const realDefaults = () => ({xi:-1, yi:-1, di:-1, ti:-1, kind:'fix', unit:'px', tunit:'ms', recW:1920, recH:1080, flipY:false, hz:60, disp:40, minDur:100});
+
+function decodeText(buf){
+  try{ return new TextDecoder('utf-8',{fatal:true}).decode(buf); }
+  catch(e){ try{ return new TextDecoder('shift_jis').decode(buf); }catch(_){ return new TextDecoder('utf-8').decode(buf); } }
+}
+function parseDelimited(text){
+  text=text.replace(/^﻿/,'');
+  const lines=text.slice(0,6000).split(/\r?\n/).filter(l=>l!=='').slice(0,6);   // 小数カンマ(0,512)があるので、行ごとに同じ数だけ出る区切りを優先する
+  const cnt=d=>lines.map(l=>l.split(d).length-1);
+  const delim=['\t',';',','].find(d=>{ const c=cnt(d); return c[0]>0&&c.every(n=>n===c[0]); }) || [',',';','\t'].sort((a,b)=>cnt(b).reduce((x,y)=>x+y,0)-cnt(a).reduce((x,y)=>x+y,0))[0];
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){ cur+='"'; i++; } else q=false; } else cur+=c; }
+    else if(c==='"') q=true;
+    else if(c===delim){ row.push(cur); cur=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(cur); cur=''; if(row.length>1||row[0]!=='') rows.push(row); row=[]; if(rows.length>REAL_MAX_ROWS) break; }
+    else cur+=c;
+  }
+  if(cur!==''||row.length){ row.push(cur); rows.push(row); }
+  return {rows, delim};
+}
+function toNum(v, dec){
+  if(typeof v==='number') return v; if(v==null) return NaN;
+  let s=String(v).trim().replace(/\s/g,''); if(s==='') return NaN; if(dec) s=s.replace(',','.');
+  return /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s) ? +s : NaN;
+}
+/* .xlsx は zip + XML。外部ライブラリを使わず、ブラウザ標準の DecompressionStream で読む */
+async function inflateRaw(u8){
+  const s=new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+async function readZip(buf){
+  const dv=new DataView(buf), u8=new Uint8Array(buf); let e=-1;
+  for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-65557);i--){ if(dv.getUint32(i,true)===0x06054b50){ e=i; break; } }
+  if(e<0) throw new Error('notzip');
+  const n=dv.getUint16(e+10,true); let p=dv.getUint32(e+16,true); const files={};
+  for(let k=0;k<n;k++){
+    if(dv.getUint32(p,true)!==0x02014b50) break;
+    const meth=dv.getUint16(p+10,true), csz=dv.getUint32(p+20,true), nl=dv.getUint16(p+28,true), el=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true), off=dv.getUint32(p+42,true);
+    files[new TextDecoder().decode(u8.subarray(p+46,p+46+nl))]={meth,csz,off}; p+=46+nl+el+cl;
+  }
+  const get=async name=>{
+    const f=files[name]; if(!f) return null;
+    const ln=dv.getUint16(f.off+26,true), le=dv.getUint16(f.off+28,true), st=f.off+30+ln+le, raw=u8.subarray(st,st+f.csz);
+    return new TextDecoder().decode(f.meth===0 ? raw : await inflateRaw(raw));
+  };
+  return {files, get};
+}
+async function readXlsx(buf){
+  if(typeof DecompressionStream==='undefined') throw new Error('nodecomp');
+  const z=await readZip(buf), dp=new DOMParser(), X=s=>dp.parseFromString(s,'application/xml');
+  if(!z.files['xl/workbook.xml']) throw new Error('notxlsx');
+  const wb=X(await z.get('xl/workbook.xml')), rels={};
+  if(z.files['xl/_rels/workbook.xml.rels']) X(await z.get('xl/_rels/workbook.xml.rels')).querySelectorAll('Relationship').forEach(r=>{ rels[r.getAttribute('Id')]=r.getAttribute('Target'); });
+  const ss=[];
+  if(z.files['xl/sharedStrings.xml']) X(await z.get('xl/sharedStrings.xml')).querySelectorAll('si').forEach(si=>{ ss.push([...si.querySelectorAll('t')].filter(t=>t.parentElement.localName!=='rPh').map(t=>t.textContent).join('')); });
+  const colIdx=ref=>{ const m=/^([A-Z]+)/.exec(ref||''); if(!m) return -1; let n=0; for(const ch of m[1]) n=n*26+ch.charCodeAt(0)-64; return n-1; };
+  const sheets=[];
+  for(const sh of [...wb.querySelectorAll('sheet')]){
+    let tg=rels[sh.getAttribute('r:id')]; if(!tg) continue;
+    const path=tg[0]==='/' ? tg.slice(1) : 'xl/'+tg; const xml=await z.get(path); if(!xml) continue;
+    const rows=[];
+    for(const r of X(xml).querySelectorAll('sheetData > row')){
+      const arr=[]; let any=false, pos=0;
+      for(const c of r.children){
+        if(c.localName!=='c') continue;
+        let ci=colIdx(c.getAttribute('r')); if(ci<0) ci=pos; pos=ci+1;
+        const t=c.getAttribute('t'), v=c.querySelector('v'); let val='';
+        if(t==='s') val=ss[+(v&&v.textContent)]||''; else if(t==='inlineStr') val=[...c.querySelectorAll('t')].map(x=>x.textContent).join('');
+        else if(v) val=(t==='str'||t==='b'||t==='e') ? v.textContent : +v.textContent;
+        if(val!=='') any=true; arr[ci]=val;
+      }
+      for(let i=0;i<arr.length;i++) if(arr[i]===undefined) arr[i]='';
+      if(any) rows.push(arr);
+      if(rows.length>REAL_MAX_ROWS) break;
+    }
+    sheets.push({name:sh.getAttribute('name')||('Sheet'+(sheets.length+1)), rows});
+  }
+  if(!sheets.length) throw new Error('nosheet');
+  return sheets;
+}
+function realSheet(rows2d, dec){
+  if(!rows2d.length) return {head:[], body:[], dec};
+  const w=Math.max(...rows2d.slice(0,50).map(r=>r.length)), r0=rows2d[0];
+  const numeric=r0.filter(v=>!isNaN(toNum(v,dec))).length, hasHead=numeric<=Math.floor(w/2);
+  const colName=i=>{ let s='',n=i; do{ s=String.fromCharCode(65+n%26)+s; n=Math.floor(n/26)-1; }while(n>=0); return s; };
+  const head=Array.from({length:w},(_,i)=>hasHead&&String(r0[i]??'').trim() ? String(r0[i]).trim() : '列'+colName(i));
+  return {head, body:hasHead?rows2d.slice(1):rows2d, dec};
+}
+function realGuess(sh){
+  const c=realDefaults(), H=sh.head;
+  const isX=h=>/(^|[^a-z0-9])x([^a-z]|$)|(gaze|point|fpog|fixation|pos|coord)[ _]*(point[ _]*)?x([^a-z]|$)|x座標|横/i.test(h);
+  const isY=h=>/(^|[^a-z0-9])y([^a-z]|$)|(gaze|point|fpog|fixation|pos|coord)[ _]*(point[ _]*)?y([^a-z]|$)|y座標|縦/i.test(h);
+  const isD=h=>/dur|滞留|継続|fpogd|注視時間/i.test(h), isT=h=>/time|stamp|時刻|時間|^t$|fpogs/i.test(h);
+  c.xi=H.findIndex(isX); c.yi=H.findIndex(h=>isY(h)); c.di=H.findIndex(isD); c.ti=H.findIndex((h,i)=>isT(h)&&i!==c.di);
+  if(c.xi<0&&H.length>=2){ c.xi=0; c.yi=1; }
+  const col=i=>i<0?[]:sh.body.slice(0,200).map(r=>toNum(r[i],sh.dec)).filter(v=>!isNaN(v));
+  const xs=col(c.xi), ys=col(c.yi);
+  if(xs.length&&ys.length&&Math.max(...xs)<=1.5&&Math.max(...ys)<=1.5&&Math.min(...xs)>=-.2&&Math.min(...ys)>=-.2) c.unit='norm';
+  if(c.di>=0 && /\(s\)|sec|秒|fpogd/i.test(H[c.di]) && !/ms|ミリ/i.test(H[c.di])) c.tunit='s';
+  else if(c.di<0&&c.ti>=0&&/\(s\)|sec|秒|fpogs/i.test(H[c.ti])&&!/ms|ミリ/i.test(H[c.ti])) c.tunit='s';
+  if(c.di<0){   // 継続時間の列がなく、時刻だけある → 生サンプルの可能性が高い
+    const t=col(c.ti); if(t.length>20){ const d=[]; for(let i=1;i<Math.min(t.length,100);i++) d.push(Math.abs(t[i]-t[i-1])*(c.tunit==='s'?1000:1)); d.sort((a,b)=>a-b); if(d[d.length>>1]<40) c.kind='sample'; }
+  }
+  return c;
+}
+function idt(samples, disp, minDur){
+  const out=[], n=samples.length; if(n<2) return out;
+  const dts=[]; for(let i=1;i<Math.min(n,200);i++) dts.push(samples[i].t-samples[i-1].t); dts.sort((a,b)=>a-b); const step=Math.max(0,dts[dts.length>>1]||0);
+  let i=0;
+  while(i<n){
+    let j=i; while(j<n && samples[j].t-samples[i].t<minDur) j++;
+    if(j>=n) break;
+    let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+    for(let k=i;k<=j;k++){ const s=samples[k]; x0=Math.min(x0,s.x); x1=Math.max(x1,s.x); y0=Math.min(y0,s.y); y1=Math.max(y1,s.y); }
+    if((x1-x0)+(y1-y0)<=disp){
+      while(j+1<n){ const s=samples[j+1], a=Math.min(x0,s.x), b=Math.max(x1,s.x), c=Math.min(y0,s.y), d=Math.max(y1,s.y); if((b-a)+(d-c)>disp) break; x0=a; x1=b; y0=c; y1=d; j++; }
+      let sx=0, sy=0; for(let k=i;k<=j;k++){ sx+=samples[k].x; sy+=samples[k].y; }
+      out.push({x:sx/(j-i+1), y:sy/(j-i+1), dur:samples[j].t-samples[i].t+step}); i=j+1;
+    } else i++;
+  }
+  return out;
+}
+function hitTarget(x,y){
+  let best=null, ba=Infinity; const m=6;
+  S.targets.forEach(t=>{ const r=t.rect; if(x>=r.x-m&&x<=r.x+r.w+m&&y>=r.y-m&&y<=r.y+r.h+m){ const a=r.w*r.h; if(a<ba){ ba=a; best=t; } } });
+  return best;
+}
+/* 読み込んだ表 + 設定 → 注視点(解析する画面の座標つき)。設定や画面幅が変わるたびに、元の記録から計算し直す */
+function realCompute(){
+  const R=S.real; if(!R||!R.tbl) return null;
+  const c=R.cfg, sh=R.tbl.sheets[R.tbl.cur], key=JSON.stringify([R.tbl.cur,c,PAGE_W,FOLD_H,S.frameH,R.rev,S.targets.length]);
+  if(R.cache&&R.cache.key===key) return R.cache.v;
+  const v={key, fix:[], warn:[], st:{rows:sh.body.length, bad:0, out:0, below:0, durAssumed:false, raw:0}};
+  const done=()=>{ R.cache={key,v}; return v; };
+  if(c.xi<0||c.yi<0){ v.err='X座標とY座標の列を選んでください。'; return done(); }
+  const fx=c.unit==='norm'?c.recW:c.unit==='pct'?c.recW/100:1, fy=c.unit==='norm'?c.recH:c.unit==='pct'?c.recH/100:1, tf=c.tunit==='s'?1000:1;
+  const pts=[];
+  sh.body.forEach(r=>{
+    let x=toNum(r[c.xi],sh.dec)*fx, y=toNum(r[c.yi],sh.dec)*fy;
+    if(isNaN(x)||isNaN(y)){ v.st.bad++; return; }
+    if(c.flipY) y=c.recH-y;
+    pts.push({x, y, d:c.di>=0?toNum(r[c.di],sh.dec)*tf:NaN, t:c.ti>=0?toNum(r[c.ti],sh.dec)*tf:NaN});
+  });
+  let raw;
+  if(c.kind==='sample'){
+    v.st.raw=pts.length; const hz=Math.max(1,c.hz||60);
+    const hasT=pts.length>1 && pts.every(p=>!isNaN(p.t));
+    const sm=pts.map((p,i)=>({x:p.x,y:p.y,t:hasT?p.t:i*1000/hz}));
+    raw=idt(sm, Math.max(1,c.disp), Math.max(1,c.minDur));
+    if(!hasT) v.warn.push(`時刻の列がないので、サンプリング周波数 ${hz}Hz として扱っています。`);
+    if(!raw.length) v.warn.push('注視が見つかりませんでした。「注視とみなす範囲」を広げるか、「最短の注視」を短くしてください。');
+  } else {
+    raw=pts.map(p=>({x:p.x,y:p.y,dur:p.d,t:p.t}));
+    const ds=raw.filter(p=>!isNaN(p.dur)&&p.dur>0).map(p=>p.dur).sort((a,b)=>a-b);
+    const hasT=raw.some(p=>!isNaN(p.t));
+    raw.forEach((p,i)=>{ if(!(p.dur>0)){ const nx=raw[i+1]; if(hasT&&nx&&!isNaN(p.t)&&!isNaN(nx.t)&&nx.t>p.t) p.dur=nx.t-p.t; else p.dur=NaN; } });
+    const med=ds.length?ds[ds.length>>1]:200;
+    raw.forEach(p=>{ if(isNaN(p.dur)){ p.dur=med; v.st.durAssumed=true; } });
+    if(v.st.durAssumed) v.warn.push(ds.length||hasT?'継続時間のない行は、中央値の長さ(約'+Math.round(med)+'ms)として扱っています。':'継続時間の列がないので、1回200msとして扱っています(滞留時間の比較には使えません)。');
+  }
+  const kx=PAGE_W/c.recW, ky=FOLD_H/c.recH; let t0=0, prev=null;
+  raw.forEach(p=>{
+    const X=p.x*kx, Y=p.y*ky;
+    if(p.y>c.recH) v.st.below++;
+    if(!(X>=0&&X<=PAGE_W&&Y>=0&&Y<=S.frameH)){ v.st.out++; return; }
+    const f={rx:p.x, ry:p.y, x:X, y:Y, dur:Math.round(p.dur), t0, amp:prev?Math.hypot(X-prev.x,Y-prev.y):0, target:hitTarget(X,Y)};
+    t0+=f.dur+30; prev=f; v.fix.push(f);
+  });
+  const ar=c.recW/c.recH, pr=PAGE_W/FOLD_H;
+  if(Math.abs(ar/pr-1)>.02) v.warn.push(`縦横比が違います(記録 ${c.recW}×${c.recH} = ${ar.toFixed(2)}、解析 ${PAGE_W}×${FOLD_H} = ${pr.toFixed(2)})。縦と横を別々の倍率で合わせています。位置がずれて見えるときは、下の「解析幅を記録に合わせる」を使ってください。`);
+  if(v.st.out) v.warn.push(`${v.st.out}件は、ページの範囲の外だったため、表示から外しました。`);
+  if(v.st.below&&c.unit!=='norm') v.warn.push(`${v.st.below}件は、記録した画面の高さ(${c.recH}px)より下にありました。スクロール後の位置がページ座標なら、そのまま重ねています。画面内の座標のままなら、ずれて見えます。`);
+  if(v.st.bad) v.warn.push(`${v.st.bad}行は、X・Yが数値でないため読み飛ばしました。`);
+  return done();
+}
+function realDwell(fix){
+  const m=new Map();
+  fix.forEach((f,i)=>{ const id=f.target?f.target.id:'_none'; let o=m.get(id); if(!o){ o={t:f.target, dur:0, n:0, first:i+1}; m.set(id,o); } o.dur+=f.dur; o.n++; });
+  return [...m.values()].sort((a,b)=>b.dur-a.dur);
+}
+function realTypeShare(fix){
+  const o={}, tot=fix.reduce((a,f)=>a+f.dur,0)||1;
+  fix.forEach(f=>{ const k=f.target?f.target.type:'none'; o[k]=(o[k]||0)+f.dur; });
+  Object.keys(o).forEach(k=>{ o[k]/=tot; }); return o;
+}
+function simTypeShare(){
+  const g=S.gaze, w=gazeWeights(), base=hashStr(S.sourceName+'|'+g.persona+'|'+g.task), o={}; let tot=0;
+  for(let i=0;i<30;i++) runSim(base+977+i*7919, g.persona, g.task, w, foldOf()).forEach(f=>{ o[f.target.type]=(o[f.target.type]||0)+f.dur; tot+=f.dur; });
+  Object.keys(o).forEach(k=>{ o[k]/=(tot||1); }); return o;
+}
+function realCSV(){
+  const r=realCompute(); if(!r||!r.fix.length) return '';
+  const q=s=>{ s=String(s??''); if(/^[=+\-@\t\r]/.test(s)) s="'"+s; return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const c=S.real.cfg;
+  const rows=[['no','x_recorded_px','y_recorded_px','x_tool_px','y_tool_px','duration_ms','start_ms','target_type','target_label','recorded_size','tool_size']];
+  r.fix.forEach((f,i)=>rows.push([i+1,f.rx.toFixed(1),f.ry.toFixed(1),f.x.toFixed(1),f.y.toFixed(1),f.dur,f.t0,f.target?f.target.type:'',f.target?f.target.label:'',`${c.recW}x${c.recH}`,`${PAGE_W}x${FOLD_H}`]));
+  return '﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n');
+}
+function realDemoTable(){
+  const T=S.targets.filter(t=>t.cy<FOLD_H&&t.rect.w>20&&t.rect.h>10).sort((a,b)=>a.cy-b.cy||a.cx-b.cx), pick=[];
+  for(let i=0;i<T.length&&pick.length<14;i+=Math.max(1,Math.floor(T.length/14))) pick.push(T[i]);
+  let h=hashStr('demo|'+S.sourceName), rnd=()=>{ h=(h*1664525+1013904223)>>>0; return h/4294967296; }, t=0;
+  const body=pick.map(tg=>{ const d=Math.round(160+rnd()*380), x=(tg.cx+(rnd()-.5)*20)/PAGE_W*1920, y=(tg.cy+(rnd()-.5)*14)/FOLD_H*1080; const row=[t,Math.round(x),Math.round(y),d]; t+=d+40; return row; });
+  return {head:['timestamp_ms','gaze_x_px','gaze_y_px','duration_ms'], body, dec:false};
+}
+async function realLoadFile(f){
+  if(f.size>REAL_MAX_BYTES){ toast('ファイルが大きすぎます(20MBまで)'); return; }
+  try{
+    const buf=await f.arrayBuffer(), u8=new Uint8Array(buf.slice(0,4)); let sheets, dec=false;
+    if(u8[0]===0x50&&u8[1]===0x4B){ sheets=(await readXlsx(buf)).map(s=>({name:s.name, ...realSheet(s.rows,false)})); }
+    else if(u8[0]===0xD0&&u8[1]===0xCF){ toast('古い形式(.xls)は読めません。.xlsx か .csv で保存し直してください'); return; }
+    else { const p=parseDelimited(decodeText(buf)); dec=p.delim!==','; sheets=[{name:f.name, ...realSheet(p.rows,dec)}]; }
+    sheets=sheets.filter(s=>s.body.length);
+    if(!sheets.length){ toast('データの行が見つかりませんでした'); return; }
+    stopRealPlay();
+    S.real={name:f.name, source:S.sourceName, demo:false, tbl:{sheets, cur:0}, cfg:realGuess(sheets[0]), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null};
+    S.show.real=true; syncToggles(); renderPanel(); renderOverlay(); toast(`${sheets[0].body.length.toLocaleString()}行を読み込みました`);
+  }catch(e){
+    toast(e.message==='nodecomp'?'このブラウザは .xlsx の直接読み込みに未対応です。CSVで保存し直してください':'読み込めませんでした(.xlsx / .csv / .tsv に対応)');
+  }
+}
+function stopRealPlay(){ if(S.real&&S.real.timer){ clearTimeout(S.real.timer); S.real.timer=null; } const b=$('#rgPlay'); if(b) b.innerHTML=ico('play',14)+'再生'; }
+function startRealPlay(){
+  const R=S.real, r=realCompute(); if(!R||!r||!r.fix.length) return; stopRealPlay(); R.upTo=0;
+  const step=()=>{ if(R.upTo>=r.fix.length){ stopRealPlay(); R.upTo=null; renderOverlay(); renderRealResult(); return; } R.upTo++; renderOverlay(); renderRealResult(); R.timer=setTimeout(step, Math.max(160, r.fix[R.upTo-1].dur*.9)); };
+  const b=$('#rgPlay'); if(b) b.innerHTML=ico('pause',14)+'停止'; step();
+}
+function ensureRealHeat(){
+  const cv=$('#heatReal'); if(!cv) return;
+  cv.style.display=S.show.realHeat?'block':'none'; if(!S.show.realHeat) return;
+  const r=realCompute(), k=(r?r.key:'')+'|'+PAGE_W+'x'+S.frameH; if(cv._k===k) return; cv._k=k;
+  if(r&&r.fix.length) drawHeat(r.fix.map(f=>({x:f.x,y:f.y,dur:f.dur})),'heatReal'); else { cv.width=1; cv.height=1; }
+}
+function realOverlay(g){
+  const r=S.real&&realCompute(); if(!r||!r.fix.length) return;
+  const f=r.fix.slice(0, S.real.upTo==null?r.fix.length:S.real.upTo), C='#1D4ED8';
+  if(f.length>1){ const pts=f.map(p=>`${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(' ');
+    g.push(`<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" opacity=".9"/><polyline points="${pts}" fill="none" stroke="${C}" stroke-width="3.5" stroke-linejoin="round" stroke-dasharray="10 5"/>`); }
+  f.forEach((p,i)=>{ const rad=clamp(10+p.dur/45,12,34);
+    g.push(`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${rad.toFixed(0)}" fill="${C}" fill-opacity=".25" stroke="${C}" stroke-width="2.5"/>`+(i<150?`<text x="${p.x.toFixed(0)}" y="${(p.y+5).toFixed(0)}" font-size="14" text-anchor="middle" font-weight="600" fill="#fff" stroke="#1E3A8A" stroke-width="3" paint-order="stroke">${i+1}</text>`:'')); });
+  g.push(`<rect x="${PAGE_W-196}" y="8" width="188" height="24" rx="6" fill="${C}"/><text x="${PAGE_W-102}" y="25" font-size="13" text-anchor="middle" fill="#fff" font-weight="600">実測視線（記録データ）</text>`);
+}
+
+function panelReal(){
+  const R=S.real;
+  let h=`<div class="sec"><span class="real-badge">実測データ（読み込んだ視線の記録）</span><span class="hint" style="margin-left:8px">③の「仮想視線」は、ルールで作った推定です。ここは記録そのものを重ねます。</span></div>`;
+  h+=`<div class="sec"><div class="row" style="gap:8px;flex-wrap:wrap">
+    <button class="btn" id="rgPick">${R?'別のファイルを読み込む':'視線データのファイルを選ぶ'}</button><input type="file" id="rgFile" accept=".csv,.tsv,.txt,.xlsx,text/csv" hidden>
+    <button class="btn ghost" id="rgDemo" title="動作を試すための、作り物のデータを読み込みます">デモ用データで試す</button>
+    ${R?'<button class="btn ghost" id="rgClear">読み込みを消す</button>':''}</div>
+    <p class="hint" style="margin-top:8px">対応: .xlsx / .csv / .tsv（1行目が見出し）。ファイルは端末の中だけで読み、外部へは送りません。必要な列は、X座標・Y座標と、注視の長さ（または時刻）です。</p></div>`;
+  if(!R) return h+`<div class="note"><b>データの形</b><ul><li><b>注視（fixation）データ</b>: 1行が1回の注視。X・Y・継続時間(ms)</li><li><b>生の視線サンプル</b>: 一定間隔の座標の記録。時刻(またはHz)から注視をまとめます</li><li>座標は、画面のピクセル、または0〜1の割合に対応します</li></ul></div>`;
+  const sh=R.tbl.sheets[R.tbl.cur], c=R.cfg;
+  const opts=(sel,none)=>(none?`<option value="-1" ${sel<0?'selected':''}>（なし）</option>`:'')+sh.head.map((n,i)=>`<option value="${i}" ${sel===i?'selected':''}>${esc(n)}</option>`).join('');
+  const preset=REC_PRESETS.some(p=>p[0]===c.recW&&p[1]===c.recH)?`${c.recW}x${c.recH}`:'custom';
+  if(R.source && R.source!==S.sourceName) h+=`<div class="note" style="margin-bottom:16px"><b style="color:var(--text)">別の画面のデータかもしれません</b><br>読み込んだときの画面は「${esc(R.source)}」、いまは「${esc(S.sourceName)}」です。記録した画面と、解析中の画面が同じか確かめてください。</div>`;
+  h+=`<div class="sec"><h3>${R.demo?'デモ用データ(作り物)':esc(R.name)} — ${sh.body.length.toLocaleString()}行</h3>
+   <div class="form-grid">
+    ${R.tbl.sheets.length>1?`<label>シート<select id="rgSheet">${R.tbl.sheets.map((s,i)=>`<option value="${i}" ${R.tbl.cur===i?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>`:''}
+    <label>X座標の列<select id="rgX">${opts(c.xi,true)}</select></label>
+    <label>Y座標の列<select id="rgY">${opts(c.yi,true)}</select></label>
+    <label>継続時間の列<select id="rgD">${opts(c.di,true)}</select></label>
+    <label>時刻の列<select id="rgT">${opts(c.ti,true)}</select></label>
+    <label>時間の単位<select id="rgTu"><option value="ms" ${c.tunit==='ms'?'selected':''}>ミリ秒(ms)</option><option value="s" ${c.tunit==='s'?'selected':''}>秒(s)</option></select></label>
+    <label>データの種類<select id="rgKind"><option value="fix" ${c.kind==='fix'?'selected':''}>注視データ(1行=1回の注視)</option><option value="sample" ${c.kind==='sample'?'selected':''}>生の視線サンプル</option></select></label>
+    <label>座標の単位<select id="rgUnit"><option value="px" ${c.unit==='px'?'selected':''}>ピクセル(px)</option><option value="norm" ${c.unit==='norm'?'selected':''}>0〜1の割合</option><option value="pct" ${c.unit==='pct'?'selected':''}>0〜100の%</option></select></label>
+    <label class="toggle" style="align-self:end"><input type="checkbox" id="rgFlip" ${c.flipY?'checked':''}> Yが下から上(下が0)</label>
+   </div></div>`;
+  h+=`<div class="sec"><h3>記録したときの画面サイズ</h3>
+   <div class="form-grid"><label>よく使う解像度<select id="rgPreset">${REC_PRESETS.map(p=>`<option value="${p[0]}x${p[1]}" ${preset===p[0]+'x'+p[1]?'selected':''}>${p[0]}×${p[1]}</option>`).join('')}<option value="custom" ${preset==='custom'?'selected':''}>指定する…</option></select></label>
+   <label>幅(px)<input type="number" id="rgW" min="200" max="10000" value="${c.recW}"></label><label>高さ(px)<input type="number" id="rgH" min="200" max="10000" value="${c.recH}"></label></div>
+   <p class="hint" style="margin-top:6px">解析中の画面は ${PAGE_W}×${FOLD_H}px です。座標は、記録の画面全体が解析の画面全体に重なるように、縦横の倍率をかけて変換します(${(PAGE_W/c.recW).toFixed(3)}倍・${(FOLD_H/c.recH).toFixed(3)}倍)。<b>ここを実際の記録環境と合わせないと、別の場所に表示されます。</b></p>
+   ${(c.recW!==PAGE_W||c.recH!==FOLD_H)&&!S.imageMode?`<div class="row" style="margin-top:6px"><button class="mini" id="rgFitVp">解析幅を記録に合わせる(${c.recW}×${c.recH})</button></div>`:''}</div>`;
+  if(c.kind==='sample') h+=`<div class="sec"><h3>注視のまとめ方(生サンプル用)</h3><div class="form-grid">
+    <label>注視とみなす範囲(px)<input type="number" id="rgDisp" min="1" max="500" value="${c.disp}"></label>
+    <label>最短の注視(ms)<input type="number" id="rgMin" min="10" max="2000" value="${c.minDur}"></label>
+    <label>サンプリング(Hz)<input type="number" id="rgHz" min="1" max="2000" value="${c.hz}"></label></div>
+    <p class="hint" style="margin-top:6px">範囲内に最短の時間とどまった点を、1回の注視にまとめます(I-DT法)。時刻の列があるときは、Hzは使いません。</p></div>`;
+  h+=`<div id="rgResult">${realResultHTML()}</div>`;
+  return h;
+}
+function renderRealResult(){ const el=$('#rgResult'); if(el) el.innerHTML=realResultHTML(); }
+function realResultHTML(){
+  const R=S.real, r=realCompute(); if(!R||!r) return '';
+  if(r.err) return `<div class="note"><b>${esc(r.err)}</b></div>`;
+  let h=r.warn.map(w=>`<div class="note" style="margin-bottom:12px">${esc(w)}</div>`).join('');
+  if(!r.fix.length) return h+'<p class="hint">表示できる注視がありません。列・単位・記録時の画面サイズを見直してください。</p>';
+  const f=r.fix, total=f.reduce((a,b)=>a+b.dur,0), shown=R.upTo==null?f.length:R.upTo;
+  const meanAmp=f.slice(1).reduce((a,b)=>a+b.amp,0)/Math.max(1,f.length-1);
+  const firstCTA=f.findIndex(x=>x.target&&x.target.type==='button'&&x.target.isCTA);
+  const ctaT=firstCTA<0?'—':(f.slice(0,firstCTA).reduce((a,b)=>a+b.dur+30,0)/1000).toFixed(1)+'秒 (#'+(firstCTA+1)+')';
+  const tiles=[['総注視時間',(total/1000).toFixed(1)+'s'],['注視回数',f.length],['主要CTAに到達',ctaT],['平均サッケード',Math.round(meanAmp)+'px']];
+  h+=`<div class="sec"><div class="tiles">${tiles.map(([k,v])=>`<div class="tile"><b style="font-size:16px">${v}</b><span>${k}</span></div>`).join('')}</div>
+    <div class="row" style="margin-top:10px;gap:6px;flex-wrap:wrap"><button class="mini" id="rgPlay">${ico('play',14)}再生</button><button class="mini" id="rgCsv">変換後の注視点をCSVで保存</button></div></div>`;
+  const dw=realDwell(f);
+  h+=`<div class="sec"><h3>要素ごとの滞留(実測)</h3><table><tr><th>要素</th><th>滞留</th><th>回数</th><th>最初に見た順</th></tr>${dw.slice(0,10).map(o=>`<tr><td>${o.t?esc((REAL_TYPE_JA[o.t.type]||o.t.type)+'：'+o.t.label):'（要素の外）'}</td><td>${(o.dur/1000).toFixed(2)}s (${(o.dur/total*100).toFixed(0)}%)</td><td>${o.n}</td><td>#${o.first}</td></tr>`).join('')}</table></div>`;
+  const rs=realTypeShare(f), ss=S.gaze.agg?simTypeShare():{}, keys=[...new Set([...Object.keys(rs),...Object.keys(ss)])].sort((a,b)=>(rs[b]||0)-(rs[a]||0));
+  h+=`<div class="sec"><h3>種類別の滞留割合:実測 と ③の仮想視線</h3>${keys.map(k=>`<div class="bar-row"><span class="nm">${REAL_TYPE_JA[k]||k}</span><div class="bar" style="position:relative"><i style="width:${((rs[k]||0)*100).toFixed(0)}%;background:#1D4ED8"></i></div><span class="v">${((rs[k]||0)*100).toFixed(0)}% / ${((ss[k]||0)*100).toFixed(0)}%</span></div>`).join('')}
+    <p class="hint">右の数値が 実測 / 仮想。仮想は、③で選んでいるペルソナ・タスクの30試行の平均です。差が大きい種類は、仮説(重み)の見直しや、実際の見られ方の確認の手がかりになります。</p></div>`;
+  h+=`<div class="sec"><h3>注視の順序(実測)</h3><table><tr><th>#</th><th>対象</th><th>滞留</th><th>累計</th></tr>${f.slice(0,Math.min(shown,60)).map((x,i)=>`<tr><td>${i+1}</td><td>${x.target?esc((REAL_TYPE_JA[x.target.type]||x.target.type)+'：'+x.target.label):'（要素の外）'}</td><td>${x.dur}ms</td><td>${((x.t0+x.dur)/1000).toFixed(1)}s</td></tr>`).join('')}</table>${shown>60?`<p class="hint">先頭の60回までを表示しています(全${shown}回はCSVで保存できます)。</p>`:''}</div>`;
+  return h;
+}
+(function realWire(){
+  document.addEventListener('click', e=>{
+    const t=e.target.closest('button'); if(!t||!t.id||t.id.indexOf('rg')!==0) return;
+    if(t.id==='rgPick'){ $('#rgFile').click(); }
+    else if(t.id==='rgDemo'){ stopRealPlay(); const tb=realDemoTable(); S.real={name:'デモ用データ', source:S.sourceName, demo:true, tbl:{sheets:[{name:'demo',...tb}],cur:0}, cfg:Object.assign(realGuess(tb),{recW:1920,recH:1080}), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null}; S.show.real=true; syncToggles(); renderPanel(); renderOverlay(); }
+    else if(t.id==='rgClear'){ stopRealPlay(); S.real=null; S.show.real=false; S.show.realHeat=false; syncToggles(); renderPanel(); renderOverlay(); }
+    else if(t.id==='rgPlay'){ if(S.real&&S.real.timer){ stopRealPlay(); S.real.upTo=null; renderOverlay(); renderRealResult(); } else startRealPlay(); }
+    else if(t.id==='rgCsv'){ const txt=realCSV(); if(!txt){ toast('保存できる注視がありません'); return; } const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'})); a.download='real-gaze-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),30000); toast('CSVを保存しました'); }
+    else if(t.id==='rgFitVp'){ const c=S.real.cfg; setViewport('custom',{custom:{w:c.recW,h:c.recH}}).then(()=>{ renderAll(); toast(`解析幅を ${PAGE_W}×${FOLD_H} にしました`); }); }
+  });
+  document.addEventListener('change', e=>{
+    const t=e.target;
+    if(t.id==='rgFile'){ const f=t.files&&t.files[0]; t.value=''; if(f) realLoadFile(f); return; }
+    if(!t.id||t.id.indexOf('rg')!==0||!S.real) return;
+    const R=S.real, c=R.cfg; let redraw=true;
+    if(t.id==='rgSheet'){ R.tbl.cur=+t.value; R.cfg=realGuess(R.tbl.sheets[R.tbl.cur]); }
+    else if(t.id==='rgX') c.xi=+t.value; else if(t.id==='rgY') c.yi=+t.value; else if(t.id==='rgD') c.di=+t.value; else if(t.id==='rgT') c.ti=+t.value;
+    else if(t.id==='rgTu') c.tunit=t.value; else if(t.id==='rgKind') c.kind=t.value; else if(t.id==='rgUnit') c.unit=t.value; else if(t.id==='rgFlip') c.flipY=t.checked;
+    else if(t.id==='rgPreset'){ if(t.value!=='custom'){ const [w,h]=t.value.split('x').map(Number); c.recW=w; c.recH=h; } }
+    else if(t.id==='rgW') c.recW=clamp(Math.round(+t.value)||1920,200,10000); else if(t.id==='rgH') c.recH=clamp(Math.round(+t.value)||1080,200,10000);
+    else if(t.id==='rgDisp') c.disp=clamp(+t.value||40,1,500); else if(t.id==='rgMin') c.minDur=clamp(+t.value||100,10,2000); else if(t.id==='rgHz') c.hz=clamp(+t.value||60,1,2000);
+    else redraw=false;
+    if(redraw){ stopRealPlay(); R.upTo=null; renderPanel(); renderOverlay(); }
+  });
+})();
 
 /* ============================================================
    Age Lens (年齢・視覚特性のフィルタと、読みにくさ判定)
@@ -3284,7 +3632,7 @@ document.addEventListener('click', e=>{
   if(t.dataset.kpShow){ const r=S.kp.find(x=>x.id===t.dataset.kpShow); if(r){ S.kpSel=r.id; scrollToRect(r.where.rect); renderPanel(); renderOverlay(); } return; }
   if(t.matches('.seg button')){ S.srcMode=t.dataset.src; $$('.seg button').forEach(b=>b.setAttribute('aria-selected',b===t)); renderSrc(); return; }
   if(t.matches('.tabs button')){
-    S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens', multi:S.tab==='multi'});
+    S.tab=t.dataset.tab; Object.assign(S.show,{comps:S.tab==='comps', pins:S.tab==='heur', path:S.tab==='gaze', lensMap:S.tab==='lens', multi:S.tab==='multi', real:S.tab==='real', realHeat:S.tab==='real'&&!!S.real&&S.real.heat===true});
     if(S.tab==='lens' && !S.lens.on && !S.lens.preset){ setLensPreset('senior65'); renderTabs(); return; }
     applyLens(); syncToggles(); renderTabs(); renderPanel(); renderOverlay(); return;
   }
@@ -3403,6 +3751,8 @@ document.addEventListener('change', e=>{
   else if(t.id==='tgPins'){ S.show.pins=t.checked; renderOverlay(); }
   else if(t.id==='tgPath'){ S.show.path=t.checked; renderOverlay(); }
   else if(t.id==='tgHeat'){ S.show.heat=t.checked; renderOverlay(); }
+  else if(t.id==='tgReal'){ S.show.real=t.checked; renderOverlay(); }
+  else if(t.id==='tgRealHeat'){ S.show.realHeat=t.checked; if(S.real) S.real.heat=t.checked; renderOverlay(); }
 });
 document.addEventListener('input', e=>{
   const lt=e.target;
@@ -3425,7 +3775,7 @@ document.addEventListener('input', e=>{
 document.addEventListener('toggle', e=>{ const d=e.target; if(d.classList&&d.classList.contains('h-card')){ d.open?S.openH.add(d.dataset.h):S.openH.delete(d.dataset.h); } }, true);
 document.addEventListener('mouseover', e=>{ const it=e.target.closest('.item[data-comp]'); const id=it?it.dataset.comp:null; if(id!==S.hlComp){ S.hlComp=id; renderOverlay(); } });
 
-function syncToggles(){ $('#tgMulti').checked=S.show.multi; $('#tgLens').checked=S.show.lensMap; $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; }
+function syncToggles(){ $('#tgMulti').checked=S.show.multi; $('#tgLens').checked=S.show.lensMap; $('#tgComps').checked=S.show.comps; $('#tgPins').checked=S.show.pins; $('#tgPath').checked=S.show.path; $('#tgHeat').checked=S.show.heat; $('#tgReal').checked=S.show.real; $('#tgRealHeat').checked=S.show.realHeat; }
 $('#stageScroll').addEventListener('mousemove', e=>{
   if(!(S.lens.on && S.lens.tunnel>0)) return;
   const hb=$('#holder').getBoundingClientRect();

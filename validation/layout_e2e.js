@@ -8,7 +8,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   const tabs = p => p.evaluate(() => { const bar = document.querySelector('.tabs'), bs = [...bar.querySelectorAll('button')]; return { n: bs.length, rows: new Set(bs.map(x => Math.round(x.getBoundingClientRect().top))).size, scroll: bar.scrollWidth > bar.clientWidth + 1, clipped: bs.filter(x => x.querySelector('.tl').scrollWidth > x.clientWidth + 1).length, names: bs.map(x => x.querySelector('.sr-only').textContent) }; });
 
   let p = await open(1440, 900); let t = await tabs(p);
-  assert(t.n === 8 && t.rows === 1, 'PC：8つのタブが1段に並ぶ（折り返さない）');
+  assert(t.n === 9 && t.rows === 1, 'PC：9つのタブが1段に並ぶ（折り返さない）');
   assert(!t.scroll && t.clipped === 0, 'PC：タブの文字が切れず、横スクロールも要らない');
   assert(t.names[7] === '⑧ Where・When・Why' && t.names[0] === '① 構成要素', 'タブの読み上げ名は、「① 構成要素」「⑧ Where・When・Why」のまま');
   await p.evaluate(() => window.scrollTo(0, 700)); await p.waitForTimeout(300);
@@ -20,7 +20,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   assert(!ui.scrRowShown, '画面が1つのときは、「解析する画面」の行を出さない');
   assert(!ui.settingsOpen && /1280×800/.test(ui.sum) && !ui.vpShown, '解析の設定は、既定で折りたたみ、いまの画面幅を見出しに出す');
   assert(ui.clamped === 0, 'サンプルの説明が、途中で省略されない');
-  assert(ui.groups.length === 2 && ui.groups[0] === '重ねて表示' && ui.toggles === 6 && ui.actions === 2, 'ステージの操作を、「重ねて表示（6つ）」と「保存（2つ）」の2グループに分ける');
+  assert(ui.groups.length === 2 && ui.groups[0] === '重ねて表示' && ui.toggles === 8 && ui.actions === 2, 'ステージの操作を、「重ねて表示（8つ）」と「保存（2つ）」の2グループに分ける');
   assert(ui.minFont >= 13, '入力欄・ステージ・結果パネルの文字は、最小13px以上（実測 ' + ui.minFont + 'px）');
   await p.click('#settings summary'); assert(await p.evaluate(() => { const e = document.querySelector('#vpSel'), r = e.getBoundingClientRect(); return document.querySelector('#settings').open && document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) === e; }), '「解析の設定」を開くと、画面幅の選択が出る（押せる位置にある）');
   await p.close();
