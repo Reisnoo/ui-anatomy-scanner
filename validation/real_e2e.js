@@ -67,6 +67,15 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   await p.click('.tabs button[data-tab="real"]'); assert(await p.evaluate(() => S.show.real === true), '⑨に戻ると実測が出る');
   // 列未選択
   await p.selectOption('#rgX', '-1'); assert((await p.textContent('#rgResult')).includes('列を選んでください'), 'X列が未選択ならメッセージを出す');
+  // 画面遷移の記録(座標なし)を、座標として描かない
+  await p.setInputFiles('#rgFile', G + 'transitions.csv'); await p.waitForSelector('#rgResult');
+  assert(await p.evaluate(() => S.real.cfg.xi === -1 && S.real.cfg.yi === -1 && realCompute().fix.length === 0), '座標のない表(画面遷移の記録)は、先頭2列を座標とみなさない');
+  assert((await p.textContent('#rgResult')).includes('画面の切り替え時刻の記録'), '画面遷移の記録だと、案内を出す');
+  // 標準タグを使わない画面(構成要素が0個)でも、⑨は使える
+  await p.evaluate(async () => { await loadHTML('<!doctype html><body style="margin:0"><div style="padding:40px"><div style="font-size:20px">タイトル</div><label style="display:inline-block;padding:10px;background:#27c">はじめる</label></div></body>', 'plain'); });
+  await p.waitForTimeout(500); assert(await p.evaluate(() => S.comps.length) === 0, '(前提)標準タグがない画面は、構成要素が0個');
+  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', G + 'fix.csv'); await p.waitForSelector('#rgResult .tile');
+  assert(await p.evaluate(() => realCompute().fix.length) === 6 && (await p.textContent('#rgResult')).includes('構成要素が見つかっていません'), '構成要素が0個でも、軌跡を重ねられる(要素別の集計は出ない旨を表示)');
   // デモ
   await p.click('#rgDemo'); await p.waitForSelector('#rgResult .tile'); assert((await p.textContent('#panelBody')).includes('デモ用データ(作り物)') && await p.evaluate(() => realCompute().fix.length) >= 5, 'デモ用データ(作り物と明記)で試せる');
   await p.click('#rgClear'); assert(await p.evaluate(() => S.real === null), '読み込みを消せる');

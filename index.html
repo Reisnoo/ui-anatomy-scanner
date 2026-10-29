@@ -1815,7 +1815,7 @@ const LEAD = {
 new MutationObserver(()=>{ $$('#panelBody h3:not([aria-level])').forEach(h=>h.setAttribute('aria-level','2')); }).observe($('#panelBody'),{childList:true,subtree:true});
 function renderPanel(){
   const el=$('#panelBody');
-  if(!S.comps.length){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
+  if(!S.comps.length && !(S.tab==='real' && S.sourceName)){ el.innerHTML='<p class="hint">解析するとここに結果が表示されます。</p>'; return; }
   el.innerHTML = `<p class="lead">${LEAD[(S.tab==='multi'&&S.pTab==='edit')?'multiEdit':(S.tab==='cmp'&&S.cTab==='history')?'cmpHist':S.tab]||''}</p>` + (S.tab==='comps'?panelComps() : S.tab==='heur'?panelHeur() : S.tab==='lens'?panelLens() : S.tab==='cmp'?panelCompare() : S.tab==='multi'?panelPersonas() : S.tab==='resp'?panelResp() : S.tab==='kp'?panelKp() : S.tab==='real'?panelReal() : panelGaze());
 }
 
@@ -2054,7 +2054,7 @@ function realGuess(sh){
   const isY=h=>/(^|[^a-z0-9])y([^a-z]|$)|(gaze|point|fpog|fixation|pos|coord)[ _]*(point[ _]*)?y([^a-z]|$)|y座標|縦/i.test(h);
   const isD=h=>/dur|滞留|継続|fpogd|注視時間/i.test(h), isT=h=>/time|stamp|時刻|時間|^t$|fpogs/i.test(h);
   c.xi=H.findIndex(isX); c.yi=H.findIndex(h=>isY(h)); c.di=H.findIndex(isD); c.ti=H.findIndex((h,i)=>isT(h)&&i!==c.di);
-  if(c.xi<0&&H.length>=2){ c.xi=0; c.yi=1; }
+  if(c.xi<0&&c.yi<0&&H.length>=2&&H.every(h=>/^列[A-Z]+$/.test(h))){ c.xi=0; c.yi=1; }   // 見出しのない数値だけの表のときだけ、先頭2列をX・Yとみなす
   const col=i=>i<0?[]:sh.body.slice(0,200).map(r=>toNum(r[i],sh.dec)).filter(v=>!isNaN(v));
   const xs=col(c.xi), ys=col(c.yi);
   if(xs.length&&ys.length&&Math.max(...xs)<=1.5&&Math.max(...ys)<=1.5&&Math.min(...xs)>=-.2&&Math.min(...ys)>=-.2) c.unit='norm';
@@ -2161,6 +2161,7 @@ function realCSV(){
 function realDemoTable(){
   const T=S.targets.filter(t=>t.cy<FOLD_H&&t.rect.w>20&&t.rect.h>10).sort((a,b)=>a.cy-b.cy||a.cx-b.cx), pick=[];
   for(let i=0;i<T.length&&pick.length<14;i+=Math.max(1,Math.floor(T.length/14))) pick.push(T[i]);
+  if(pick.length<3) [[.2,.15],[.5,.3],[.75,.25],[.3,.55],[.6,.6],[.5,.85]].forEach(q=>pick.push({cx:q[0]*PAGE_W,cy:q[1]*FOLD_H}));   // 要素が見つからない画面では、画面の割合で作る
   let h=hashStr('demo|'+S.sourceName), rnd=()=>{ h=(h*1664525+1013904223)>>>0; return h/4294967296; }, t=0;
   const body=pick.map(tg=>{ const d=Math.round(160+rnd()*380), x=(tg.cx+(rnd()-.5)*20)/PAGE_W*1920, y=(tg.cy+(rnd()-.5)*14)/FOLD_H*1080; const row=[t,Math.round(x),Math.round(y),d]; t+=d+40; return row; });
   return {head:['timestamp_ms','gaze_x_px','gaze_y_px','duration_ms'], body, dec:false};
@@ -2244,9 +2245,13 @@ function panelReal(){
 function renderRealResult(){ const el=$('#rgResult'); if(el) el.innerHTML=realResultHTML(); }
 function realResultHTML(){
   const R=S.real, r=realCompute(); if(!R||!r) return '';
-  if(r.err) return `<div class="note"><b>${esc(r.err)}</b></div>`;
+  if(r.err){
+    const sh=R.tbl.sheets[R.tbl.cur], trans=sh.head.some(h=>/screen|画面/i.test(h))&&sh.head.some(h=>/time|時刻|時間/i.test(h));
+    return `<div class="note"><b>${esc(r.err)}</b>${trans?'<br>この表は、画面の切り替え時刻の記録のようです(座標の列がありません)。これだけでは、視線の軌跡は描けません。X・Y座標の入った視線データのファイルを読み込んでください。':''}</div>`;
+  }
   let h=r.warn.map(w=>`<div class="note" style="margin-bottom:12px">${esc(w)}</div>`).join('');
   if(!r.fix.length) return h+'<p class="hint">表示できる注視がありません。列・単位・記録時の画面サイズを見直してください。</p>';
+  if(!S.targets.length) h+='<div class="note" style="margin-bottom:12px">この画面からは、構成要素が見つかっていません(ボタンや見出しが、button・h1などの標準のタグでない作りのとき)。軌跡とヒートマップは重ねられますが、要素ごとの集計は出ません。</div>';
   const f=r.fix, total=f.reduce((a,b)=>a+b.dur,0), shown=R.upTo==null?f.length:R.upTo;
   const meanAmp=f.slice(1).reduce((a,b)=>a+b.amp,0)/Math.max(1,f.length-1);
   const firstCTA=f.findIndex(x=>x.target&&x.target.type==='button'&&x.target.isCTA);
@@ -2256,7 +2261,7 @@ function realResultHTML(){
     <div class="row" style="margin-top:10px;gap:6px;flex-wrap:wrap"><button class="mini" id="rgPlay">${ico('play',14)}再生</button><button class="mini" id="rgCsv">変換後の注視点をCSVで保存</button></div></div>`;
   const dw=realDwell(f);
   h+=`<div class="sec"><h3>要素ごとの滞留(実測)</h3><table><tr><th>要素</th><th>滞留</th><th>回数</th><th>最初に見た順</th></tr>${dw.slice(0,10).map(o=>`<tr><td>${o.t?esc((REAL_TYPE_JA[o.t.type]||o.t.type)+'：'+o.t.label):'（要素の外）'}</td><td>${(o.dur/1000).toFixed(2)}s (${(o.dur/total*100).toFixed(0)}%)</td><td>${o.n}</td><td>#${o.first}</td></tr>`).join('')}</table></div>`;
-  const rs=realTypeShare(f), ss=S.gaze.agg?simTypeShare():{}, keys=[...new Set([...Object.keys(rs),...Object.keys(ss)])].sort((a,b)=>(rs[b]||0)-(rs[a]||0));
+  const rs=realTypeShare(f), ss=(S.gaze.agg&&S.targets.length)?simTypeShare():{}, keys=[...new Set([...Object.keys(rs),...Object.keys(ss)])].sort((a,b)=>(rs[b]||0)-(rs[a]||0));
   h+=`<div class="sec"><h3>種類別の滞留割合:実測 と ③の仮想視線</h3>${keys.map(k=>`<div class="bar-row"><span class="nm">${REAL_TYPE_JA[k]||k}</span><div class="bar" style="position:relative"><i style="width:${((rs[k]||0)*100).toFixed(0)}%;background:#1D4ED8"></i></div><span class="v">${((rs[k]||0)*100).toFixed(0)}% / ${((ss[k]||0)*100).toFixed(0)}%</span></div>`).join('')}
     <p class="hint">右の数値が 実測 / 仮想。仮想は、③で選んでいるペルソナ・タスクの30試行の平均です。差が大きい種類は、仮説(重み)の見直しや、実際の見られ方の確認の手がかりになります。</p></div>`;
   h+=`<div class="sec"><h3>注視の順序(実測)</h3><table><tr><th>#</th><th>対象</th><th>滞留</th><th>累計</th></tr>${f.slice(0,Math.min(shown,60)).map((x,i)=>`<tr><td>${i+1}</td><td>${x.target?esc((REAL_TYPE_JA[x.target.type]||x.target.type)+'：'+x.target.label):'（要素の外）'}</td><td>${x.dur}ms</td><td>${((x.t0+x.dur)/1000).toFixed(1)}s</td></tr>`).join('')}</table>${shown>60?`<p class="hint">先頭の60回までを表示しています(全${shown}回はCSVで保存できます)。</p>`:''}</div>`;
