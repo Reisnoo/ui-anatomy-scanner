@@ -1,0 +1,18 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>radio screens</title>
+<style>
+.ctrl{display:none}
+body{margin:0;font-family:sans-serif}
+.screen{display:none;padding:80px 40px 0;flex-direction:column;gap:12px}
+#t0:checked ~ .dev .s0,#t1:checked ~ .dev .s1,#t2:checked ~ .dev .s2{display:flex}
+#nav{position:absolute;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:12px;align-items:center;padding:0 20px}
+#t0:checked ~ .dev #nav{display:none}
+.btn{display:inline-block;padding:12px 28px;background:#2b5fcb;color:#fff;border-radius:8px;cursor:pointer}
+.dev{position:relative;height:700px}
+</style></head><body>
+<input class="ctrl" type="radio" name="n" id="t0" checked><input class="ctrl" type="radio" name="n" id="t1"><input class="ctrl" type="radio" name="n" id="t2">
+<div class="dev">
+ <nav id="nav"><b id="aoi-logo">Shop</b><label class="btn" for="t1">一覧</label></nav>
+ <section class="screen s0"><div>ようこそ。商品を探して、購入手続きの画面まで進んでください。この文章は、スタート画面の説明です。実験の流れを、ここで確認してください。</div><label class="btn" for="t1">はじめる</label></section>
+ <section class="screen s1"><div>一覧の画面です。気になる商品を、自由にカートへ入れてください。どれを選んでも構いません。お好きな順番で、操作してください。</div><label class="btn" for="t2">次へ</label></section>
+ <section class="screen s2"><div>完了</div><span>ありがとうございました</span><label class="btn" for="t0">終了</label></section>
+</div></body></html>

@@ -817,7 +817,7 @@ function detectScreens(doc){
       const sameCls=key.split('|')[1]!=='';
       if(!(namedN>=2 || (sameCls && nHid<big.length))) continue;
       const score=big.length*1000+Math.min(999,big.reduce((s,m)=>s+m.getElementsByTagName('*').length,0)/10);
-      if(score>bestScore){ bestScore=score; best=big; }
+      if(score>bestScore){ bestScore=score; best=ms.filter(m=>big.includes(m) || m.getElementsByTagName('*').length>=3 || (m.textContent||'').trim().length>=10); }   // 同じ並びの、中身の少ない画面(完了画面など)も含める
     }
   }
   if(!best) return none;
@@ -830,7 +830,26 @@ function detectScreens(doc){
   });
   return {items, hid};
 }
+/* 非表示の radio の :checked だけで画面を切り替える作り: 選んだ画面だけが表示になる radio を探して、選んだ状態にする
+   (共通のパンくず・ヘッダーなど、radio の状態で出し入れされる要素も、その画面の表示になる) */
+function applyRadioState(doc, found, idx){
+  const win=doc.defaultView, el=found.items[idx].el, others=found.items.filter((x,i)=>i!==idx).map(x=>x.el);
+  const radios=[...doc.querySelectorAll('input[type=radio]')].slice(0,60); if(!radios.length) return false;
+  const groups=new Map(); radios.forEach(r=>{ const k=r.name||('#'+r.id); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(r); });
+  const shown=e=>win.getComputedStyle(e).display!=='none';
+  let hit=null;
+  for(const r of radios){
+    const before=new Map(radios.map(x=>[x,x.checked])); r.checked=true;
+    const ok=shown(el) && others.every(o=>!shown(o));
+    before.forEach((v,x)=>{ x.checked=v; });
+    if(ok){ hit=r; break; }
+  }
+  if(!hit) return false;
+  (groups.get(hit.name||('#'+hit.id))||[]).forEach(x=>{ x.checked=(x===hit); if(x===hit) x.setAttribute('checked',''); else x.removeAttribute('checked'); });   // outerHTML に残るよう、属性にも反映する
+  return true;
+}
 function applyScreen(doc, found, idx, reveal){
+  applyRadioState(doc, found, idx);
   const win=doc.defaultView, vis=found.items.find(x=>!x.initiallyHidden);
   let disp = vis ? win.getComputedStyle(vis.el).display : 'block';
   if(disp==='none'||disp==='inline'||disp==='contents') disp='block';

@@ -88,6 +88,13 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   const ar = await p.evaluate(() => { const r = realAoiRows(realCompute().fix); return { g: r.groups.map(o => [o.name, o.els.length, o.dur, o.n, o.first]), out: [r.out.dur, r.out.n] }; });
   assert(JSON.stringify(ar.g[0]) === '["aoi-target",1,900,3,1]' && JSON.stringify(ar.g[1]) === '["aoi-decoy",2,500,1,4]', 'AOI別に、滞留・回数・最初に見た順を集計する(target 900ms/3回、decoy 500ms/1回)');
   assert((await p.textContent('#rgResult')).includes('AOI別の滞留') && await p.evaluate(() => document.querySelector('#ov').innerHTML.includes('stroke="#7E22CE"')), 'AOI別の表と、AOIの位置(紫の破線)をステージに出す');
+  // CSSだけ(非表示の radio の :checked)で切り替わる画面: 中身の少ない画面も数え、共通のナビもその画面の状態で解析する
+  await p.evaluate(async h => { await loadHTML(h, 'radio-screens'); }, require('fs').readFileSync(path.join(__dirname, 'fixtures/radio-screens.html'), 'utf8')); await p.waitForTimeout(600);
+  assert(await p.evaluate(() => S.screens && S.screens.items.length) === 3, '中身の少ない画面(完了)も、画面として数える(3画面)');
+  await p.evaluate(async () => { await selectScreen(1); }); await p.waitForTimeout(500);
+  assert(await p.evaluate(() => S.aoi.some(a => a.name === 'aoi-logo') && S.comps.some(c => c.type === 'button' && c.label === '一覧')), 'radio で切り替わる画面は、その画面の状態(共通ナビあり)で解析する');
+  await p.evaluate(async () => { await selectScreen(0); }); await p.waitForTimeout(500);
+  assert(await p.evaluate(() => !S.aoi.some(a => a.name === 'aoi-logo')), 'スタート画面では、共通ナビは出ない(その画面の状態のまま)');
   // デモ
   await p.click('#rgDemo'); await p.waitForSelector('#rgResult .tile'); assert((await p.textContent('#panelBody')).includes('デモ用データ(作り物)') && await p.evaluate(() => realCompute().fix.length) >= 5, 'デモ用データ(作り物と明記)で試せる');
   await p.click('#rgClear'); assert(await p.evaluate(() => S.real === null), '読み込みを消せる');
