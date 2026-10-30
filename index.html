@@ -2002,7 +2002,7 @@ function gazeResult(){
 const REC_PRESETS = [[1920,1080],[1920,1200],[2560,1440],[1536,864],[1440,900],[1366,768],[1280,800],[1280,720]];
 const REAL_MAX_ROWS = 200000, REAL_MAX_BYTES = 20e6;
 const REAL_TYPE_JA = {heading:'見出し',image:'画像',banner:'バナー',button:'ボタン',input:'入力欄',search:'検索',navlink:'ナビ',text:'本文',card:'カード',nav:'ステップ/パンくず',none:'要素の外'};
-const realDefaults = () => ({xi:-1, yi:-1, di:-1, ti:-1, kind:'fix', unit:'px', tunit:'ms', recW:1920, recH:1080, flipY:false, hz:60, disp:40, minDur:100});
+const realDefaults = () => ({xi:-1, yi:-1, di:-1, ti:-1, kind:'fix', unit:'px', tunit:'ms', recW:1920, recH:1080, offX:0, offY:0, regW:0, regH:0, stim:'', tb:null, flipY:false, hz:60, disp:40, minDur:100});
 
 function decodeText(buf){
   try{ return new TextDecoder('utf-8',{fatal:true}).decode(buf); }
@@ -2092,7 +2092,22 @@ function realSheet(rows2d, dec){
   const head=Array.from({length:w},(_,i)=>hasHead&&String(r0[i]??'').trim() ? String(r0[i]).trim() : '列'+colName(i));
   return {head, body:hasHead?rows2d.slice(1):rows2d, dec};
 }
+/* Tobii Pro Lab の書き出し(Eye movement type・Fixation point X/Y・Gaze event duration など): 注視の分類つき。1回の注視が複数のサンプル行に繰り返し入っている */
+function tobiiGuess(sh){
+  const H=sh.head, f=n=>H.indexOf(n), T={type:f('Eye movement type'), idx:f('Eye movement type index'), x:f('Fixation point X'), y:f('Fixation point Y'), dur:f('Gaze event duration'), t:f('Recording timestamp'),
+    stim:f('Presented Stimulus name'), ev:f('Event'), evv:f('Event value'), cax:f('Client area position X (DACSpx)'), cay:f('Client area position Y (DACSpx)'), vw:f('Viewport width'), vh:f('Viewport height'),
+    mw:f('Original Media width'), mh:f('Original Media height')};
+  if([T.type,T.idx,T.x,T.y,T.dur,T.t].some(i=>i<0)) return null;
+  const c=realDefaults(); c.kind='tobii'; c.tb=T; c.tunit='us'; c.unit='px';
+  const first=i=>{ if(i<0) return NaN; for(const r of sh.body){ const v=toNum(r[i],false); if(!isNaN(v)) return v; } return NaN; };
+  const stims={}; if(T.stim>=0) sh.body.forEach(r=>{ const k=r[T.stim]; if(k!==''&&k!=null) stims[k]=(stims[k]||0)+1; });
+  const names=Object.keys(stims).filter(k=>!/calib/i.test(k)).sort((a,b)=>stims[b]-stims[a]); c.stim=names[0]||'';
+  const mw=first(T.mw), mh=first(T.mh); if(mw>0&&mh>0){ c.recW=mw; c.recH=mh; }
+  const vw=first(T.vw), vh=first(T.vh); if(vw>0&&vh>0){ c.regW=vw; c.regH=vh; c.offX=first(T.cax)||0; c.offY=first(T.cay)||0; }   // ブラウザの表示領域(画面の中の位置と大きさ)
+  return c;
+}
 function realGuess(sh){
+  const tb=tobiiGuess(sh); if(tb) return tb;
   const c=realDefaults(), H=sh.head;
   const isX=h=>/(^|[^a-z0-9])x([^a-z]|$)|(gaze|point|fpog|fixation|pos|coord)[ _]*(point[ _]*)?x([^a-z]|$)|x座標|横/i.test(h);
   const isY=h=>/(^|[^a-z0-9])y([^a-z]|$)|(gaze|point|fpog|fixation|pos|coord)[ _]*(point[ _]*)?y([^a-z]|$)|y座標|縦/i.test(h);
@@ -2121,7 +2136,7 @@ function idt(samples, disp, minDur){
     if((x1-x0)+(y1-y0)<=disp){
       while(j+1<n){ const s=samples[j+1], a=Math.min(x0,s.x), b=Math.max(x1,s.x), c=Math.min(y0,s.y), d=Math.max(y1,s.y); if((b-a)+(d-c)>disp) break; x0=a; x1=b; y0=c; y1=d; j++; }
       let sx=0, sy=0; for(let k=i;k<=j;k++){ sx+=samples[k].x; sy+=samples[k].y; }
-      out.push({x:sx/(j-i+1), y:sy/(j-i+1), dur:samples[j].t-samples[i].t+step}); i=j+1;
+      out.push({x:sx/(j-i+1), y:sy/(j-i+1), dur:samples[j].t-samples[i].t+step, t:samples[i].t}); i=j+1;
     } else i++;
   }
   return out;
@@ -2131,51 +2146,93 @@ function hitTarget(x,y){
   S.targets.forEach(t=>{ const r=t.rect; if(x>=r.x-m&&x<=r.x+r.w+m&&y>=r.y-m&&y<=r.y+r.h+m){ const a=r.w*r.h; if(a<ba){ ba=a; best=t; } } });
   return best;
 }
+/* 画面の切り替え時刻の単位: 視線データの時間の範囲に収まる倍率を選ぶ(列名が _ms でも、中身はμsのことがある) */
+function transScale(R, span){
+  const ts=R.trans.rows.map(r=>r.t); if(!ts.length) return 1;
+  const forced={ms:1, us:.001, s:1000}[R.transUnit];
+  if(forced) return forced;
+  for(const k of [1,.001,1000]){ if(ts.every(t=>t*k>=span[0]-1000 && t*k<=span[1]+1000)) return k; }
+  return 1;
+}
 /* 読み込んだ表 + 設定 → 注視点(解析する画面の座標つき)。設定や画面幅が変わるたびに、元の記録から計算し直す */
 function realCompute(){
   const R=S.real; if(!R||!R.tbl) return null;
-  const c=R.cfg, sh=R.tbl.sheets[R.tbl.cur], key=JSON.stringify([R.tbl.cur,c,PAGE_W,FOLD_H,S.frameH,R.rev,S.targets.length]);
+  const c=R.cfg, sh=R.tbl.sheets[R.tbl.cur], key=JSON.stringify([R.tbl.cur,c,PAGE_W,FOLD_H,S.frameH,R.rev,S.targets.length,R.trans&&[R.trans.rows,R.transUnit,R.useWin],S.screenIdx]);
   if(R.cache&&R.cache.key===key) return R.cache.v;
-  const v={key, fix:[], warn:[], st:{rows:sh.body.length, bad:0, out:0, below:0, durAssumed:false, raw:0}};
+  const v={key, fix:[], all:[], warn:[], win:null, scr:null, st:{rows:sh.body.length, bad:0, out:0, below:0, durAssumed:false, raw:0}};
   const done=()=>{ R.cache={key,v}; return v; };
-  if(c.xi<0||c.yi<0){ v.err='X座標とY座標の列を選んでください。'; return done(); }
-  const fx=c.unit==='norm'?c.recW:c.unit==='pct'?c.recW/100:1, fy=c.unit==='norm'?c.recH:c.unit==='pct'?c.recH/100:1, tf=c.tunit==='s'?1000:1;
-  const pts=[];
-  sh.body.forEach(r=>{
-    let x=toNum(r[c.xi],sh.dec)*fx, y=toNum(r[c.yi],sh.dec)*fy;
-    if(isNaN(x)||isNaN(y)){ v.st.bad++; return; }
-    if(c.flipY) y=c.recH-y;
-    pts.push({x, y, d:c.di>=0?toNum(r[c.di],sh.dec)*tf:NaN, t:c.ti>=0?toNum(r[c.ti],sh.dec)*tf:NaN});
-  });
-  let raw;
-  if(c.kind==='sample'){
-    v.st.raw=pts.length; const hz=Math.max(1,c.hz||60);
-    const hasT=pts.length>1 && pts.every(p=>!isNaN(p.t));
-    const sm=pts.map((p,i)=>({x:p.x,y:p.y,t:hasT?p.t:i*1000/hz}));
-    raw=idt(sm, Math.max(1,c.disp), Math.max(1,c.minDur));
-    if(!hasT) v.warn.push(`時刻の列がないので、サンプリング周波数 ${hz}Hz として扱っています。`);
-    if(!raw.length) v.warn.push('注視が見つかりませんでした。「注視とみなす範囲」を広げるか、「最短の注視」を短くしてください。');
+  const tf=c.tunit==='s'?1000:c.tunit==='us'?.001:1;   // 時間 → ms
+  let raw, span=null;
+  if(c.kind==='tobii'){
+    const T=c.tb, seen=new Map(); let t0=Infinity, t1=-Infinity;
+    sh.body.forEach(r=>{
+      const t=toNum(r[T.t],false)*tf; if(!isNaN(t)){ t0=Math.min(t0,t); t1=Math.max(t1,t); }
+      if(r[T.type]!=='Fixation') return;
+      if(c.stim && T.stim>=0 && r[T.stim]!==c.stim) return;
+      const k=r[T.idx]; if(seen.has(k)) return;
+      const x=toNum(r[T.x],false), y=toNum(r[T.y],false), d=toNum(r[T.dur],false);
+      if(isNaN(x)||isNaN(y)){ v.st.bad++; return; }
+      seen.set(k,{x, y, dur:isNaN(d)?200:d, t});
+    });
+    raw=[...seen.values()].sort((a,b)=>a.t-b.t); v.st.raw=raw.length; span=t1>=t0?[t0,t1]:null;
+    if(!raw.length) v.warn.push('注視(Eye movement type = Fixation)の行が見つかりませんでした。'+(c.stim?`「${c.stim}」以外を見るときは、刺激の選択を変えてください。`:''));
   } else {
-    raw=pts.map(p=>({x:p.x,y:p.y,dur:p.d,t:p.t}));
-    const ds=raw.filter(p=>!isNaN(p.dur)&&p.dur>0).map(p=>p.dur).sort((a,b)=>a-b);
-    const hasT=raw.some(p=>!isNaN(p.t));
-    raw.forEach((p,i)=>{ if(!(p.dur>0)){ const nx=raw[i+1]; if(hasT&&nx&&!isNaN(p.t)&&!isNaN(nx.t)&&nx.t>p.t) p.dur=nx.t-p.t; else p.dur=NaN; } });
-    const med=ds.length?ds[ds.length>>1]:200;
-    raw.forEach(p=>{ if(isNaN(p.dur)){ p.dur=med; v.st.durAssumed=true; } });
-    if(v.st.durAssumed) v.warn.push(ds.length||hasT?'継続時間のない行は、中央値の長さ(約'+Math.round(med)+'ms)として扱っています。':'継続時間の列がないので、1回200msとして扱っています(滞留時間の比較には使えません)。');
+    if(c.xi<0||c.yi<0){ v.err='X座標とY座標の列を選んでください。'; return done(); }
+    const fx=c.unit==='norm'?c.recW:c.unit==='pct'?c.recW/100:1, fy=c.unit==='norm'?c.recH:c.unit==='pct'?c.recH/100:1;
+    const pts=[]; let t0=Infinity, t1=-Infinity;
+    sh.body.forEach(r=>{
+      let x=toNum(r[c.xi],sh.dec)*fx, y=toNum(r[c.yi],sh.dec)*fy;
+      if(isNaN(x)||isNaN(y)){ v.st.bad++; return; }
+      if(c.flipY) y=c.recH-y;
+      const t=c.ti>=0?toNum(r[c.ti],sh.dec)*tf:NaN; if(!isNaN(t)){ t0=Math.min(t0,t); t1=Math.max(t1,t); }
+      pts.push({x, y, d:c.di>=0?toNum(r[c.di],sh.dec)*tf:NaN, t});
+    });
+    if(t1>=t0) span=[t0,t1];
+    if(c.kind==='sample'){
+      v.st.raw=pts.length; const hz=Math.max(1,c.hz||60);
+      const hasT=pts.length>1 && pts.every(p=>!isNaN(p.t));
+      const sm=pts.map((p,i)=>({x:p.x,y:p.y,t:hasT?p.t:i*1000/hz}));
+      raw=idt(sm, Math.max(1,c.disp), Math.max(1,c.minDur));
+      if(!hasT) v.warn.push(`時刻の列がないので、サンプリング周波数 ${hz}Hz として扱っています。`);
+      if(!raw.length) v.warn.push('注視が見つかりませんでした。「注視とみなす範囲」を広げるか、「最短の注視」を短くしてください。');
+    } else {
+      raw=pts.map(p=>({x:p.x,y:p.y,dur:p.d,t:p.t}));
+      const ds=raw.filter(p=>!isNaN(p.dur)&&p.dur>0).map(p=>p.dur).sort((a,b)=>a-b);
+      const hasT=raw.some(p=>!isNaN(p.t));
+      raw.forEach((p,i)=>{ if(!(p.dur>0)){ const nx=raw[i+1]; if(hasT&&nx&&!isNaN(p.t)&&!isNaN(nx.t)&&nx.t>p.t) p.dur=nx.t-p.t; else p.dur=NaN; } });
+      const med=ds.length?ds[ds.length>>1]:200;
+      raw.forEach(p=>{ if(isNaN(p.dur)){ p.dur=med; v.st.durAssumed=true; } });
+      if(v.st.durAssumed) v.warn.push(ds.length||hasT?'継続時間のない行は、中央値の長さ(約'+Math.round(med)+'ms)として扱っています。':'継続時間の列がないので、1回200msとして扱っています(滞留時間の比較には使えません)。');
+    }
   }
-  const kx=PAGE_W/c.recW, ky=FOLD_H/c.recH; let t0=0, prev=null;
+  // 記録の座標 → 解析する画面の座標。ブラウザの表示領域(画面の中の位置・大きさ)があれば、その領域が解析の画面全体に対応する
+  const rw=c.regW||c.recW, rh=c.regH||c.recH, kx=PAGE_W/rw, ky=FOLD_H/rh; let t0=0, prev=null;
   raw.forEach(p=>{
-    const X=p.x*kx, Y=p.y*ky;
-    if(p.y>c.recH) v.st.below++;
+    const X=(p.x-c.offX)*kx, Y=(p.y-c.offY)*ky;
+    if(p.y-c.offY>rh) v.st.below++;
     if(!(X>=0&&X<=PAGE_W&&Y>=0&&Y<=S.frameH)){ v.st.out++; return; }
-    const f={rx:p.x, ry:p.y, x:X, y:Y, dur:Math.round(p.dur), t0, amp:prev?Math.hypot(X-prev.x,Y-prev.y):0, target:hitTarget(X,Y)};
-    t0+=f.dur+30; prev=f; v.fix.push(f);
+    const f={rx:p.x, ry:p.y, x:X, y:Y, dur:Math.round(p.dur), t0, ts:isNaN(p.t)?null:p.t, amp:prev?Math.hypot(X-prev.x,Y-prev.y):0, target:hitTarget(X,Y)};
+    t0+=f.dur+30; prev=f; v.all.push(f);
   });
-  const ar=c.recW/c.recH, pr=PAGE_W/FOLD_H;
-  if(Math.abs(ar/pr-1)>.02) v.warn.push(`縦横比が違います(記録 ${c.recW}×${c.recH} = ${ar.toFixed(2)}、解析 ${PAGE_W}×${FOLD_H} = ${pr.toFixed(2)})。縦と横を別々の倍率で合わせています。位置がずれて見えるときは、下の「解析幅を記録に合わせる」を使ってください。`);
+  // 画面の切り替え時刻: 解析中の画面の時間帯だけに絞る
+  v.fix=v.all;
+  if(R.trans&&R.trans.rows.length){
+    const k=span?transScale(R,span):1, rows=R.trans.rows.slice().sort((a,b)=>a.k-b.k), n=S.screens?S.screens.items.length:0;
+    const wins=rows.map((r,i)=>({k:r.k, a:r.t*k, b:i+1<rows.length?rows[i+1].t*k:(span?span[1]:Infinity)}));
+    v.wins=wins.map(w=>({...w, n:v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b).length, dur:v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b).reduce((a,f)=>a+f.dur,0)}));
+    v.transScale=k; v.noTs=!v.all.some(f=>f.ts!=null);
+    if(n && n!==rows.length) v.warn.push(`画面の切り替え時刻は${rows.length}件、解析で検出した画面は${n}つです。画面の番号の対応を確かめてください(画面N = screen N−1)。`);
+    if(R.useWin){
+      const idx=S.screenIdx==null?0:S.screenIdx, w=wins.find(x=>x.k===idx);
+      if(v.noTs) v.warn.push('注視の時刻がないため、画面ごとの絞り込みはできません。');
+      else if(!w) v.warn.push(`screen ${idx} の切り替え時刻がないため、絞り込めません。`);
+      else { v.win=w; v.fix=v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b); }
+    }
+  }
+  const ar=rw/rh, pr=PAGE_W/FOLD_H;
+  if(Math.abs(ar/pr-1)>.02) v.warn.push(`縦横比が違います(記録の表示領域 ${rw}×${rh} = ${ar.toFixed(2)}、解析 ${PAGE_W}×${FOLD_H} = ${pr.toFixed(2)})。縦と横を別々の倍率で合わせています。位置がずれて見えるときは、下の「解析幅を記録に合わせる」を使ってください。`);
   if(v.st.out) v.warn.push(`${v.st.out}件は、ページの範囲の外だったため、表示から外しました。`);
-  if(v.st.below&&c.unit!=='norm') v.warn.push(`${v.st.below}件は、記録した画面の高さ(${c.recH}px)より下にありました。スクロール後の位置がページ座標なら、そのまま重ねています。画面内の座標のままなら、ずれて見えます。`);
+  if(v.st.below&&c.unit!=='norm') v.warn.push(`${v.st.below}件は、記録した表示領域の高さ(${rh}px)より下にありました。スクロール後の位置がページ座標なら、そのまま重ねています。画面内の座標のままなら、ずれて見えます。`);
   if(v.st.bad) v.warn.push(`${v.st.bad}行は、X・Yが数値でないため読み飛ばしました。`);
   return done();
 }
@@ -2215,8 +2272,9 @@ function realCSV(){
   const r=realCompute(); if(!r||!r.fix.length) return '';
   const q=s=>{ s=String(s??''); if(/^[=+\-@\t\r]/.test(s)) s="'"+s; return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
   const c=S.real.cfg;
-  const rows=[['no','x_recorded_px','y_recorded_px','x_tool_px','y_tool_px','duration_ms','start_ms','target_type','target_label','recorded_size','tool_size']];
-  r.fix.forEach((f,i)=>rows.push([i+1,f.rx.toFixed(1),f.ry.toFixed(1),f.x.toFixed(1),f.y.toFixed(1),f.dur,f.t0,f.target?f.target.type:'',f.target?f.target.label:'',`${c.recW}x${c.recH}`,`${PAGE_W}x${FOLD_H}`]));
+  const rows=[['no','x_recorded_px','y_recorded_px','x_tool_px','y_tool_px','duration_ms','start_ms','recording_ms','screen','target_type','target_label','recorded_size','tool_size']];
+  const scr=f=>{ if(!r.wins||f.ts==null) return ''; const w=r.wins.find(w=>f.ts>=w.a&&f.ts<w.b); return w?w.k:''; };
+  r.fix.forEach((f,i)=>rows.push([i+1,f.rx.toFixed(1),f.ry.toFixed(1),f.x.toFixed(1),f.y.toFixed(1),f.dur,f.t0,f.ts==null?'':Math.round(f.ts),scr(f),f.target?f.target.type:'',f.target?f.target.label:'',`${c.recW}x${c.recH}`,`${PAGE_W}x${FOLD_H}`]));
   return '﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n');
 }
 function realDemoTable(){
@@ -2229,6 +2287,7 @@ function realDemoTable(){
 }
 async function realLoadFile(f){
   if(f.size>REAL_MAX_BYTES){ toast('ファイルが大きすぎます(20MBまで)'); return; }
+  toast('読み込んでいます…');
   try{
     const buf=await f.arrayBuffer(), u8=new Uint8Array(buf.slice(0,4)); let sheets, dec=false;
     if(u8[0]===0x50&&u8[1]===0x4B){ sheets=(await readXlsx(buf)).map(s=>({name:s.name, ...realSheet(s.rows,false)})); }
@@ -2237,11 +2296,26 @@ async function realLoadFile(f){
     sheets=sheets.filter(s=>s.body.length);
     if(!sheets.length){ toast('データの行が見つかりませんでした'); return; }
     stopRealPlay();
-    S.real={name:f.name, source:S.sourceName, demo:false, tbl:{sheets, cur:0}, cfg:realGuess(sheets[0]), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null};
+    S.real={name:f.name, source:S.sourceName, demo:false, tbl:{sheets, cur:0}, cfg:realGuess(sheets[0]), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null, trans:S.real?S.real.trans:null, transUnit:S.real?S.real.transUnit:'auto', useWin:S.real?S.real.useWin:true};
     S.show.real=true; syncToggles(); renderPanel(); renderOverlay(); toast(`${sheets[0].body.length.toLocaleString()}行を読み込みました`);
   }catch(e){
     toast(e.message==='nodecomp'?'このブラウザは .xlsx の直接読み込みに未対応です。CSVで保存し直してください':'読み込めませんでした(.xlsx / .csv / .tsv に対応)');
   }
+}
+async function realLoadTrans(f){
+  if(!S.real) return;
+  if(f.size>REAL_MAX_BYTES){ toast('ファイルが大きすぎます(20MBまで)'); return; }
+  try{
+    const buf=await f.arrayBuffer(), u8=new Uint8Array(buf.slice(0,2)); let rows2d;
+    if(u8[0]===0x50&&u8[1]===0x4B){ const sh=await readXlsx(buf); rows2d=sh[0].rows; } else rows2d=parseDelimited(decodeText(buf)).rows;
+    const sh=realSheet(rows2d,false), H=sh.head;
+    let ki=H.findIndex(h=>/screen|画面/i.test(h)), ti=H.findIndex(h=>/time|stamp|時刻|時間/i.test(h));
+    if(ki<0||ti<0){ if(H.length>=2){ ki=0; ti=1; } else { toast('screen と timestamp の2列が見つかりません'); return; } }
+    const rows=sh.body.map(r=>({k:toNum(r[ki],false), t:toNum(r[ti],false)})).filter(r=>!isNaN(r.k)&&!isNaN(r.t)).map(r=>({k:Math.round(r.k), t:r.t}));
+    if(!rows.length){ toast('画面の切り替え時刻を読めませんでした'); return; }
+    S.real.trans={name:f.name, rows}; S.real.transUnit='auto'; S.real.useWin=true;
+    renderPanel(); renderOverlay(); toast(`${rows.length}件の切り替え時刻を読み込みました`);
+  }catch(e){ toast('読み込めませんでした(.csv / .xlsx に対応)'); }
 }
 function stopRealPlay(){ if(S.real&&S.real.timer){ clearTimeout(S.real.timer); S.real.timer=null; } const b=$('#rgPlay'); if(b) b.innerHTML=ico('play',14)+'再生'; }
 function startRealPlay(){
@@ -2267,6 +2341,20 @@ function realOverlay(g){
   g.push(`<rect x="${PAGE_W-196}" y="8" width="188" height="24" rx="6" fill="${C}"/><text x="${PAGE_W-102}" y="25" font-size="13" text-anchor="middle" fill="#fff" font-weight="600">実測視線（記録データ）</text>`);
 }
 
+function tobiiForm(R,sh,c){
+  const T=c.tb, names=T.stim>=0?[...new Set(sh.body.map(r=>r[T.stim]).filter(v=>v!==''&&v!=null))]:[];
+  return `<div class="note" style="grid-column:1/-1;margin:0">Tobii Pro Lab の書き出しとして読んでいます（Eye movement type が Fixation の行を、注視の番号ごとに1回にまとめます。座標は Fixation point X・Y、長さは Gaze event duration、時刻は Recording timestamp(µs)）。</div>
+    ${names.length?`<label>対象の刺激<select id="rgStim"><option value="" ${!c.stim?'selected':''}>すべて</option>${names.map(n=>`<option value="${esc(n)}" ${c.stim===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`:''}`;
+}
+/* 画面の切り替え時刻(screen, timestamp)。視線の時刻と同じ時計の値。解析中の画面の時間帯だけを重ねる */
+function transSection(R){
+  let h=`<div class="sec"><h3>画面の切り替え時刻(任意)</h3><div class="row" style="gap:8px;flex-wrap:wrap"><button class="mini" id="rgTransPick">${R.trans?'別のファイルを読み込む':'ファイルを選ぶ'}</button><input type="file" id="rgTransFile" accept=".csv,.tsv,.txt,.xlsx,text/csv" hidden>${R.trans?'<button class="mini" id="rgTransClear">消す</button>':''}</div>`;
+  if(!R.trans) return h+`<p class="hint" style="margin-top:6px">screen と timestamp の2列のCSVを読み込むと、画面ごとに視線を分けられます。screen 0 は、解析の「画面1」に対応します(画面N = screen N−1)。</p></div>`;
+  h+=`<div class="form-grid" style="margin-top:8px"><label>時刻の単位<select id="rgTransUnit">${[['auto','自動(視線データの時間に合わせる)'],['ms','ミリ秒(ms)'],['us','マイクロ秒(µs)'],['s','秒(s)']].map(([k,l])=>`<option value="${k}" ${R.transUnit===k?'selected':''}>${l}</option>`).join('')}</select></label>
+   <label class="toggle" style="align-self:end"><input type="checkbox" id="rgWin" ${R.useWin?'checked':''}> 解析中の画面の時間帯だけ重ねる</label></div>
+   <p class="hint" style="margin-top:6px">${esc(R.trans.name)}: ${R.trans.rows.length}件。${S.screens?`解析で検出した画面は${S.screens.items.length}つ。`:'この画面は、1画面です(画面の切り替えを検出していません)。'}</p></div>`;
+  return h;
+}
 function panelReal(){
   const R=S.real;
   let h=`<div class="sec"><span class="real-badge">実測データ（読み込んだ視線の記録）</span><span class="hint" style="margin-left:8px">③の「仮想視線」は、ルールで作った推定です。ここは記録そのものを重ねます。</span></div>`;
@@ -2283,20 +2371,25 @@ function panelReal(){
   h+=`<div class="sec"><h3>${R.demo?'デモ用データ(作り物)':esc(R.name)} — ${sh.body.length.toLocaleString()}行</h3>
    <div class="form-grid">
     ${R.tbl.sheets.length>1?`<label>シート<select id="rgSheet">${R.tbl.sheets.map((s,i)=>`<option value="${i}" ${R.tbl.cur===i?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>`:''}
-    <label>X座標の列<select id="rgX">${opts(c.xi,true)}</select></label>
+    ${c.kind==='tobii'?tobiiForm(R,sh,c):`<label>X座標の列<select id="rgX">${opts(c.xi,true)}</select></label>
     <label>Y座標の列<select id="rgY">${opts(c.yi,true)}</select></label>
     <label>継続時間の列<select id="rgD">${opts(c.di,true)}</select></label>
     <label>時刻の列<select id="rgT">${opts(c.ti,true)}</select></label>
-    <label>時間の単位<select id="rgTu"><option value="ms" ${c.tunit==='ms'?'selected':''}>ミリ秒(ms)</option><option value="s" ${c.tunit==='s'?'selected':''}>秒(s)</option></select></label>
+    <label>時間の単位<select id="rgTu"><option value="ms" ${c.tunit==='ms'?'selected':''}>ミリ秒(ms)</option><option value="us" ${c.tunit==='us'?'selected':''}>マイクロ秒(µs)</option><option value="s" ${c.tunit==='s'?'selected':''}>秒(s)</option></select></label>
     <label>データの種類<select id="rgKind"><option value="fix" ${c.kind==='fix'?'selected':''}>注視データ(1行=1回の注視)</option><option value="sample" ${c.kind==='sample'?'selected':''}>生の視線サンプル</option></select></label>
     <label>座標の単位<select id="rgUnit"><option value="px" ${c.unit==='px'?'selected':''}>ピクセル(px)</option><option value="norm" ${c.unit==='norm'?'selected':''}>0〜1の割合</option><option value="pct" ${c.unit==='pct'?'selected':''}>0〜100の%</option></select></label>
-    <label class="toggle" style="align-self:end"><input type="checkbox" id="rgFlip" ${c.flipY?'checked':''}> Yが下から上(下が0)</label>
+    <label class="toggle" style="align-self:end"><input type="checkbox" id="rgFlip" ${c.flipY?'checked':''}> Yが下から上(下が0)</label>`}
    </div></div>`;
   h+=`<div class="sec"><h3>記録したときの画面サイズ</h3>
    <div class="form-grid"><label>よく使う解像度<select id="rgPreset">${REC_PRESETS.map(p=>`<option value="${p[0]}x${p[1]}" ${preset===p[0]+'x'+p[1]?'selected':''}>${p[0]}×${p[1]}</option>`).join('')}<option value="custom" ${preset==='custom'?'selected':''}>指定する…</option></select></label>
    <label>幅(px)<input type="number" id="rgW" min="200" max="10000" value="${c.recW}"></label><label>高さ(px)<input type="number" id="rgH" min="200" max="10000" value="${c.recH}"></label></div>
-   <p class="hint" style="margin-top:6px">解析中の画面は ${PAGE_W}×${FOLD_H}px です。座標は、記録の画面全体が解析の画面全体に重なるように、縦横の倍率をかけて変換します(${(PAGE_W/c.recW).toFixed(3)}倍・${(FOLD_H/c.recH).toFixed(3)}倍)。<b>ここを実際の記録環境と合わせないと、別の場所に表示されます。</b></p>
-   ${(c.recW!==PAGE_W||c.recH!==FOLD_H)&&!S.imageMode?`<div class="row" style="margin-top:6px"><button class="mini" id="rgFitVp">解析幅を記録に合わせる(${c.recW}×${c.recH})</button></div>`:''}</div>`;
+   <details class="grp" ${(c.regW||c.offX||c.offY)?'open':''}><summary>ブラウザの表示領域(画面の中の位置と大きさ)</summary><div class="inner"><div class="form-grid">
+    <label>左からの位置(px)<input type="number" id="rgOffX" min="0" max="10000" value="${c.offX}"></label><label>上からの位置(px)<input type="number" id="rgOffY" min="0" max="10000" value="${c.offY}"></label>
+    <label>幅(px。0=画面全体)<input type="number" id="rgRegW" min="0" max="10000" value="${c.regW}"></label><label>高さ(px。0=画面全体)<input type="number" id="rgRegH" min="0" max="10000" value="${c.regH}"></label></div>
+    <p class="hint" style="margin-top:6px">視線の座標は画面全体のものなので、ブラウザのタブ・URL欄などの分だけ、ページが下にずれています(例: 画面1920×1080のうち、ページの表示領域が上から44pxの位置の1920×1036)。この領域が、解析の画面全体に重なります。Tobii Pro Lab の書き出しは、記録の値から自動で入ります。</p></div></details>
+   <p class="hint" style="margin-top:6px">解析中の画面は ${PAGE_W}×${FOLD_H}px です。座標は、記録の${(c.regW||c.offX||c.offY)?'ブラウザの表示領域':'画面全体'}(${c.regW||c.recW}×${c.regH||c.recH})が解析の画面全体に重なるように、縦横の倍率をかけて変換します(${(PAGE_W/(c.regW||c.recW)).toFixed(3)}倍・${(FOLD_H/(c.regH||c.recH)).toFixed(3)}倍)。<b>ここを実際の記録環境と合わせないと、別の場所に表示されます。</b></p>
+   ${((c.regW||c.recW)!==PAGE_W||(c.regH||c.recH)!==FOLD_H)&&!S.imageMode?`<div class="row" style="margin-top:6px"><button class="mini" id="rgFitVp">解析幅を記録に合わせる(${c.regW||c.recW}×${c.regH||c.recH})</button></div>`:''}</div>`;
+  h+=transSection(R);
   if(c.kind==='sample') h+=`<div class="sec"><h3>注視のまとめ方(生サンプル用)</h3><div class="form-grid">
     <label>注視とみなす範囲(px)<input type="number" id="rgDisp" min="1" max="500" value="${c.disp}"></label>
     <label>最短の注視(ms)<input type="number" id="rgMin" min="10" max="2000" value="${c.minDur}"></label>
@@ -2313,7 +2406,12 @@ function realResultHTML(){
     return `<div class="note"><b>${esc(r.err)}</b>${trans?'<br>この表は、画面の切り替え時刻の記録のようです(座標の列がありません)。これだけでは、視線の軌跡は描けません。X・Y座標の入った視線データのファイルを読み込んでください。':''}</div>`;
   }
   let h=r.warn.map(w=>`<div class="note" style="margin-bottom:12px">${esc(w)}</div>`).join('');
-  if(!r.fix.length) return h+'<p class="hint">表示できる注視がありません。列・単位・記録時の画面サイズを見直してください。</p>';
+  if(r.wins){
+    const cur=r.win?r.win.k:null, sec=t=>(t/1000).toFixed(1);
+    h+=`<div class="sec"><h3>画面ごとの視線(切り替え時刻で分けた注視)</h3><table><tr><th>画面</th><th>時間帯</th><th>注視</th><th>総注視時間</th></tr>${r.wins.map(w=>`<tr${w.k===cur?' style="font-weight:700"':''}><td>${w.k===cur?'▶ ':''}画面${w.k+1}(screen ${w.k})</td><td>${sec(w.a)}〜${isFinite(w.b)?sec(w.b):'終わり'}s</td><td>${w.n}回</td><td>${(w.dur/1000).toFixed(1)}s</td></tr>`).join('')}</table>
+      <p class="hint">${r.win?`いま解析中の画面(画面${r.win.k+1})の時間帯だけを、ステージに重ねています。`:'画面で絞らず、すべての注視を重ねています。'}時刻の単位は ${r.transScale===1?'ms':r.transScale===.001?'µs':'秒'} として読みました。</p></div>`;
+  }
+  if(!r.fix.length) return h+(r.win?'<p class="hint">この画面の時間帯には、注視がありません。</p>':'<p class="hint">表示できる注視がありません。列・単位・記録時の画面サイズを見直してください。</p>');
   if(!S.targets.length) h+='<div class="note" style="margin-bottom:12px">この画面からは、構成要素が見つかっていません(ボタンや見出しが、button・h1などの標準のタグでない作りのとき)。軌跡とヒートマップは重ねられますが、要素ごとの集計は出ません。</div>';
   const f=r.fix, total=f.reduce((a,b)=>a+b.dur,0), shown=R.upTo==null?f.length:R.upTo;
   const meanAmp=f.slice(1).reduce((a,b)=>a+b.amp,0)/Math.max(1,f.length-1);
@@ -2340,15 +2438,18 @@ function realResultHTML(){
   document.addEventListener('click', e=>{
     const t=e.target.closest('button'); if(!t||!t.id||t.id.indexOf('rg')!==0) return;
     if(t.id==='rgPick'){ $('#rgFile').click(); }
-    else if(t.id==='rgDemo'){ stopRealPlay(); const tb=realDemoTable(); S.real={name:'デモ用データ', source:S.sourceName, demo:true, tbl:{sheets:[{name:'demo',...tb}],cur:0}, cfg:Object.assign(realGuess(tb),{recW:1920,recH:1080}), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null}; S.show.real=true; syncToggles(); renderPanel(); renderOverlay(); }
+    else if(t.id==='rgDemo'){ stopRealPlay(); const tb=realDemoTable(); S.real={name:'デモ用データ', source:S.sourceName, demo:true, tbl:{sheets:[{name:'demo',...tb}],cur:0}, cfg:Object.assign(realGuess(tb),{recW:1920,recH:1080}), upTo:null, rev:(S.real?S.real.rev:0)+1, timer:null, trans:null, transUnit:'auto', useWin:true}; S.show.real=true; syncToggles(); renderPanel(); renderOverlay(); }
     else if(t.id==='rgClear'){ stopRealPlay(); S.real=null; S.show.real=false; S.show.realHeat=false; syncToggles(); renderPanel(); renderOverlay(); }
     else if(t.id==='rgPlay'){ if(S.real&&S.real.timer){ stopRealPlay(); S.real.upTo=null; renderOverlay(); renderRealResult(); } else startRealPlay(); }
     else if(t.id==='rgCsv'){ const txt=realCSV(); if(!txt){ toast('保存できる注視がありません'); return; } const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'})); a.download='real-gaze-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),30000); toast('CSVを保存しました'); }
-    else if(t.id==='rgFitVp'){ const c=S.real.cfg; setViewport('custom',{custom:{w:c.recW,h:c.recH}}).then(()=>{ renderAll(); toast(`解析幅を ${PAGE_W}×${FOLD_H} にしました`); }); }
+    else if(t.id==='rgTransPick'){ $('#rgTransFile').click(); }
+    else if(t.id==='rgTransClear'){ S.real.trans=null; renderPanel(); renderOverlay(); }
+    else if(t.id==='rgFitVp'){ const c=S.real.cfg; setViewport('custom',{custom:{w:c.regW||c.recW,h:c.regH||c.recH}}).then(()=>{ renderAll(); toast(`解析幅を ${PAGE_W}×${FOLD_H} にしました`); }); }
   });
   document.addEventListener('change', e=>{
     const t=e.target;
     if(t.id==='rgFile'){ const f=t.files&&t.files[0]; t.value=''; if(f) realLoadFile(f); return; }
+    if(t.id==='rgTransFile'){ const f=t.files&&t.files[0]; t.value=''; if(f) realLoadTrans(f); return; }
     if(!t.id||t.id.indexOf('rg')!==0||!S.real) return;
     const R=S.real, c=R.cfg; let redraw=true;
     if(t.id==='rgSheet'){ R.tbl.cur=+t.value; R.cfg=realGuess(R.tbl.sheets[R.tbl.cur]); }
@@ -2356,6 +2457,10 @@ function realResultHTML(){
     else if(t.id==='rgTu') c.tunit=t.value; else if(t.id==='rgKind') c.kind=t.value; else if(t.id==='rgUnit') c.unit=t.value; else if(t.id==='rgFlip') c.flipY=t.checked;
     else if(t.id==='rgPreset'){ if(t.value!=='custom'){ const [w,h]=t.value.split('x').map(Number); c.recW=w; c.recH=h; } }
     else if(t.id==='rgW') c.recW=clamp(Math.round(+t.value)||1920,200,10000); else if(t.id==='rgH') c.recH=clamp(Math.round(+t.value)||1080,200,10000);
+    else if(t.id==='rgStim') c.stim=t.value;
+    else if(t.id==='rgOffX') c.offX=clamp(+t.value||0,0,10000); else if(t.id==='rgOffY') c.offY=clamp(+t.value||0,0,10000);
+    else if(t.id==='rgRegW') c.regW=clamp(Math.round(+t.value)||0,0,10000); else if(t.id==='rgRegH') c.regH=clamp(Math.round(+t.value)||0,0,10000);
+    else if(t.id==='rgTransUnit') R.transUnit=t.value; else if(t.id==='rgWin') R.useWin=t.checked;
     else if(t.id==='rgDisp') c.disp=clamp(+t.value||40,1,500); else if(t.id==='rgMin') c.minDur=clamp(+t.value||100,10,2000); else if(t.id==='rgHz') c.hz=clamp(+t.value||60,1,2000);
     else redraw=false;
     if(redraw){ stopRealPlay(); R.upTo=null; renderPanel(); renderOverlay(); }

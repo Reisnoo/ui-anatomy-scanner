@@ -95,6 +95,26 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   assert(await p.evaluate(() => S.aoi.some(a => a.name === 'aoi-logo') && S.comps.some(c => c.type === 'button' && c.label === '一覧')), 'radio で切り替わる画面は、その画面の状態(共通ナビあり)で解析する');
   await p.evaluate(async () => { await selectScreen(0); }); await p.waitForTimeout(500);
   assert(await p.evaluate(() => !S.aoi.some(a => a.name === 'aoi-logo')), 'スタート画面では、共通ナビは出ない(その画面の状態のまま)');
+  // Tobii Pro Lab の書き出し(注視の分類つき) + 画面の切り替え時刻(列名は ms でも中身は µs)
+  await p.evaluate(async h => { await loadHTML(h, 'radio-screens'); }, require('fs').readFileSync(path.join(__dirname, 'fixtures/radio-screens.html'), 'utf8')); await p.waitForTimeout(600);
+  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', G + 'tobii-mini.xlsx'); await p.waitForSelector('#rgResult .tile');
+  const tb = await p.evaluate(() => { const c = S.real.cfg, r = realCompute(); return { kind: c.kind, stim: c.stim, off: [c.offX, c.offY], reg: [c.regW, c.regH], rec: [c.recW, c.recH], n: r.all.length, d: r.all.map(f => f.dur) }; });
+  assert(tb.kind === 'tobii' && tb.stim === 'Web Page', 'Tobii Pro Lab の書き出しを自動で判定し、較正の刺激を除く');
+  assert(tb.n === 3 && tb.d.join() === '150,100,120', 'サンプル行に繰り返される注視を、番号ごとに1回へまとめる(3回)');
+  assert(JSON.stringify(tb.off) === '[0,44]' && JSON.stringify(tb.reg) === '[1920,1036]' && JSON.stringify(tb.rec) === '[1920,1080]', '画面1920×1080のうち、ブラウザの表示領域(上から44px・1920×1036)を自動で読む');
+  await p.setViewportSize({ width: 1500, height: 950 });
+  await p.click('#rgFitVp'); await p.waitForFunction(() => PAGE_W === 1920 && FOLD_H === 1036, null, { timeout: 30000 }); await p.waitForTimeout(800);
+  const pt = await p.evaluate(() => realCompute().all.map(f => [Math.round(f.x), Math.round(f.y)]));
+  assert(JSON.stringify(pt[0]) === '[500,256]', '表示領域の分(44px)を引いて、解析の画面の座標にする(y 300 → 256)');
+  await p.setInputFiles('#rgTransFile', G + 'transitions-us.csv'); await p.waitForTimeout(400);
+  const tr = await p.evaluate(() => { const r = realCompute(); return { k: r.transScale, w: r.wins.map(w => w.n).join(), cur: r.win && r.win.k, n: r.fix.length }; });
+  assert(tr.k === .001 && tr.w === '1,1,1', '遷移時刻の単位を、視線データの時間に合わせて自動で判定する(µs)');
+  assert(tr.cur === 0 && tr.n === 1, '解析中の画面(初期表示=画面1)の時間帯の注視だけを重ねる');
+  await p.evaluate(async () => { await selectScreen(1); }); await p.waitForTimeout(500);
+  assert(await p.evaluate(() => { const r = realCompute(); return r.win.k === 1 && r.fix.length === 1 && r.fix[0].dur === 100; }), '画面を切り替えると、その画面の時間帯の注視に変わる');
+  await p.uncheck('#rgWin'); assert(await p.evaluate(() => realCompute().fix.length) === 3, '「時間帯だけ重ねる」を外すと、すべての注視を重ねる');
+  assert((await p.textContent('#rgResult')).includes('画面ごとの視線'), '画面ごとの視線の表を出す');
+  await p.evaluate(async () => { await setViewport('pc'); renderAll(); }); await p.waitForTimeout(600);
   // デモ
   await p.click('#rgDemo'); await p.waitForSelector('#rgResult .tile'); assert((await p.textContent('#panelBody')).includes('デモ用データ(作り物)') && await p.evaluate(() => realCompute().fix.length) >= 5, 'デモ用データ(作り物と明記)で試せる');
   await p.click('#rgClear'); assert(await p.evaluate(() => S.real === null), '読み込みを消せる');
