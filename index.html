@@ -2093,6 +2093,8 @@ function realSheet(rows2d, dec){
   return {head, body:hasHead?rows2d.slice(1):rows2d, dec};
 }
 /* Tobii Pro Lab の書き出し(Eye movement type・Fixation point X/Y・Gaze event duration など): 注視の分類つき。1回の注視が複数のサンプル行に繰り返し入っている */
+/* Tobii のイベントのうち、実験の操作ではなく、システムが記録するもの(それ以外のイベントを、画面の切り替えの目印として使う) */
+const TOBII_SYS_EVENT = /^(RecordingStart|RecordingEnd|WebStimulusStart|WebStimulusEnd|URLStart|URLEnd|MouseEvent|KeyboardEvent|ScreenRecordingStart|ScreenRecordingEnd|.*Calibration.*|.*Validation.*|.*Gaze.*)$/i;
 function tobiiGuess(sh){
   const H=sh.head, f=n=>H.indexOf(n), T={type:f('Eye movement type'), idx:f('Eye movement type index'), x:f('Fixation point X'), y:f('Fixation point Y'), dur:f('Gaze event duration'), t:f('Recording timestamp'),
     stim:f('Presented Stimulus name'), ev:f('Event'), evv:f('Event value'), cax:f('Client area position X (DACSpx)'), cay:f('Client area position Y (DACSpx)'), vw:f('Viewport width'), vh:f('Viewport height'),
@@ -2165,8 +2167,10 @@ function realCompute(){
   let raw, span=null;
   if(c.kind==='tobii'){
     const T=c.tb, seen=new Map(); let t0=Infinity, t1=-Infinity;
+    const marks=[];
     sh.body.forEach(r=>{
       const t=toNum(r[T.t],false)*tf; if(!isNaN(t)){ t0=Math.min(t0,t); t1=Math.max(t1,t); }
+      if(T.ev>=0){ const e=r[T.ev]; if(e!==''&&e!=null&&!TOBII_SYS_EVENT.test(String(e))&&!isNaN(t)) marks.push({name:String(e), t}); }
       if(r[T.type]!=='Fixation') return;
       if(c.stim && T.stim>=0 && r[T.stim]!==c.stim) return;
       const k=r[T.idx]; if(seen.has(k)) return;
@@ -2175,6 +2179,7 @@ function realCompute(){
       seen.set(k,{x, y, dur:isNaN(d)?200:d, t});
     });
     raw=[...seen.values()].sort((a,b)=>a.t-b.t); v.st.raw=raw.length; span=t1>=t0?[t0,t1]:null;
+    marks.sort((a,b)=>a.t-b.t); if(marks.length>=2) v.autoTrans=marks.map((m,i)=>({k:i, t:m.t, name:m.name}));
     if(!raw.length) v.warn.push('注視(Eye movement type = Fixation)の行が見つかりませんでした。'+(c.stim?`「${c.stim}」以外を見るときは、刺激の選択を変えてください。`:''));
   } else {
     if(c.xi<0||c.yi<0){ v.err='X座標とY座標の列を選んでください。'; return done(); }
@@ -2214,19 +2219,24 @@ function realCompute(){
     const f={rx:p.x, ry:p.y, x:X, y:Y, dur:Math.round(p.dur), t0, ts:isNaN(p.t)?null:p.t, amp:prev?Math.hypot(X-prev.x,Y-prev.y):0, target:hitTarget(X,Y)};
     t0+=f.dur+30; prev=f; v.all.push(f);
   });
-  // 画面の切り替え時刻: 解析中の画面の時間帯だけに絞る
+  // 画面の切り替え時刻: 解析中の画面の時間帯だけに絞る(CSVを読み込んだらCSV、なければ Tobii の Event 列の目印から自動で)
   v.fix=v.all;
-  if(R.trans&&R.trans.rows.length){
-    const k=span?transScale(R,span):1, rows=R.trans.rows.slice().sort((a,b)=>a.k-b.k), n=S.screens?S.screens.items.length:0;
-    const wins=rows.map((r,i)=>({k:r.k, a:r.t*k, b:i+1<rows.length?rows[i+1].t*k:(span?span[1]:Infinity)}));
-    v.wins=wins.map(w=>({...w, n:v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b).length, dur:v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b).reduce((a,f)=>a+f.dur,0)}));
-    v.transScale=k; v.noTs=!v.all.some(f=>f.ts!=null);
-    if(n && n!==rows.length) v.warn.push(`画面の切り替え時刻は${rows.length}件、解析で検出した画面は${n}つです。画面の番号の対応を確かめてください(画面N = screen N−1)。`);
+  let trRows=null, trScale=1;
+  if(R.trans&&R.trans.rows.length){ trScale=span?transScale(R,span):1; trRows=R.trans.rows.slice().sort((a,b)=>a.k-b.k).map(r=>({k:r.k, t:r.t*trScale, name:''})); v.transSrc='csv'; }
+  else if(v.autoTrans&&v.autoTrans.length>=2){ trRows=v.autoTrans; v.transSrc='event'; }
+  if(trRows){
+    const n=S.screens?S.screens.items.length:0, wins=trRows.map((r,i)=>({k:r.k, name:r.name, a:r.t, b:i+1<trRows.length?trRows[i+1].t:(span?span[1]:Infinity)}));
+    v.wins=wins.map(w=>{ const m=v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b); return {...w, n:m.length, dur:m.reduce((a,f)=>a+f.dur,0)}; });
+    v.transScale=trScale; v.noTs=!v.all.some(f=>f.ts!=null);
+    if(n && n!==trRows.length) v.warn.push(`画面の切り替え時刻は${trRows.length}件、解析で検出した画面は${n}つです。画面の番号の対応を確かめてください(画面N = N番目の切り替え)。`);
     if(R.useWin){
-      const idx=S.screenIdx==null?0:S.screenIdx, w=wins.find(x=>x.k===idx);
-      if(v.noTs) v.warn.push('注視の時刻がないため、画面ごとの絞り込みはできません。');
-      else if(!w) v.warn.push(`screen ${idx} の切り替え時刻がないため、絞り込めません。`);
-      else { v.win=w; v.fix=v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b); }
+      if(!S.screens) v.warn.push('この画面は、1つのHTMLに複数の画面を検出していないため、時間帯では絞り込んでいません(全時間の注視を重ねています)。');
+      else {
+        const idx=S.screenIdx==null?0:S.screenIdx, w=wins.find(x=>x.k===idx);
+        if(v.noTs) v.warn.push('注視の時刻がないため、画面ごとの絞り込みはできません。');
+        else if(!w) v.warn.push(`screen ${idx} の切り替え時刻がないため、絞り込めません。`);
+        else { v.win=w; v.fix=v.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b); }
+      }
     }
   }
   const ar=rw/rh, pr=PAGE_W/FOLD_H;
@@ -2249,7 +2259,7 @@ function realAoiRows(fix){
     const a=hitAoi(f.x,f.y);
     if(!a){ out.dur+=f.dur; out.n++; if(!out.first) out.first=i+1; return; }
     const o=g.get(a.name), e=o.els.find(x=>x.a===a);
-    [o,e].forEach(z=>{ z.dur+=f.dur; z.n++; if(!z.first) z.first=i+1; });
+    [o,e].forEach(z=>{ z.dur+=f.dur; z.n++; if(!z.first){ z.first=i+1; z.ts=f.ts; } });
   });
   return {groups:[...g.values()].sort((a,b)=>b.dur-a.dur), out};
 }
@@ -2302,6 +2312,40 @@ async function realLoadFile(f){
     toast(e.message==='nodecomp'?'このブラウザは .xlsx の直接読み込みに未対応です。CSVで保存し直してください':'読み込めませんでした(.xlsx / .csv / .tsv に対応)');
   }
 }
+/* 全画面を順に表示して、その画面の時間帯の注視を、AOIごとに集計する */
+async function realBatch(){
+  const R=S.real; if(!R||!S.screens||R.batchBusy) return;
+  const keep=S.screenIdx, n=S.screens.items.length, rows=[]; R.batchBusy=true;
+  try{
+    for(let i=0;i<n;i++){
+      toast(`集計中 ${i+1} / ${n}`); await selectScreen(i,true);
+      const r=realCompute(); if(!r||!r.wins) break;
+      const w=r.wins.find(x=>x.k===i); if(!w){ rows.push({i, label:S.screens.items[i].label, n:0, dur:0, aoi:[], out:{n:0,dur:0}}); continue; }
+      const fx=r.all.filter(f=>f.ts!=null&&f.ts>=w.a&&f.ts<w.b), ar=realAoiRows(fx);
+      rows.push({i, label:S.screens.items[i].label, name:w.name, a:w.a, b:w.b, n:fx.length, dur:fx.reduce((a,f)=>a+f.dur,0),
+        aoi:ar.groups.map(g=>({name:g.name, els:g.els.length, dur:g.dur, n:g.n, first:g.first, ttf:g.n&&g.ts!=null?g.ts-w.a:null})), out:{n:ar.out.n, dur:ar.out.dur}});
+    }
+    R.batch=rows;
+  } finally { R.batchBusy=false; await selectScreen(keep, true); toast('全画面の集計ができました'); }
+}
+function batchHTML(B){
+  const sec=t=>(t/1000).toFixed(2);
+  return `<table style="margin-top:8px"><tr><th>画面</th><th>注視</th><th>AOI</th><th>滞留</th><th>回数</th><th>最初に見るまで</th></tr>${B.map(b=>{
+    const hit=b.aoi.filter(a=>a.n), rs=Math.max(1,hit.length+(b.out.n?1:0));
+    if(!hit.length&&!b.out.n) return `<tr><td>画面${b.i+1}</td><td>${b.n}回</td><td colspan="4">—</td></tr>`;
+    return hit.map((a,k)=>`<tr>${k?'':`<td rowspan="${rs}">画面${b.i+1}${b.name?`<br><small>${esc(b.name)}</small>`:''}</td><td rowspan="${rs}">${b.n}回<br><small>${sec(b.dur)}s</small></td>`}<td>${esc(a.name)}</td><td>${sec(a.dur)}s</td><td>${a.n}</td><td>${a.ttf==null?'—':sec(a.ttf)+'s'}</td></tr>`).join('')
+      +(b.out.n?`<tr>${hit.length?'':`<td rowspan="${rs}">画面${b.i+1}</td><td rowspan="${rs}">${b.n}回</td>`}<td>（どのAOIでもない）</td><td>${sec(b.out.dur)}s</td><td>${b.out.n}</td><td>—</td></tr>`:'');
+  }).join('')}</table><p class="hint">「最初に見るまで」は、その画面に切り替わってから、そのAOIを最初に注視するまでの時間です。</p>`;
+}
+function batchCSV(B){
+  const q=x=>{ x=String(x??''); if(/^[=+\-@\t\r]/.test(x)) x="'"+x; return /[",\n\r]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x; };
+  const rows=[['screen_no','screen_label','event','start_ms','end_ms','fixations','total_dwell_ms','aoi','aoi_elements','aoi_dwell_ms','aoi_fixations','aoi_first_rank','time_to_first_ms']];
+  B.forEach(b=>{ const base=[b.i+1,b.label,b.name||'',b.a==null?'':Math.round(b.a),b.b==null||!isFinite(b.b)?'':Math.round(b.b),b.n,b.dur];
+    if(!b.aoi.length&&!b.out.n) rows.push([...base,'','','','','','']);
+    b.aoi.filter(a=>a.n).forEach(a=>rows.push([...base,a.name,a.els,a.dur,a.n,a.first,a.ttf==null?'':Math.round(a.ttf)]));
+    if(b.out.n) rows.push([...base,'(AOI外)','',b.out.dur,b.out.n,'','']); });
+  return '\uFEFF'+rows.map(r=>r.map(q).join(',')).join('\r\n');
+}
 async function realLoadTrans(f){
   if(!S.real) return;
   if(f.size>REAL_MAX_BYTES){ toast('ファイルが大きすぎます(20MBまで)'); return; }
@@ -2313,7 +2357,7 @@ async function realLoadTrans(f){
     if(ki<0||ti<0){ if(H.length>=2){ ki=0; ti=1; } else { toast('screen と timestamp の2列が見つかりません'); return; } }
     const rows=sh.body.map(r=>({k:toNum(r[ki],false), t:toNum(r[ti],false)})).filter(r=>!isNaN(r.k)&&!isNaN(r.t)).map(r=>({k:Math.round(r.k), t:r.t}));
     if(!rows.length){ toast('画面の切り替え時刻を読めませんでした'); return; }
-    S.real.trans={name:f.name, rows}; S.real.transUnit='auto'; S.real.useWin=true;
+    S.real.trans={name:f.name, rows}; S.real.transUnit='auto'; S.real.useWin=true; S.real.batch=null;
     renderPanel(); renderOverlay(); toast(`${rows.length}件の切り替え時刻を読み込みました`);
   }catch(e){ toast('読み込めませんでした(.csv / .xlsx に対応)'); }
 }
@@ -2349,7 +2393,10 @@ function tobiiForm(R,sh,c){
 /* 画面の切り替え時刻(screen, timestamp)。視線の時刻と同じ時計の値。解析中の画面の時間帯だけを重ねる */
 function transSection(R){
   let h=`<div class="sec"><h3>画面の切り替え時刻(任意)</h3><div class="row" style="gap:8px;flex-wrap:wrap"><button class="mini" id="rgTransPick">${R.trans?'別のファイルを読み込む':'ファイルを選ぶ'}</button><input type="file" id="rgTransFile" accept=".csv,.tsv,.txt,.xlsx,text/csv" hidden>${R.trans?'<button class="mini" id="rgTransClear">消す</button>':''}</div>`;
-  if(!R.trans) return h+`<p class="hint" style="margin-top:6px">screen と timestamp の2列のCSVを読み込むと、画面ごとに視線を分けられます。screen 0 は、解析の「画面1」に対応します(画面N = screen N−1)。</p></div>`;
+  if(!R.trans){
+    const r=realCompute(), auto=r&&r.autoTrans;
+    return h+`<p class="hint" style="margin-top:6px">${auto?`記録の Event 列の目印（${auto.map(a=>esc(a.name)).join(' → ')}）を、画面の切り替えとして使っています（画面N = N番目の目印）。別の切り替え時刻を使うときは、`:''}screen と timestamp の2列のCSVを読み込むと、${auto?'そちらを優先します。':'画面ごとに視線を分けられます。'}screen 0 は、解析の「画面1」に対応します(画面N = screen N−1)。</p></div>`;
+  }
   h+=`<div class="form-grid" style="margin-top:8px"><label>時刻の単位<select id="rgTransUnit">${[['auto','自動(視線データの時間に合わせる)'],['ms','ミリ秒(ms)'],['us','マイクロ秒(µs)'],['s','秒(s)']].map(([k,l])=>`<option value="${k}" ${R.transUnit===k?'selected':''}>${l}</option>`).join('')}</select></label>
    <label class="toggle" style="align-self:end"><input type="checkbox" id="rgWin" ${R.useWin?'checked':''}> 解析中の画面の時間帯だけ重ねる</label></div>
    <p class="hint" style="margin-top:6px">${esc(R.trans.name)}: ${R.trans.rows.length}件。${S.screens?`解析で検出した画面は${S.screens.items.length}つ。`:'この画面は、1画面です(画面の切り替えを検出していません)。'}</p></div>`;
@@ -2408,8 +2455,10 @@ function realResultHTML(){
   let h=r.warn.map(w=>`<div class="note" style="margin-bottom:12px">${esc(w)}</div>`).join('');
   if(r.wins){
     const cur=r.win?r.win.k:null, sec=t=>(t/1000).toFixed(1);
-    h+=`<div class="sec"><h3>画面ごとの視線(切り替え時刻で分けた注視)</h3><table><tr><th>画面</th><th>時間帯</th><th>注視</th><th>総注視時間</th></tr>${r.wins.map(w=>`<tr${w.k===cur?' style="font-weight:700"':''}><td>${w.k===cur?'▶ ':''}画面${w.k+1}(screen ${w.k})</td><td>${sec(w.a)}〜${isFinite(w.b)?sec(w.b):'終わり'}s</td><td>${w.n}回</td><td>${(w.dur/1000).toFixed(1)}s</td></tr>`).join('')}</table>
-      <p class="hint">${r.win?`いま解析中の画面(画面${r.win.k+1})の時間帯だけを、ステージに重ねています。`:'画面で絞らず、すべての注視を重ねています。'}時刻の単位は ${r.transScale===1?'ms':r.transScale===.001?'µs':'秒'} として読みました。</p></div>`;
+    h+=`<div class="sec"><h3>画面ごとの視線(切り替え時刻で分けた注視)</h3><table><tr><th>画面</th><th>時間帯</th><th>注視</th><th>総注視時間</th></tr>${r.wins.map(w=>`<tr${w.k===cur?' style="font-weight:700"':''}><td>${w.k===cur?'▶ ':''}画面${w.k+1}(${w.name?esc(w.name):'screen '+w.k})</td><td>${sec(w.a)}〜${isFinite(w.b)?sec(w.b):'終わり'}s</td><td>${w.n}回</td><td>${(w.dur/1000).toFixed(1)}s</td></tr>`).join('')}</table>
+      <p class="hint">${r.win?`いま解析中の画面(画面${r.win.k+1})の時間帯だけを、ステージに重ねています。`:'画面で絞らず、すべての注視を重ねています。'}${r.transSrc==='event'?'画面の切り替えは、記録の Event 列の目印から自動で読みました。':`時刻の単位は ${r.transScale===1?'ms':r.transScale===.001?'µs':'秒'} として読みました。`}</p>
+      ${S.screens?`<div class="row" style="gap:6px;flex-wrap:wrap"><button class="mini" id="rgBatch">全画面を一括で集計</button>${R.batch?'<button class="mini" id="rgBatchCsv">集計をCSVで保存</button>':''}</div>`:''}
+      ${R.batch?batchHTML(R.batch):''}</div>`;
   }
   if(!r.fix.length) return h+(r.win?'<p class="hint">この画面の時間帯には、注視がありません。</p>':'<p class="hint">表示できる注視がありません。列・単位・記録時の画面サイズを見直してください。</p>');
   if(!S.targets.length) h+='<div class="note" style="margin-bottom:12px">この画面からは、構成要素が見つかっていません(ボタンや見出しが、button・h1などの標準のタグでない作りのとき)。軌跡とヒートマップは重ねられますが、要素ごとの集計は出ません。</div>';
@@ -2442,8 +2491,10 @@ function realResultHTML(){
     else if(t.id==='rgClear'){ stopRealPlay(); S.real=null; S.show.real=false; S.show.realHeat=false; syncToggles(); renderPanel(); renderOverlay(); }
     else if(t.id==='rgPlay'){ if(S.real&&S.real.timer){ stopRealPlay(); S.real.upTo=null; renderOverlay(); renderRealResult(); } else startRealPlay(); }
     else if(t.id==='rgCsv'){ const txt=realCSV(); if(!txt){ toast('保存できる注視がありません'); return; } const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'})); a.download='real-gaze-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),30000); toast('CSVを保存しました'); }
+    else if(t.id==='rgBatch'){ realBatch().then(()=>renderPanel()).catch(e=>toast('集計できませんでした: '+e.message)); }
+    else if(t.id==='rgBatchCsv'){ const txt=batchCSV(S.real.batch||[]); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'})); a.download='real-gaze-by-screen-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),30000); toast('CSVを保存しました'); }
     else if(t.id==='rgTransPick'){ $('#rgTransFile').click(); }
-    else if(t.id==='rgTransClear'){ S.real.trans=null; renderPanel(); renderOverlay(); }
+    else if(t.id==='rgTransClear'){ S.real.trans=null; S.real.batch=null; renderPanel(); renderOverlay(); }
     else if(t.id==='rgFitVp'){ const c=S.real.cfg; setViewport('custom',{custom:{w:c.regW||c.recW,h:c.regH||c.recH}}).then(()=>{ renderAll(); toast(`解析幅を ${PAGE_W}×${FOLD_H} にしました`); }); }
   });
   document.addEventListener('change', e=>{
@@ -2463,7 +2514,7 @@ function realResultHTML(){
     else if(t.id==='rgTransUnit') R.transUnit=t.value; else if(t.id==='rgWin') R.useWin=t.checked;
     else if(t.id==='rgDisp') c.disp=clamp(+t.value||40,1,500); else if(t.id==='rgMin') c.minDur=clamp(+t.value||100,10,2000); else if(t.id==='rgHz') c.hz=clamp(+t.value||60,1,2000);
     else redraw=false;
-    if(redraw){ stopRealPlay(); R.upTo=null; renderPanel(); renderOverlay(); }
+    if(redraw){ stopRealPlay(); R.upTo=null; R.batch=null; renderPanel(); renderOverlay(); }
   });
 })();
 
