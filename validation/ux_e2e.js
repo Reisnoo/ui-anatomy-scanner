@@ -12,7 +12,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].every(b => (b.title || '').length > 8)), '8つのタブすべてに、用語の説明（title）がある');
   const ns = await p.evaluate(() => { const e = document.querySelector('.next-steps'); return e ? { text: e.textContent, btns: [...e.querySelectorAll('[data-goto]')].map(b => b.dataset.goto), act: S.issues.filter(isActive).length } : null; });
   assert(ns && ns.text.includes('解析できました') && ns.text.includes(ns.act + '件'), '解析後、①の先頭に「次にやること」と指摘件数を出す');
-  assert(ns && ns.btns.join() === 'heur,gaze,kp,report', '次にやること：② 指摘・③ 仮想視線・⑧ 記録・レポートへ進める');
+  assert(ns && ns.btns.join() === 'heur,gaze,kp,report', '次にやること：② 指摘・③ 仮想視線・⑨ 記録・レポートへ進める');
   await p.click('.next-steps [data-goto="heur"]'); assert(await p.evaluate(() => S.tab) === 'heur', '「② 指摘を見る」で、②のタブへ移る');
 
   const cnt = () => p.evaluate(() => ({ cards: [...document.querySelectorAll('.h-card')].length, issues: document.querySelectorAll('#panelBody .issue').length, manual: document.querySelectorAll('#panelBody .issue .badge-manual').length, pressed: [...document.querySelectorAll('[data-hf]')].find(b => b.getAttribute('aria-pressed') === 'true').dataset.hf }));

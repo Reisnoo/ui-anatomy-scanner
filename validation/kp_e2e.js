@@ -1,4 +1,4 @@
-// ⑧ Where・When・Why（キーポイントの記録）を確かめる。
+// ⑨ Where・When・Why（キーポイントの記録）を確かめる。
 // 使い方: PLAYWRIGHT_MODULE=$PWD/node_modules/playwright CHROMIUM_PATH=<chromium> node kp_e2e.js
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'); const fs = require('fs'), path = require('path');
 const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('ok  :', m); };
@@ -11,9 +11,9 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   const html = fs.readFileSync(path.join(__dirname, 'fixtures/spa-multipage.html'), 'utf8');
   await p.evaluate(async h => { await loadHTML(h, 'spa'); await selectScreen(1); }, html);   // 一覧画面
 
-  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,lens,cmp,multi,resp,kp,real', '⑧のタブが、⑦の次に並ぶ');
+  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,multi,real,lens,resp,cmp,kp', '⑨のタブが、⑦の次に並ぶ');
   await p.evaluate(() => gotoTab('kp'));
-  assert(await p.evaluate(() => document.querySelector('#panelBody').textContent.includes('Where') && document.querySelector('#panelBody').textContent.includes('When') && document.querySelector('#panelBody').textContent.includes('Why')), '⑧のパネルに Where・When・Why が出る');
+  assert(await p.evaluate(() => document.querySelector('#panelBody').textContent.includes('Where') && document.querySelector('#panelBody').textContent.includes('When') && document.querySelector('#panelBody').textContent.includes('Why')), '⑨のパネルに Where・When・Why が出る');
   assert(await p.evaluate(() => document.getElementById('kpWhen').value) === 'list：商品一覧', 'When の初期値は、いま解析している画面');
 
   await p.click('#kpAdd');   // Why が空

@@ -10,7 +10,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   let p = await open(1440, 900); let t = await tabs(p);
   assert(t.all === 9 && t.g === 4 && t.grows === 1 && t.n >= 2 && t.rows === 1, 'PC：4つの目的（1段）と、その中のタブ（1段）に分けて並ぶ（全9タブ）');
   assert(!t.scroll && t.clipped === 0, 'PC：タブの文字が切れず、横スクロールも要らない');
-  assert(t.names[7] === '⑧ Where・When・Why' && t.names[0] === '① 構成要素', 'タブの読み上げ名は、「① 構成要素」「⑧ Where・When・Why」のまま');
+  assert(t.names[8] === '⑨ Where・When・Why' && t.names[0] === '① 構成要素', 'タブの読み上げ名は、「① 構成要素」「⑨ Where・When・Why」のまま');
   await p.evaluate(() => window.scrollTo(0, 700)); await p.waitForTimeout(300);
   const pr = await p.evaluate(() => { const r = document.querySelector('.panel').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
   assert(pr.top >= 0 && pr.bottom <= pr.vh, 'PC：スクロールしても、結果パネル（タブを含む）が画面に収まる（' + pr.top + '〜' + pr.bottom + ' / ' + pr.vh + '）');
@@ -39,11 +39,11 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   await p.click('#jump button[data-jump="panel"]'); await p.waitForTimeout(900);
   assert(await p.evaluate(() => document.querySelector('#jump button[data-jump="panel"]').getAttribute('aria-pressed')) === 'true', 'スマホ：「結果」を押すと、結果に戻り、「結果」が選択状態になる');
   await p.evaluate(() => gotoTab('kp')); await p.waitForTimeout(700);
-  assert(await p.evaluate(() => { const a = document.querySelector('.tabs button[data-tab="kp"]').getBoundingClientRect(), r = document.querySelector('.tabs').getBoundingClientRect(); return a.left >= r.left - 1 && a.right <= r.right + 1; }), 'スマホ：⑧を選ぶと、⑧のタブが見える位置に出る');
+  assert(await p.evaluate(() => { const a = document.querySelector('.tabs button[data-tab="kp"]').getBoundingClientRect(), r = document.querySelector('.tabs').getBoundingClientRect(); return a.left >= r.left - 1 && a.right <= r.right + 1; }), 'スマホ：⑨を選ぶと、⑨のタブが見える位置に出る');
   await p.click('.tabgroups button[data-grp="gaze"]'); await p.waitForTimeout(300);
-  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].filter(b => !b.hidden).map(b => b.dataset.tab).join() === 'gaze,multi,real' && document.querySelector('.tabgroups button[data-grp="gaze"]').getAttribute('aria-pressed') === 'true'), '「視線」を選ぶと、③⑥⑨だけが並ぶ');
+  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].filter(b => !b.hidden).map(b => b.dataset.tab).join() === 'gaze,multi,real' && document.querySelector('.tabgroups button[data-grp="gaze"]').getAttribute('aria-pressed') === 'true'), '「視線」を選ぶと、③④⑤だけが並ぶ');
   await p.click('.tabgroups button[data-grp="log"]'); await p.waitForTimeout(300);
-  assert(await p.evaluate(() => S.tab === 'kp' && [...document.querySelectorAll('.tabs button')].filter(b => !b.hidden).map(b => b.dataset.tab).join() === 'cmp,kp'), '目的を切り替えても、その目的で最後に見ていたタブに戻る（⑧）');
+  assert(await p.evaluate(() => S.tab === 'kp' && [...document.querySelectorAll('.tabs button')].filter(b => !b.hidden).map(b => b.dataset.tab).join() === 'cmp,kp'), '目的を切り替えても、その目的で最後に見ていたタブに戻る（⑨）');
   await p.evaluate(() => window.scrollTo(0, 0)); await p.evaluate(() => document.querySelectorAll('[data-sample]')[1].click()); await p.waitForTimeout(1500);
   assert(await p.evaluate(() => Math.abs(document.querySelector('.panel').getBoundingClientRect().top) < 60), 'スマホ：サンプルを選んで解析すると、結果の位置へ自動で移る');
   assert(!errs.length, 'JavaScriptのエラーがない'); await b.close();

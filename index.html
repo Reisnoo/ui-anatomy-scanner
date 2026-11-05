@@ -295,7 +295,7 @@ th { color:var(--muted); font-weight:600; }
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="26" height="24" rx="4"/><path d="M8 10h10M8 16h6"/><circle cx="22" cy="20" r="4" style="stroke:var(--primary)"/></svg>
     UI Anatomy Scanner <span class="tag">Prototype</span>
   </h1>
-  <div class="disclaimer">指摘と仮想視線(③)はルールベースの推定で、実ユーザーテストの代替ではありません。実測の視線は⑨で読み込みます。</div>
+  <div class="disclaimer">指摘と仮想視線(③)はルールベースの推定で、実ユーザーテストの代替ではありません。実測の視線は⑤で読み込みます。</div>
   <button class="btn ghost app-rep" id="repBtn" title="履歴をもとに、提出用レポート（単体HTML）を書き出す画面へ移ります">レポートを書き出す</button>
   <button class="icon-btn" id="themeBtn" aria-label="ダークモード切替"></button>
 </header>
@@ -308,7 +308,7 @@ th { color:var(--muted); font-weight:600; }
         <p class="hint" style="margin:6px 0 0">サーバーへは送らず、ブラウザの中だけで動きます。アカウントも不要です。</p></div>
         <button class="mini" id="welcomeClose" aria-label="この案内を閉じる">閉じる</button>
       </div>
-      <ol class="wsteps"><li><b>入れる</b><span>サンプルを選ぶ／URL／HTMLを貼る／スクリーンショット</span></li><li><b>見る</b><span>右の「画面の中身・視線・見え方・比較」から、見たいものを選ぶ</span></li><li><b>重ねる</b><span>「視線」の⑨で、実測の視線データ(Excel/CSV)を画面に重ねる</span></li></ol>
+      <ol class="wsteps"><li><b>入れる</b><span>サンプルを選ぶ／URL／HTMLを貼る／スクリーンショット</span></li><li><b>見る</b><span>右の「画面の中身・視線・見え方・比較」から、見たいものを選ぶ</span></li><li><b>重ねる</b><span>「視線」の⑤で、実測の視線データ(Excel/CSV)を画面に重ねる</span></li></ol>
     </div>
     <div class="card input-card">
       <div class="row" style="justify-content:space-between">
@@ -384,12 +384,12 @@ th { color:var(--muted); font-weight:600; }
       <button role="tab" aria-selected="true" data-tab="comps" title="画面の部品（ボタン・見出し・画像など）の種類・数・位置"><span class="tn" aria-hidden="true">①</span><span class="tl">構成要素</span><span class="sr-only">① 構成要素</span></button>
       <button role="tab" aria-selected="false" data-tab="heur" title="ニールセンの10のユーザビリティ原則で、弱い点を見る"><span class="tn" aria-hidden="true">②</span><span class="tl">10原則</span><span class="sr-only">② 10原則</span></button>
       <button role="tab" aria-selected="false" data-tab="gaze" title="ルールから作った仮想の視線の動き（実測ではありません）"><span class="tn" aria-hidden="true">③</span><span class="tl">仮想視線</span><span class="sr-only">③ 仮想視線</span></button>
-      <button role="tab" aria-selected="false" data-tab="lens" title="年齢や視覚特性（ぼやけ・色覚など）での見え方"><span class="tn" aria-hidden="true">④</span><span class="tl">Age Lens</span><span class="sr-only">④ Age Lens</span></button>
-      <button role="tab" aria-selected="false" data-tab="cmp" title="Before/After・履歴・提出用レポート"><span class="tn" aria-hidden="true">⑤</span><span class="tl">比較</span><span class="sr-only">⑤ 比較</span></button>
-      <button role="tab" aria-selected="false" data-tab="multi" title="利用者像（ペルソナ）ごとの、視線と見え方の違いを並べて比べる"><span class="tn" aria-hidden="true">⑥</span><span class="tl">ペルソナ</span><span class="sr-only">⑥ ペルソナ</span></button>
+      <button role="tab" aria-selected="false" data-tab="multi" title="利用者像（ペルソナ）ごとの、視線と見え方の違いを並べて比べる"><span class="tn" aria-hidden="true">④</span><span class="tl">ペルソナ</span><span class="sr-only">④ ペルソナ</span></button>
+      <button role="tab" aria-selected="false" data-tab="real" title="視線計測の記録（Excel / CSV）を読み込んで、画面に重ねる（③の仮想視線とは別物）"><span class="tn" aria-hidden="true">⑤</span><span class="tl">実測視線</span><span class="sr-only">⑤ 実測視線（Excel / CSV）</span></button>
+      <button role="tab" aria-selected="false" data-tab="lens" title="年齢や視覚特性（ぼやけ・色覚など）での見え方"><span class="tn" aria-hidden="true">⑥</span><span class="tl">Age Lens</span><span class="sr-only">⑥ Age Lens</span></button>
       <button role="tab" aria-selected="false" data-tab="resp" title="スマホ〜大画面での、崩れ・指摘・視線の違い"><span class="tn" aria-hidden="true">⑦</span><span class="tl">画面幅</span><span class="sr-only">⑦ 画面幅</span></button>
-      <button role="tab" aria-selected="false" data-tab="kp" title="Where・When・Why（どの要素・どの画面・なぜ）"><span class="tn" aria-hidden="true">⑧</span><span class="tl">記録(3W)</span><span class="sr-only">⑧ Where・When・Why</span></button>
-      <button role="tab" aria-selected="false" data-tab="real" title="視線計測の記録（Excel / CSV）を読み込んで、画面に重ねる（③の仮想視線とは別物）"><span class="tn" aria-hidden="true">⑨</span><span class="tl">実測視線</span><span class="sr-only">⑨ 実測視線（Excel / CSV）</span></button>
+      <button role="tab" aria-selected="false" data-tab="cmp" title="Before/After・履歴・提出用レポート"><span class="tn" aria-hidden="true">⑧</span><span class="tl">比較</span><span class="sr-only">⑧ 比較</span></button>
+      <button role="tab" aria-selected="false" data-tab="kp" title="Where・When・Why（どの要素・どの画面・なぜ）"><span class="tn" aria-hidden="true">⑨</span><span class="tl">記録(3W)</span><span class="sr-only">⑨ Where・When・Why</span></button>
     </div>
     <div class="panel-body" id="panelBody"></div>
   </aside>
@@ -923,11 +923,11 @@ async function analyzeAllScreens(){
   for(let i=0;i<n;i++){ await selectScreen(i,true); addVersion((items[i].id||items[i].label), true); }
   await selectScreen(keep==null?null:keep, true);
   S.tab='cmp'; S.cTab='history'; Object.assign(S.show,{comps:false,pins:false,path:false,heat:false,lensMap:false,multi:false,real:false,realHeat:false}); syncToggles(); renderAll();
-  toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑤比較→履歴で、画面どうしを比べられます`);
+  toast(n<items.length ? `${n}画面を履歴に追加しました（履歴の上限のため残り${items.length-n}画面は未解析）` : `${n}画面を履歴に追加しました。⑧比較→履歴で、画面どうしを比べられます`);
 }
 
 /* ------------------------------------------------------------
-   ⑧ Where・When・Why（キーポイントの記録）
+   ⑨ Where・When・Why（キーポイントの記録）
    docs/keypoint_codebook_v1 の定義に合わせる。
    Where＝対象のUI要素、When＝画面、Why＝理由（自由記述を先に書き、そのあとコードを割り当てる）。
    ------------------------------------------------------------ */
@@ -1382,7 +1382,7 @@ function runAnalysis(){
   body.querySelectorAll('footer').forEach(el=>{ if(isVis(el)) add('footer', el); });
 
   S.comps = comps;
-  /* 実験・評価用の AOI 指定(id / class に aoi を含む要素。例: #aoi-target, .aoi-decoy)。⑨の実測視線の集計に使う */
+  /* 実験・評価用の AOI 指定(id / class に aoi を含む要素。例: #aoi-target, .aoi-decoy)。⑤の実測視線の集計に使う */
   S.aoi = [];
   body.querySelectorAll('[id],[class]').forEach(el=>{
     const toks=[el.id, ...(cls(el).split(/\s+/))].filter(t=>t&&/(^|[-_])aoi([-_]|$)/i.test(t)); if(!toks.length||!isVis(el)) return;
@@ -1908,7 +1908,7 @@ function nextSteps(){
   const act=S.issues.filter(isActive), high=act.filter(i=>i.sev>=3).length;
   return `<div class="next-steps" role="region" aria-label="次にやること"><div class="ns-head"><b>解析できました。次は</b><button class="mini" data-next-off="1" aria-label="この案内を閉じる">閉じる</button></div>
     <p class="ns-sum">指摘 <b>${act.length}件</b>${high?`（うち重大度3以上 <b>${high}件</b>）`:''}・要素 <b>${S.comps.length}個</b></p>
-    <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn" data-goto="heur">② 指摘を見る</button><button class="btn ghost" data-goto="gaze">③ 仮想視線を見る</button><button class="btn ghost" data-goto="kp">⑧ 気になる点を記録</button><button class="btn ghost" data-goto="report">レポートを書き出す</button></div></div>`;
+    <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn" data-goto="heur">② 指摘を見る</button><button class="btn ghost" data-goto="gaze">③ 仮想視線を見る</button><button class="btn ghost" data-goto="kp">⑨ 気になる点を記録</button><button class="btn ghost" data-goto="report">レポートを書き出す</button></div></div>`;
 }
 document.addEventListener('click', e=>{ const b=e.target.closest('.tabgroups button'); if(!b) return; const g=b.dataset.grp; gotoTab((S.lastTab&&S.lastTab[g])||TAB_GROUPS[g][0]); });
 function gotoTab(k){ const b=$(`.tabs button[data-tab="${k}"]`); if(b) b.click(); }
@@ -2006,7 +2006,7 @@ function panelGaze(){
   h+=`<div class="sec"><h3>視線モデルの重み（スライダーで仮説を変えられます）</h3>
    ${[['wV','視覚的な目立ち',w.wV],['wR','タスクとの関連',w.wR],['wP','位置の事前傾向(左上→)',w.wP]].map(([k,l,v])=>`<div class="slider-row"><span>${l}</span><input type="range" min="0" max="1" step="0.05" value="${v}" data-w="${k}" aria-label="${l}"><b id="v_${k}">${v.toFixed(2)}</b></div>`).join('')}
    <div class="row" style="margin-top:6px"><button class="mini" id="wReset">ペルソナの既定値に戻す</button></div></div>`;
-  h+=`<div class="sec"><label class="toggle"><input type="checkbox" id="gLens" ${g.useLens?'checked':''}> Age Lensの設定を視線に反映（読めない要素は注視されにくくなる）</label>${g.useLens&&!S.lens.on?'<p class="hint">④ Age Lens タブでレンズを有効にすると反映されます。</p>':''}</div>`;
+  h+=`<div class="sec"><label class="toggle"><input type="checkbox" id="gLens" ${g.useLens?'checked':''}> Age Lensの設定を視線に反映（読めない要素は注視されにくくなる）</label>${g.useLens&&!S.lens.on?'<p class="hint">⑥ Age Lens タブでレンズを有効にすると反映されます。</p>':''}</div>`;
   h+=`<div id="gazeResult">${gazeResult()}</div>`;
   h+=`<div class="sec"><h3>このペルソナの仮定</h3><div class="note"><ul>${personaDesc(P).map(d=>`<li>${esc(d)}</li>`).join('')}</ul><div style="margin-top:6px">モデル：各要素の「目立ち×タスク関連×位置傾向」に、現在地からの距離減衰と再訪抑制をかけて次の注視先を確率的に選びます。乱数はシード固定（同じ設定なら同じ結果）。</div></div></div>`;
   return h;
@@ -2035,7 +2035,7 @@ function gazeResult(){
 }
 
 /* ============================================================
-   ⑨ 実測視線（視線データ:CSV / Excel(.xlsx) の読み込み）
+   ⑤ 実測視線（視線データ:CSV / Excel(.xlsx) の読み込み）
    ③の仮想視線とは別物。読み込んだ記録を、解析中の画面に重ねて見る。
    記録時の画面解像度 → 解析する画面(PAGE_W×FOLD_H)へ、縦横の倍率で座標を変換する
    ============================================================ */
@@ -2528,7 +2528,7 @@ function realResultHTML(){
 }
 (function realWire(){
   document.addEventListener('toggle', e=>{ const d=e.target; if(d&&d.id==='rgSettings'&&S.real) S.real.setOpen=d.open; }, true);
-  // ファイルのドラッグ&ドロップ(⑨のタブのとき): .xlsx / .csv を、視線データとして読み込む
+  // ファイルのドラッグ&ドロップ(⑤のタブのとき): .xlsx / .csv を、視線データとして読み込む
   const pan=document.querySelector('.panel'); if(pan){
     pan.addEventListener('dragover', e=>{ if(S.tab==='real'&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){ e.preventDefault(); pan.classList.add('drop'); } });
     pan.addEventListener('dragleave', e=>{ if(e.target===pan) pan.classList.remove('drop'); });
@@ -2776,8 +2776,8 @@ function panelMulti(){
       <label>タスク<select id="gTask">${Object.entries(TASKS).map(([k,v])=>`<option value="${k}" ${g.task===k?'selected':''}>${v}</option>`).join('')}</select></label>
       <label>範囲<select id="gRange"><option value="fold" ${g.range==='fold'?'selected':''}>ファーストビュー(800px)</option><option value="full" ${g.range==='full'?'selected':''}>ページ全体(〜2400px)</option></select></label>
       <label>試行<div class="row"><button class="mini" id="gRetry">別の試行 (#${g.trial+1})</button></div></label>
-      <div style="display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:600;color:var(--muted)">視覚特性<div class="row"><label class="toggle" style="font-weight:600"><input type="checkbox" id="mLens" ${S.multiLens?'checked':''}> 高齢者に④の設定を適用</label></div></div>
-    </div>${S.multiLens&&!S.lens.on?'<p class="hint">④ Age Lens タブでレンズを有効にすると反映されます。</p>':''}</div>`;
+      <div style="display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:600;color:var(--muted)">視覚特性<div class="row"><label class="toggle" style="font-weight:600"><input type="checkbox" id="mLens" ${S.multiLens?'checked':''}> 高齢者に⑥の設定を適用</label></div></div>
+    </div>${S.multiLens&&!S.lens.on?'<p class="hint">⑥ Age Lens タブでレンズを有効にすると反映されます。</p>':''}</div>`;
   h+=`<div class="sec"><h3>比較に含めるペルソナ</h3><div class="chips">${Object.keys(PERSONAS).map(k=>`<button class="chip" data-pactive="${k}" aria-pressed="${S.pActive.has(k)}"><i class="pdot" style="background:${pcol(k)};display:inline-block;margin-right:6px"></i>${esc(pshort(k))}${PERSONAS[k].custom?'（自作）':''}</button>`).join('')}</div></div>`;
   h+=`<div class="legend" style="margin-bottom:8px">${keys.map(k=>`<span style="display:inline-flex;align-items:center;gap:4px"><svg width="34" height="10" aria-hidden="true"><line x1="0" y1="5" x2="34" y2="5" stroke="${pcol(k)}" stroke-width="3" ${pdash(k)?`stroke-dasharray="${pdash(k).split(' ').map(v=>Math.round(v/3)).join(' ')}"`:''}/></svg>${PERSONAS[k].name}</span>`).join('')}</div>`;
   h+=`<div class="sec"><h3>ワイヤーフレーム上の視線（1試行・番号は注視の順）</h3><div class="pmap">${keys.map(k=>`<div class="pcard"><div class="hd"><i class="pdot" style="background:${pcol(k)}"></i>${PERSONAS[k].name}</div>${wireSVG(k,M.per[k],M.foldH)}</div>`).join('')}</div>
@@ -2820,12 +2820,12 @@ function panelPersonaEdit(){
     <label class="full">メモ（任意・80文字まで）<textarea id="pDesc" maxlength="80" style="min-height:56px;font-family:inherit;font-size:13px">${esc(d.descText)}</textarea></label></div></div>
   <div class="sec"><h3>視線のふるまい</h3>${prow(PF,k=>d[k],'data-pf')}
     <div style="margin-top:8px"><label class="toggle"><input type="checkbox" id="pSmall" ${d.smallPenalty?'checked':''}> 小さい文字・低コントラストを見落としやすい（簡易）</label></div></div>
-  <div class="sec"><h3>視覚特性（④ Age Lens と同じ指標）</h3>
+  <div class="sec"><h3>視覚特性（⑥ Age Lens と同じ指標）</h3>
     <div class="lens-row"><span>プリセットから</span><select id="pLensPreset" aria-label="視覚特性のプリセット"><option value="">選んでコピー</option>${Object.entries(LENS_PRESETS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('')}</select><span></span></div>
     ${prow(PL,k=>d.lens[k],'data-pl')}
     <div class="lens-row"><span>色覚の特性</span><select id="pCvd" aria-label="色覚の特性">${Object.entries(CVD_JA).map(([k,v])=>`<option value="${k}" ${d.lens.cvd===k?'selected':''}>${v}</option>`).join('')}</select><span></span></div>
-    <div class="row" style="margin-top:12px"><button class="mini" id="pLensFrom4">④の現在の設定を取り込む</button><button class="mini" id="pLensTo4">この視覚特性を④で見る</button></div>
-    <p class="hint">視覚特性があるペルソナは、読めない文字の要素が注視されにくくなります（④と同じ判定）。</p></div>
+    <div class="row" style="margin-top:12px"><button class="mini" id="pLensFrom4">⑥の現在の設定を取り込む</button><button class="mini" id="pLensTo4">この視覚特性を⑥で見る</button></div>
+    <p class="hint">視覚特性があるペルソナは、読めない文字の要素が注視されにくくなります（⑥と同じ判定）。</p></div>
   <div class="sec"><div class="row"><button class="btn" id="pSave">${editing?'上書き保存':'保存して比較に追加'}</button>${editing?'<button class="btn ghost" id="pSaveNew">別名で保存</button><button class="btn ghost" id="pDel">削除</button>':''}</div>
     <p class="hint">保存先はこのブラウザ（localStorage）です。自作 ${cust.length}/${MAX_CUSTOM} 件。</p></div>
   <div class="sec"><h3>書き出し／読み込み</h3><div class="row"><button class="mini" id="pExport">自作を書き出す（JSON）</button><button class="mini" id="pImport">下の欄から読み込む</button></div>
@@ -2972,7 +2972,7 @@ function panelHistory(){
   const M=rows.map(r=>histMetrics(r.snap, r.cur?null:r.id)), labels=rows.map(r=>shortLabel(r.label));
   const tl=issueTimelineOf(rows);
   h+=`<div class="sec"><h3>推移</h3>${chartsHTML(M,labels)}
-    <p class="hint">仮想視線（CTA）とAge Lensの値は、③④で選んでいる設定（ペルソナ・タスク・レンズ）で全バージョンを同じ条件にそろえて計算しています。</p></div>`;
+    <p class="hint">仮想視線（CTA）とAge Lensの値は、③⑥で選んでいる設定（ペルソナ・タスク・レンズ）で全バージョンを同じ条件にそろえて計算しています。</p></div>`;
   h+=`<div class="sec"><h3>10原則スコアの変化</h3>${heatHTML(M,labels)}<p class="hint">濃いほど良いスコア。小さな数字は直前のバージョンとの差です。</p></div>`;
   h+=`<div class="sec"><h3>指摘の出入り</h3>${timelineHTML(tl,labels)}<p class="hint">数字は重大度、「—」はその時点で指摘なし。件数などの数字を除いたタイトルで同じ指摘とみなします。</p></div>`;
   const ins=histInsights(rows,M,tl);
@@ -3184,9 +3184,9 @@ function reportUI(){
     <label class="full">目的・課題設定（任意・400字まで）<textarea id="rPurpose" maxlength="400" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：問い合わせフォームの入力負荷を下げるため、…">${esc(rp.purpose)}</textarea></label>
     <label class="full">設計判断・補足（任意・600字まで）<textarea id="rNote" maxlength="600" style="min-height:72px;font-family:inherit;font-size:13px" placeholder="例：ボタンを3種類に絞った理由、…">${esc(rp.note)}</textarea></label></div>
     <div style="margin-top:8px"><label class="toggle"><input type="checkbox" id="rThumbs" ${rp.thumbs?'checked':''}> 各バージョンの画面のスナップショットを載せる</label></div>
-    <div style="margin-top:6px"><label class="toggle"><input type="checkbox" id="rKp" ${rp.kp?'checked':''}> ⑧ Where・When・Why の記録を載せる（${kpRows().filter(r=>r.status!=='下書き').length}件）</label>
+    <div style="margin-top:6px"><label class="toggle"><input type="checkbox" id="rKp" ${rp.kp?'checked':''}> ⑨ Where・When・Why の記録を載せる（${kpRows().filter(r=>r.status!=='下書き').length}件）</label>
     <label class="toggle" style="margin-left:10px"><input type="checkbox" id="rKpDraft" ${rp.kpDraft?'checked':''}> 「下書き」も載せる（${kpRows().filter(r=>r.status==='下書き').length}件）</label></div>
-    <p class="hint">記録は、⑧タブで追加します。「下書き」は、自動の指摘から作った案で、人の確認前のため、既定では載せません。</p>
+    <p class="hint">記録は、⑨タブで追加します。「下書き」は、自動の指摘から作った案で、人の確認前のため、既定では載せません。</p>
     <p class="hint">載せると、画面のHTMLがレポートに入り、ファイルサイズが大きくなります。解析した画面の中身も、レポートを渡した相手に伝わります。</p>
     <div class="row" style="margin-top:12px"><button class="btn" id="rExport" ${ready?'':'disabled'}>レポートをHTMLで書き出す</button><button class="btn ghost" id="rPreview" ${ready?'':'disabled'}>プレビューを開く</button></div>
     ${ready?'':'<p class="hint">履歴（または履歴＋現在の画面）が2件以上あると書き出せます。</p>'}</div>`;
@@ -3336,7 +3336,7 @@ function panelCmp(){
     ${dRow('ボタン（総数）',...ty('button'))}${dRow('バナー（総数）',...ty('banner'))}${dRow('入力欄',B.types.input||0,A.types.input||0)}${dRow('リンク',B.links,A.links)}${dRow('ページの高さ(px)',B.H,A.H)}</table></div>`;
   h+=`<div class="sec"><h3>Age Lens の差（${esc(c.lensLabel)}）</h3><table><tr><th>指標</th><th>Before</th><th>After</th><th>差</th></tr>
     ${dRow('読みにくい文字（重大）',c.lensB.n2,c.lensA.n2,{better:'lower'})}${dRow('読みにくい文字（注意）',c.lensB.n1,c.lensA.n1)}${dRow('重大＋注意の合計',c.lensB.n2+c.lensB.n1,c.lensA.n2+c.lensA.n1,{better:'lower'})}${dRow('押しにくい操作領域(<44px)',c.lensB.tap,c.lensA.tap,{better:'lower'})}</table>
-    <p class="hint">④タブでレンズ設定を有効にしていれば、その設定で比較します（未設定なら65歳前後の既定値）。</p></div>`;
+    <p class="hint">⑥タブでレンズ設定を有効にしていれば、その設定で比較します（未設定なら65歳前後の既定値）。</p></div>`;
   const g=S.gaze, P=PERSONAS[g.persona];
   h+=`<div class="sec"><h3>仮想視線の差（30試行・同じシード）</h3>
     <div class="form-grid" style="margin-bottom:8px"><label>ペルソナ<select id="gPersona">${Object.entries(PERSONAS).map(([k,v])=>`<option value="${k}" ${g.persona===k?'selected':''}>${v.name}</option>`).join('')}</select></label>

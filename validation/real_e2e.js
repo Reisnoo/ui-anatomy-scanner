@@ -1,4 +1,4 @@
-// ⑨ 実測視線（CSV / Excel の読み込み・座標変換・重ね表示）を確かめる。
+// ⑤ 実測視線（CSV / Excel の読み込み・座標変換・重ね表示）を確かめる。
 // 使い方: PLAYWRIGHT_MODULE=$PWD/node_modules/playwright CHROMIUM_PATH=<chromium> node real_e2e.js
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'); const path = require('path');
 const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('ok  :', m); };
@@ -9,7 +9,7 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && !/net::|ERR_/.test(m.text()) && errs.push(m.text()));
   await p.goto('file://' + path.resolve(__dirname, '../index.html'));
   await p.waitForFunction(() => document.querySelector('#status').textContent.includes('解析完了'), null, { timeout: 30000 });
-  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,lens,cmp,multi,resp,kp,real', '⑨のタブが⑧の次に並ぶ');
+  assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,multi,real,lens,resp,cmp,kp', '⑤のタブが④の次に並ぶ(番号順)');
   await p.evaluate(() => gotoTab('real'));
   assert((await p.textContent('#panelBody')).includes('実測データ'), '実測データのバッジが出る(③の仮想と別ラベル)');
   assert(!(await p.textContent('.tabs button[data-tab="gaze"]')).includes('実測'), '③のタブは「仮想視線」のまま');
@@ -64,14 +64,14 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   await p.click('#rgPlay'); await p.waitForTimeout(300); assert(await p.evaluate(() => S.real.upTo !== null && S.real.upTo >= 1), '再生で、軌跡が順に伸びる'); await p.click('#rgPlay');
   // 仮想視線タブとの切替で状態が混ざらない
   await p.evaluate(() => gotoTab('gaze')); assert(await p.evaluate(() => S.show.real === false && document.querySelector('#ov').innerHTML.includes('#E11D48')), '③に戻ると、実測は消え、仮想視線(赤)が出る');
-  await p.evaluate(() => gotoTab('real')); assert(await p.evaluate(() => S.show.real === true), '⑨に戻ると実測が出る');
+  await p.evaluate(() => gotoTab('real')); assert(await p.evaluate(() => S.show.real === true), '⑤に戻ると実測が出る');
   // 列未選択
   await p.selectOption('#rgX', '-1'); assert((await p.textContent('#rgResult')).includes('列を選んでください'), 'X列が未選択ならメッセージを出す');
   // 画面遷移の記録(座標なし)を、座標として描かない
   await p.setInputFiles('#rgFile', G + 'transitions.csv'); await p.waitForSelector('#rgResult');
   assert(await p.evaluate(() => S.real.cfg.xi === -1 && S.real.cfg.yi === -1 && realCompute().fix.length === 0), '座標のない表(画面遷移の記録)は、先頭2列を座標とみなさない');
   assert((await p.textContent('#rgResult')).includes('画面の切り替え時刻の記録'), '画面遷移の記録だと、案内を出す');
-  // 標準タグを使わない画面(構成要素が0個)でも、⑨は使える
+  // 標準タグを使わない画面(構成要素が0個)でも、⑤は使える
   await p.evaluate(async () => { await loadHTML('<!doctype html><body style="margin:0"><div style="padding:40px"><div style="font-size:20px">タイトル</div><label style="display:inline-block;padding:10px;background:#27c">はじめる</label></div></body>', 'plain'); });
   await p.waitForTimeout(500); assert(await p.evaluate(() => S.comps.length) === 0, '(前提)標準タグがない画面は、構成要素が0個');
   await p.evaluate(() => gotoTab('real')); await p.setInputFiles('#rgFile', G + 'fix.csv'); await p.waitForSelector('#rgResult .tile');
