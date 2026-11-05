@@ -232,6 +232,7 @@ th,td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--border);
 th { color:var(--muted); font-weight:600; }
 .note { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--muted); }
 .note ul { margin:4px 0 0; padding-left:18px; }
+.panel.drop { outline:3px dashed #1D4ED8; outline-offset:-6px; }
 .real-badge { display:inline-block; font-size:13px; font-weight:600; color:#1D4ED8; background:transparent; border:1px solid #1D4ED8; border-radius:6px; padding:2px 10px; }
 :root[data-theme="dark"] .real-badge { color:#93C5FD; border-color:#93C5FD; }
 .sim-badge { display:inline-block; font-size:13px; font-weight:600; color:var(--muted); background:transparent; border:1px solid var(--border); border-radius:6px; padding:2px 10px; }
@@ -2409,12 +2410,13 @@ function panelReal(){
     <button class="btn" id="rgPick">${R?'別のファイルを読み込む':'視線データのファイルを選ぶ'}</button><input type="file" id="rgFile" accept=".csv,.tsv,.txt,.xlsx,text/csv" hidden>
     <button class="btn ghost" id="rgDemo" title="動作を試すための、作り物のデータを読み込みます">デモ用データで試す</button>
     ${R?'<button class="btn ghost" id="rgClear">読み込みを消す</button>':''}</div>
-    <p class="hint" style="margin-top:8px">対応: .xlsx / .csv / .tsv（1行目が見出し）。ファイルは端末の中だけで読み、外部へは送りません。必要な列は、X座標・Y座標と、注視の長さ（または時刻）です。</p></div>`;
+    <p class="hint" style="margin-top:8px">対応: .xlsx / .csv / .tsv（1行目が見出し）。ここにファイルをドラッグ&ドロップしても読み込めます。ファイルは端末の中だけで読み、外部へは送りません。必要な列は、X座標・Y座標と、注視の長さ（または時刻）です。</p></div>`;
   if(!R) return h+`<div class="note"><b>データの形</b><ul><li><b>注視（fixation）データ</b>: 1行が1回の注視。X・Y・継続時間(ms)</li><li><b>生の視線サンプル</b>: 一定間隔の座標の記録。時刻(またはHz)から注視をまとめます</li><li>座標は、画面のピクセル、または0〜1の割合に対応します</li></ul></div>`;
   const sh=R.tbl.sheets[R.tbl.cur], c=R.cfg;
   const opts=(sel,none)=>(none?`<option value="-1" ${sel<0?'selected':''}>（なし）</option>`:'')+sh.head.map((n,i)=>`<option value="${i}" ${sel===i?'selected':''}>${esc(n)}</option>`).join('');
   const preset=REC_PRESETS.some(p=>p[0]===c.recW&&p[1]===c.recH)?`${c.recW}x${c.recH}`:'custom';
   if(R.source && R.source!==S.sourceName) h+=`<div class="note" style="margin-bottom:16px"><b style="color:var(--text)">別の画面のデータかもしれません</b><br>読み込んだときの画面は「${esc(R.source)}」、いまは「${esc(S.sourceName)}」です。記録した画面と、解析中の画面が同じか確かめてください。</div>`;
+  const h0=h; h='';   // ここから下は「読み込みの設定」(折りたたむ)
   h+=`<div class="sec"><h3>${R.demo?'デモ用データ(作り物)':esc(R.name)} — ${sh.body.length.toLocaleString()}行</h3>
    <div class="form-grid">
     ${R.tbl.sheets.length>1?`<label>シート<select id="rgSheet">${R.tbl.sheets.map((s,i)=>`<option value="${i}" ${R.tbl.cur===i?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>`:''}
@@ -2435,15 +2437,16 @@ function panelReal(){
     <label>幅(px。0=画面全体)<input type="number" id="rgRegW" min="0" max="10000" value="${c.regW}"></label><label>高さ(px。0=画面全体)<input type="number" id="rgRegH" min="0" max="10000" value="${c.regH}"></label></div>
     <p class="hint" style="margin-top:6px">視線の座標は画面全体のものなので、ブラウザのタブ・URL欄などの分だけ、ページが下にずれています(例: 画面1920×1080のうち、ページの表示領域が上から44pxの位置の1920×1036)。この領域が、解析の画面全体に重なります。Tobii Pro Lab の書き出しは、記録の値から自動で入ります。</p></div></details>
    <p class="hint" style="margin-top:6px">解析中の画面は ${PAGE_W}×${FOLD_H}px です。座標は、記録の${(c.regW||c.offX||c.offY)?'ブラウザの表示領域':'画面全体'}(${c.regW||c.recW}×${c.regH||c.recH})が解析の画面全体に重なるように、縦横の倍率をかけて変換します(${(PAGE_W/(c.regW||c.recW)).toFixed(3)}倍・${(FOLD_H/(c.regH||c.recH)).toFixed(3)}倍)。<b>ここを実際の記録環境と合わせないと、別の場所に表示されます。</b></p>
-   ${((c.regW||c.recW)!==PAGE_W||(c.regH||c.recH)!==FOLD_H)&&!S.imageMode?`<div class="row" style="margin-top:6px"><button class="mini" id="rgFitVp">解析幅を記録に合わせる(${c.regW||c.recW}×${c.regH||c.recH})</button></div>`:''}</div>`;
-  h+=transSection(R);
+</div>`;
   if(c.kind==='sample') h+=`<div class="sec"><h3>注視のまとめ方(生サンプル用)</h3><div class="form-grid">
     <label>注視とみなす範囲(px)<input type="number" id="rgDisp" min="1" max="500" value="${c.disp}"></label>
     <label>最短の注視(ms)<input type="number" id="rgMin" min="10" max="2000" value="${c.minDur}"></label>
     <label>サンプリング(Hz)<input type="number" id="rgHz" min="1" max="2000" value="${c.hz}"></label></div>
     <p class="hint" style="margin-top:6px">範囲内に最短の時間とどまった点を、1回の注視にまとめます(I-DT法)。時刻の列があるときは、Hzは使いません。</p></div>`;
-  h+=`<div id="rgResult">${realResultHTML()}</div>`;
-  return h;
+  const stHtml=h, r0=realCompute(), mode=c.kind==='tobii'?'Tobii形式':c.kind==='sample'?'生サンプル':'注視データ';
+  const need=!!(r0&&(r0.err||!r0.all.length)), open=R.setOpen==null?need:R.setOpen;
+  return h0+transSection(R)+`<details class="grp" id="rgSettings" ${open?'open':''}><summary>読み込みの設定（${mode}・${r0&&r0.all?r0.all.length:0}回の注視・記録 ${c.regW||c.recW}×${c.regH||c.recH}）</summary><div class="inner">${stHtml}</div></details>
+    <div id="rgResult">${realResultHTML()}</div>`;
 }
 function renderRealResult(){ const el=$('#rgResult'); if(el) el.innerHTML=realResultHTML(); }
 function realResultHTML(){
@@ -2453,6 +2456,7 @@ function realResultHTML(){
     return `<div class="note"><b>${esc(r.err)}</b>${trans?'<br>この表は、画面の切り替え時刻の記録のようです(座標の列がありません)。これだけでは、視線の軌跡は描けません。X・Y座標の入った視線データのファイルを読み込んでください。':''}</div>`;
   }
   let h=r.warn.map(w=>`<div class="note" style="margin-bottom:12px">${esc(w)}</div>`).join('');
+  { const c=R.cfg, rw=c.regW||c.recW, rh=c.regH||c.recH; if((rw!==PAGE_W||rh!==FOLD_H)&&!S.imageMode) h+=`<div class="row" style="margin-bottom:12px"><button class="mini" id="rgFitVp">解析幅を記録に合わせる(${rw}×${rh})</button></div>`; }
   if(r.wins){
     const cur=r.win?r.win.k:null, sec=t=>(t/1000).toFixed(1);
     h+=`<div class="sec"><h3>画面ごとの視線(切り替え時刻で分けた注視)</h3><table><tr><th>画面</th><th>時間帯</th><th>注視</th><th>総注視時間</th></tr>${r.wins.map(w=>`<tr${w.k===cur?' style="font-weight:700"':''}><td>${w.k===cur?'▶ ':''}画面${w.k+1}(${w.name?esc(w.name):'screen '+w.k})</td><td>${sec(w.a)}〜${isFinite(w.b)?sec(w.b):'終わり'}s</td><td>${w.n}回</td><td>${(w.dur/1000).toFixed(1)}s</td></tr>`).join('')}</table>
@@ -2484,6 +2488,13 @@ function realResultHTML(){
   return h;
 }
 (function realWire(){
+  document.addEventListener('toggle', e=>{ const d=e.target; if(d&&d.id==='rgSettings'&&S.real) S.real.setOpen=d.open; }, true);
+  // ファイルのドラッグ&ドロップ(⑨のタブのとき): .xlsx / .csv を、視線データとして読み込む
+  const pan=document.querySelector('.panel'); if(pan){
+    pan.addEventListener('dragover', e=>{ if(S.tab==='real'&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){ e.preventDefault(); pan.classList.add('drop'); } });
+    pan.addEventListener('dragleave', e=>{ if(e.target===pan) pan.classList.remove('drop'); });
+    pan.addEventListener('drop', e=>{ pan.classList.remove('drop'); if(S.tab!=='real'||!e.dataTransfer||!e.dataTransfer.files.length) return; e.preventDefault(); realLoadFile(e.dataTransfer.files[0]); });
+  }
   document.addEventListener('click', e=>{
     const t=e.target.closest('button'); if(!t||!t.id||t.id.indexOf('rg')!==0) return;
     if(t.id==='rgPick'){ $('#rgFile').click(); }
