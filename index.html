@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UI Anatomy Scanner | UI構成・ヒューリスティクス・仮想視線</title>
+<title>UI Anatomy Scanner | UI構成・ヒューリスティクス・視線</title>
+<meta name="description" content="UIの画面を入れるだけで、構成要素・ニールセンの10原則・仮想の視線・年齢による見え方を確認できるブラウザだけの分析ツール。実測の視線データ(Excel/CSV)も重ねられます。">
+<meta name="theme-color" content="#2563EB">
+<meta property="og:title" content="UI Anatomy Scanner">
+<meta property="og:description" content="UIの構成・10原則・視線・見え方を一画面で。実測の視線データも重ねられる、ブラウザだけの分析ツール。">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%232563EB' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='26' height='24' rx='4'/%3E%3Cpath d='M8 10h10M8 16h6'/%3E%3C/svg%3E">
 <style>
 /* デザイン方針（固定スペック）
    雰囲気: 落ち着いた／情報が主役／余白がある
@@ -37,6 +43,12 @@ small { font-size:13px; }
 .brand { display:flex; align-items:center; gap:10px; font-weight:600; font-size:16px; color:var(--text); margin:0; }
 .brand svg { width:26px; height:26px; }
 .tag { font-size:13px; font-weight:600; padding:1px 8px; border-radius:6px; background:transparent; color:var(--muted); border:1px solid var(--border); }
+.welcome { margin-bottom:16px; padding:16px 18px; }
+.wsteps { list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0 0; padding:0; counter-reset:w; }
+.wsteps li { counter-increment:w; border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--bg); display:flex; flex-direction:column; gap:2px; font-size:13px; }
+.wsteps li b::before { content:counter(w) '. '; color:var(--primary); }
+.wsteps li span { color:var(--muted); }
+@media (max-width:700px){ .wsteps { grid-template-columns:1fr; } }
 .disclaimer { flex:1; min-width:260px; font-size:13px; color:var(--muted); }
 .icon-btn { border:1px solid var(--border); background:var(--surface); border-radius:6px; padding:6px 10px; min-height:36px; }
 .layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(380px,1fr); gap:24px; padding:24px 24px 40px; align-items:start; }
@@ -277,13 +289,21 @@ th { color:var(--muted); font-weight:600; }
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="26" height="24" rx="4"/><path d="M8 10h10M8 16h6"/><circle cx="22" cy="20" r="4" style="stroke:var(--primary)"/></svg>
     UI Anatomy Scanner <span class="tag">Prototype</span>
   </h1>
-  <div class="disclaimer">指摘と視線はルールベースの推定です。実ユーザーテストの代替ではなく、視線は実測ではなく仮想です。</div>
+  <div class="disclaimer">指摘と仮想視線(③)はルールベースの推定で、実ユーザーテストの代替ではありません。実測の視線は⑨で読み込みます。</div>
   <button class="btn ghost app-rep" id="repBtn" title="履歴をもとに、提出用レポート（単体HTML）を書き出す画面へ移ります">レポートを書き出す</button>
   <button class="icon-btn" id="themeBtn" aria-label="ダークモード切替"></button>
 </header>
 
 <main class="layout">
   <section>
+    <div class="card welcome" id="welcome" role="region" aria-label="はじめに" hidden>
+      <div class="row" style="justify-content:space-between;align-items:flex-start;gap:12px">
+        <div><b style="font-size:16px">UIの画面を入れるだけで、「どこが分かりにくいか」「どう見られるか」が分かります</b>
+        <p class="hint" style="margin:6px 0 0">サーバーへは送らず、ブラウザの中だけで動きます。アカウントも不要です。</p></div>
+        <button class="mini" id="welcomeClose" aria-label="この案内を閉じる">閉じる</button>
+      </div>
+      <ol class="wsteps"><li><b>入れる</b><span>サンプルを選ぶ／URL／HTMLを貼る／スクリーンショット</span></li><li><b>見る</b><span>右の①〜⑧で、構成・10原則・仮想視線・見え方</span></li><li><b>重ねる</b><span>⑨で、実測の視線データ(Excel/CSV)を画面に重ねる</span></li></ol>
+    </div>
     <div class="card input-card">
       <div class="row" style="justify-content:space-between">
         <div class="seg" role="tablist" aria-label="入力方法">
@@ -4041,6 +4061,8 @@ function scrollToRect(r){ if(!r) return; focusStage(); const sc=$('#stageScroll'
 
 /* テーマ */
 function toggleTheme(){ const d=document.documentElement; const next=d.dataset.theme==='dark'?'light':'dark'; d.dataset.theme=next; $('#themeBtn').innerHTML=ico(next==='dark'?'sun':'moon',18); try{ localStorage.setItem('uas-theme',next); }catch(e){} }
+(function initWelcome(){ const w=$('#welcome'); if(!w) return; let off=false; try{ off=localStorage.getItem('uas-welcome-off')==='1'; }catch(e){} w.hidden=off;
+  $('#welcomeClose').addEventListener('click',()=>{ w.hidden=true; try{ localStorage.setItem('uas-welcome-off','1'); }catch(e){} }); })();
 (function initTheme(){ let t=null; try{ t=localStorage.getItem('uas-theme'); }catch(e){} if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; document.documentElement.dataset.theme=t; $('#themeBtn').innerHTML=ico(t==='dark'?'sun':'moon',18); })();
 
 /* 起動 */
