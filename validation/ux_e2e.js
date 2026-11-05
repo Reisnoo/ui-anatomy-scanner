@@ -31,7 +31,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   await p.click('#repBtn'); await p.waitForTimeout(600);
   assert(await p.evaluate(() => S.tab + '/' + S.cTab) === 'cmp/history' && await p.evaluate(() => !!document.getElementById('rTitle')), 'ヘッダーの「レポートを書き出す」で、履歴の提出用レポートの設定へ移る');
 
-  await p.click('.tabs button[data-tab="comps"]'); await p.click('[data-next-off]');
+  await p.evaluate(() => gotoTab('comps')); await p.click('[data-next-off]');
   assert(await p.evaluate(() => !document.querySelector('.next-steps')), '「閉じる」で、次にやることの案内を消せる');
   await p.reload(); await ready();
   assert(await p.evaluate(() => !document.querySelector('.next-steps')), '再読み込みしても、閉じた案内は出ない');

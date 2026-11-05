@@ -12,7 +12,7 @@ const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode
   await p.evaluate(async h => { await loadHTML(h, 'spa'); await selectScreen(1); }, html);   // 一覧画面
 
   assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,lens,cmp,multi,resp,kp,real', '⑧のタブが、⑦の次に並ぶ');
-  await p.click('.tabs button[data-tab="kp"]');
+  await p.evaluate(() => gotoTab('kp'));
   assert(await p.evaluate(() => document.querySelector('#panelBody').textContent.includes('Where') && document.querySelector('#panelBody').textContent.includes('When') && document.querySelector('#panelBody').textContent.includes('Why')), '⑧のパネルに Where・When・Why が出る');
   assert(await p.evaluate(() => document.getElementById('kpWhen').value) === 'list：商品一覧', 'When の初期値は、いま解析している画面');
 

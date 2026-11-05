@@ -10,7 +10,7 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   await p.goto('file://' + path.resolve(__dirname, '../index.html'));
   await p.waitForFunction(() => document.querySelector('#status').textContent.includes('解析完了'), null, { timeout: 30000 });
   assert(await p.evaluate(() => [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab).join()) === 'comps,heur,gaze,lens,cmp,multi,resp,kp,real', '⑨のタブが⑧の次に並ぶ');
-  await p.click('.tabs button[data-tab="real"]');
+  await p.evaluate(() => gotoTab('real'));
   assert((await p.textContent('#panelBody')).includes('実測データ'), '実測データのバッジが出る(③の仮想と別ラベル)');
   assert(!(await p.textContent('.tabs button[data-tab="gaze"]')).includes('実測'), '③のタブは「仮想視線」のまま');
 
@@ -63,8 +63,8 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   // 再生
   await p.click('#rgPlay'); await p.waitForTimeout(300); assert(await p.evaluate(() => S.real.upTo !== null && S.real.upTo >= 1), '再生で、軌跡が順に伸びる'); await p.click('#rgPlay');
   // 仮想視線タブとの切替で状態が混ざらない
-  await p.click('.tabs button[data-tab="gaze"]'); assert(await p.evaluate(() => S.show.real === false && document.querySelector('#ov').innerHTML.includes('#E11D48')), '③に戻ると、実測は消え、仮想視線(赤)が出る');
-  await p.click('.tabs button[data-tab="real"]'); assert(await p.evaluate(() => S.show.real === true), '⑨に戻ると実測が出る');
+  await p.evaluate(() => gotoTab('gaze')); assert(await p.evaluate(() => S.show.real === false && document.querySelector('#ov').innerHTML.includes('#E11D48')), '③に戻ると、実測は消え、仮想視線(赤)が出る');
+  await p.evaluate(() => gotoTab('real')); assert(await p.evaluate(() => S.show.real === true), '⑨に戻ると実測が出る');
   // 列未選択
   await p.selectOption('#rgX', '-1'); assert((await p.textContent('#rgResult')).includes('列を選んでください'), 'X列が未選択ならメッセージを出す');
   // 画面遷移の記録(座標なし)を、座標として描かない
@@ -74,7 +74,7 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   // 標準タグを使わない画面(構成要素が0個)でも、⑨は使える
   await p.evaluate(async () => { await loadHTML('<!doctype html><body style="margin:0"><div style="padding:40px"><div style="font-size:20px">タイトル</div><label style="display:inline-block;padding:10px;background:#27c">はじめる</label></div></body>', 'plain'); });
   await p.waitForTimeout(500); assert(await p.evaluate(() => S.comps.length) === 0, '(前提)標準タグがない画面は、構成要素が0個');
-  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', G + 'fix.csv'); await p.waitForSelector('#rgResult .tile');
+  await p.evaluate(() => gotoTab('real')); await p.setInputFiles('#rgFile', G + 'fix.csv'); await p.waitForSelector('#rgResult .tile');
   assert(await p.evaluate(() => realCompute().fix.length) === 6 && (await p.textContent('#rgResult')).includes('構成要素が見つかっていません'), '構成要素が0個でも、軌跡を重ねられる(要素別の集計は出ない旨を表示)');
   // 標準タグを使わない作り: label のボタン・CSS の content の文言・選択カード・aoi 指定
   await p.evaluate(async h => { await loadHTML(h, 'aoi-shop'); }, require('fs').readFileSync(path.join(__dirname, 'fixtures/aoi-shop.html'), 'utf8')); await p.waitForTimeout(600);
@@ -84,7 +84,7 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   assert(dt.aoi === 'aoi-decoy,aoi-decoy,aoi-target', 'id・class の aoi 指定を、AOIとして読む');
   const tg = await p.evaluate(() => { const a = S.aoi.find(x => x.name === 'aoi-target').rect, d = S.aoi.find(x => x.name === 'aoi-decoy').rect; const k = 1920 / PAGE_W; return { t: [(a.x + a.w / 2) * k, (a.y + 30) * 1080 / FOLD_H], d: [(d.x + d.w / 2) * k, (d.y + 30) * 1080 / FOLD_H] }; });
   const csvText = 'x,y,duration\n' + [[...tg.t, 400], [...tg.t, 300], [...tg.t, 200], [...tg.d, 500], [10, 790, 100]].map(r => r.join(',')).join('\n');
-  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', { name: 'aoi.csv', mimeType: 'text/csv', buffer: Buffer.from(csvText) }); await p.waitForSelector('#rgResult .tile');
+  await p.evaluate(() => gotoTab('real')); await p.setInputFiles('#rgFile', { name: 'aoi.csv', mimeType: 'text/csv', buffer: Buffer.from(csvText) }); await p.waitForSelector('#rgResult .tile');
   const ar = await p.evaluate(() => { const r = realAoiRows(realCompute().fix); return { g: r.groups.map(o => [o.name, o.els.length, o.dur, o.n, o.first]), out: [r.out.dur, r.out.n] }; });
   assert(JSON.stringify(ar.g[0]) === '["aoi-target",1,900,3,1]' && JSON.stringify(ar.g[1]) === '["aoi-decoy",2,500,1,4]', 'AOI別に、滞留・回数・最初に見た順を集計する(target 900ms/3回、decoy 500ms/1回)');
   assert((await p.textContent('#rgResult')).includes('AOI別の滞留') && await p.evaluate(() => document.querySelector('#ov').innerHTML.includes('stroke="#7E22CE"')), 'AOI別の表と、AOIの位置(紫の破線)をステージに出す');
@@ -97,7 +97,7 @@ const G = path.join(__dirname, 'fixtures/gaze/') ;
   assert(await p.evaluate(() => !S.aoi.some(a => a.name === 'aoi-logo')), 'スタート画面では、共通ナビは出ない(その画面の状態のまま)');
   // Tobii Pro Lab の書き出し(注視の分類つき) + 画面の切り替え時刻(列名は ms でも中身は µs)
   await p.evaluate(async h => { await loadHTML(h, 'radio-screens'); }, require('fs').readFileSync(path.join(__dirname, 'fixtures/radio-screens.html'), 'utf8')); await p.waitForTimeout(600);
-  await p.click('.tabs button[data-tab="real"]'); await p.setInputFiles('#rgFile', G + 'tobii-mini.xlsx'); await p.waitForSelector('#rgResult .tile');
+  await p.evaluate(() => gotoTab('real')); await p.setInputFiles('#rgFile', G + 'tobii-mini.xlsx'); await p.waitForSelector('#rgResult .tile');
   const tb = await p.evaluate(() => { const c = S.real.cfg, r = realCompute(); return { kind: c.kind, stim: c.stim, off: [c.offX, c.offY], reg: [c.regW, c.regH], rec: [c.recW, c.recH], n: r.all.length, d: r.all.map(f => f.dur) }; });
   assert(tb.kind === 'tobii' && tb.stim === 'Web Page', 'Tobii Pro Lab の書き出しを自動で判定し、較正の刺激を除く');
   assert(tb.n === 3 && tb.d.join() === '150,100,120', 'サンプル行に繰り返される注視を、番号ごとに1回へまとめる(3回)');
