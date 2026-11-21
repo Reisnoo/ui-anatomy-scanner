@@ -265,3 +265,7 @@ export default {
 - 日本語サイト・独自CSSの大規模サイトでの検証
 - Age Lens の閾値を、文献や実ユーザー評価で較正する
 - レポートのスライド用書き出し（課題設定→根拠→改善案の構成）
+
+## ライセンス
+
+MIT License です(`LICENSE`)。画像の文字認識に使う [Tesseract.js](https://github.com/naptha/tesseract.js) は、実行時に CDN から読み込む外部の部品で、Apache License 2.0 です。
